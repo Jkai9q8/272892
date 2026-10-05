@@ -6,8 +6,8 @@
     <title>TechStore - Website Bán Lẻ Điện Thoại Chính Hãng</title>
     <style>
         :root {
-            --primary-color: #0071e3;
-            --secondary-color: #f5f5f7;
+            --primary-color: #007bff; /* Đã đổi màu chủ đạo sang Xanh dương */
+            --secondary-color: #e7f1ff;
             --text-color: #1d1d1f;
             --accent-color: #ff3b30;
             --admin-bg: #1e1e2d;
@@ -111,7 +111,7 @@
         .search-suggestions div:hover { background: var(--secondary-color); }
 
         /* Banner */
-        .banner { background: linear-gradient(135deg, #0071e3, #4589ff); color: white; text-align: center; padding: 40px 15px; margin-bottom: 10px; }
+        .banner { background: linear-gradient(135deg, var(--primary-color), #4dabf7); color: white; text-align: center; padding: 40px 15px; margin-bottom: 10px; }
         .banner h1 { font-size: 28px; margin-bottom: 8px; }
         .banner p { font-size: 14px; opacity: 0.9; }
 
@@ -123,6 +123,10 @@
         .sidebar h3 { margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 6px; }
         .filter-group { margin-bottom: 15px; }
         .filter-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13.5px; }
+        
+        /* Khoảng giá tùy chỉnh */
+        .custom-price-box { display: flex; gap: 5px; align-items: center; margin-top: 8px; }
+        .custom-price-box input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
 
         /* Danh sách sản phẩm */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
@@ -144,13 +148,24 @@
         .recent-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
         .recent-grid .product-card { min-width: 200px; flex: 0 0 auto; }
 
-        /* ================= CHATBOT AI NÂNG CẤP (GIAO DIỆN TGDĐ / FPT) ================= */
+        /* Trang liên hệ */
+        .contact-page { display: none; max-width: 800px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .contact-page h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 22px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        .contact-form textarea { height: 120px; resize: vertical; }
+
+        /* Giao diện So sánh điện thoại */
+        .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #333; color: white; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1500; }
+        .compare-list-preview { display: flex; gap: 10px; }
+        .compare-thumb { width: 40px; height: 40px; background: #fff; border-radius: 4px; object-fit: contain; }
+
+        /* ================= CHATBOT AI NÂNG CẤP ================= */
         .chat-toggle-btn { 
             position: fixed; bottom: 20px; right: 20px; 
-            background: linear-gradient(135deg, #0071e3, #005bb5); 
+            background: linear-gradient(135deg, var(--primary-color), #4dabf7); 
             color: white; border: none; border-radius: 50px; 
             padding: 12px 20px; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(0,113,227,0.4); z-index: 9999; 
+            box-shadow: 0 4px 15px rgba(0,123,255,0.4); z-index: 9999; 
             font-size: 14px; display: flex; align-items: center; gap: 8px;
             transition: transform 0.2s;
         }
@@ -163,7 +178,7 @@
             z-index: 9999; overflow: hidden; border: 1px solid #e1e1e1; 
         }
         .chat-header { 
-            background: linear-gradient(135deg, #0071e3, #4589ff); color: white; 
+            background: linear-gradient(135deg, var(--primary-color), #4dabf7); color: white; 
             padding: 14px 16px; font-weight: bold; display: flex; justify-content: space-between; 
             align-items: center; font-size: 15px; 
         }
@@ -177,18 +192,16 @@
         }
         .message { padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; position: relative; }
         .bot-msg { background: #fff; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .user-msg { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 5px rgba(0,113,227,0.2); }
+        .user-msg { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 5px rgba(0,123,255,0.2); }
 
-        /* Hiệu ứng gõ chữ (Typing Indicator) */
         .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 10px 14px; background: #fff; border-radius: 12px; align-self: flex-start; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .typing-dot { width: 7px; height: 7px; background: #999; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
 
-        /* Thanh gợi ý câu hỏi nhanh (Quick Replies) */
         .chat-quick-replies { padding: 8px 12px; background: #fff; display: flex; gap: 6px; overflow-x: auto; border-top: 1px solid #eee; white-space: nowrap; }
-        .quick-chip { background: #eef2f7; color: var(--primary-color); border: 1px solid #d0e1fd; padding: 5px 10px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .quick-chip { background: var(--secondary-color); color: var(--primary-color); border: 1px solid #d0e1fd; padding: 5px 10px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 500; transition: 0.2s; }
         .quick-chip:hover { background: var(--primary-color); color: #fff; }
 
         .chat-footer { padding: 10px; background: #fff; display: flex; border-top: 1px solid #ddd; gap: 8px; align-items: center; }
@@ -246,7 +259,6 @@
         .add-product-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .add-product-form input { padding: 7px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
 
-        /* RESPONSIVE CHO ĐIỆN THOẠI (< 768px) */
         @media (max-width: 768px) { 
             header { flex-direction: column; align-items: stretch; padding: 10px 3%; gap: 8px; }
             .logo { text-align: center; font-size: 20px; }
@@ -282,20 +294,18 @@
 </head>
 <body>
 
-    <!-- Khung chứa Toast Notification -->
     <div id="toast-container"></div>
 
-    <!-- Header -->
     <header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="logo" onclick="location.reload()">📱 TechStore</div>
+            <div class="logo" onclick="switchTab('home')">📱 TechStore</div>
         </div>
 
         <nav>
-            <a href="#">Trang chủ</a>
-            <a href="#">Điện thoại</a>
-            <a href="#">Phụ kiện</a>
-            <a href="#">Trả góp 0%</a>
+            <a onclick="switchTab('home')">Trang chủ</a>
+            <a onclick="switchTab('home')">Điện thoại</a>
+            <a onclick="switchTab('home')">Phụ kiện</a>
+            <a onclick="switchTab('contact')">Liên hệ</a>
         </nav>
         
         <div class="location-selector" style="min-width: 150px;">
@@ -330,22 +340,20 @@
                 <div class="user-dropdown" id="user-dropdown">
                     <div id="dropdown-account-info">📄 Thông tin tài khoản</div>
                     <div id="dropdown-orders">📦 Đơn hàng của tôi</div>
-                    <div id="dropdown-staff-dash" style="color: var(--primary-color); font-weight: bold;">🛠️ Giao diện Nhân viên</div>
+                    <div id="dropdown-staff-dash" style="color: var(--primary-color); font-weight: bold;">🛠 Giao diện Nhân viên</div>
                     <div id="dropdown-logout" style="color: var(--accent-color); font-weight: bold;">🚪 Đăng xuất</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Banner -->
-    <div class="banner">
+    <div class="banner" id="main-banner">
         <h1>Siêu Hội Smartphone - Giảm Đến 50%</h1>
         <p>Cam kết chính hãng 100% - Bảo hành đổi trả 1 đổi 1 trong 30 days</p>
     </div>
 
-    <!-- Main Content -->
-    <div class="container">
-        
+    <!-- MAIN SHOPPING CONTAINER -->
+    <div class="container" id="home-view">
         <aside class="sidebar">
             <h3>Hãng sản xuất</h3>
             <div class="filter-group">
@@ -353,33 +361,101 @@
                 <label><input type="checkbox" class="brand-filter" value="samsung"> Samsung</label>
                 <label><input type="checkbox" class="brand-filter" value="xiaomi"> Xiaomi</label>
                 <label><input type="checkbox" class="brand-filter" value="oppo"> OPPO</label>
-                <label><input type="checkbox" class="brand-filter" value="zte"> ZTE / Nubia</label>
+                <label><input type="checkbox" class="brand-filter" value="zte"> ZTE / Nubia / RedMagic</label>
             </div>
 
-            <h3>Mức giá</h3>
+            <h3>Mức giá cố định</h3>
             <div class="filter-group">
                 <label><input type="checkbox" class="price-filter" value="under-3m"> Dưới 3 triệu</label>
                 <label><input type="checkbox" class="price-filter" value="3m-10m"> Từ 3 - 10 triệu</label>
                 <label><input type="checkbox" class="price-filter" value="over-10m"> Trên 10 triệu</label>
             </div>
+
+            <h3>Khoảng giá tùy chỉnh (VNĐ)</h3>
+            <div class="custom-price-box">
+                <input type="number" id="price-min" placeholder="Từ">
+                <span>-</span>
+                <input type="number" id="price-max" placeholder="Đến">
+            </div>
+            <button class="btn" style="margin-top: 8px; font-size: 12px; padding: 5px;" onclick="filterProducts()">Lọc giá</button>
         </aside>
 
-        <!-- Danh sách sản phẩm -->
         <main class="product-grid" id="product-list">
+            <div class="product-card" data-name="ZTE Nubia RedMagic Gaming Phone" data-price="19990000" data-specs="• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh">
+                <img src="images.jpg" alt="ZTE Nubia RedMagic Gaming Phone">
+                <h4>ZTE Nubia RedMagic Gaming Phone</h4>
+                <div class="price">19.990.000₫</div>
+                <div class="specs-preview">• AMOLED 144Hz<br>• Chip Snapdragon đầu bảng<br>• Tản nhiệt quạt gió</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('ZTE Nubia RedMagic Gaming Phone')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Xiaomi Redmi 14C Tím" data-price="3490000" data-specs="• 6.88&quot; 120Hz, Chip Helio G81-Ultra, Pin 5160 mAh, Camera AI">
+                <img src="images (1).jpg" alt="Xiaomi Redmi 14C Tím">
+                <h4>Xiaomi Redmi 14C Tím 128GB</h4>
+                <div class="price">3.490.000₫</div>
+                <div class="specs-preview">• 6.88" 120Hz<br>• Chip: Helio G81-Ultra<br>• Pin: 5160 mAh</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Xiaomi Redmi 14C Tím')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Xiaomi 14 Ultra Xanh Leica" data-price="24990000" data-specs="• 6.73&quot; AMOLED 120Hz, Chip Snapdragon 8 Gen 3, Camera Leica 50MP, Pin 5000 mAh">
+                <img src="images (2).jpg" alt="Xiaomi 14 Ultra Xanh">
+                <h4>Xiaomi 14 Ultra Xanh Leica</h4>
+                <div class="price">24.990.000₫</div>
+                <div class="specs-preview">• 6.73" AMOLED 120Hz<br>• Chip: Snapdragon 8 Gen 3<br>• Camera Leica 50MP</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Xiaomi 14 Ultra Xanh Leica')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Xiaomi Redmi Note 14 Tím Vân" data-price="4790000" data-specs="• 6.67&quot; AMOLED 120Hz, Pin 5000 mAh, Sạc nhanh 33W, Camera AI">
+                <img src="images (3).jpg" alt="Xiaomi Redmi Note 14 Tím">
+                <h4>Xiaomi Redmi Note 14 Tím Vân</h4>
+                <div class="price">4.790.000₫</div>
+                <div class="specs-preview">• 6.67" AMOLED 120Hz<br>• Pin: 5000 mAh, 33W<br>• Camera AI</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Xiaomi Redmi Note 14 Tím Vân')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="iPhone 18 Pro Đỏ 256GB" data-price="35990000" data-specs="• 6.3&quot; OLED 120Hz, Chip A20 Pro, Pin 5000 mAh, Camera 48MP">
+                <img src="iphone-18-pro-do-thumb-600x600.jpg" alt="iPhone 18 Pro Đỏ">
+                <h4>iPhone 18 Pro Đỏ 256GB</h4>
+                <div class="price">35.990.000₫</div>
+                <div class="specs-preview">• 6.3" OLED 120Hz<br>• Chip: A20 Pro<br>• Pin: 5000 mAh</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('iPhone 18 Pro Đỏ 256GB')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="iPhone Duo Trắng 128GB" data-price="28990000" data-specs="• 6.1&quot; Super Retina, Chip A19, Pin 4600 mAh, Camera kép">
+                <img src="iphone-duo-white-thumb-600x600.jpg" alt="iPhone Duo Trắng">
+                <h4>iPhone Duo Trắng 128GB</h4>
+                <div class="price">28.990.000₫</div>
+                <div class="specs-preview">• 6.1" Super Retina<br>• Chip: A19<br>• Pin: 4600 mAh</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('iPhone Duo Trắng 128GB')">So sánh</button>
+                </div>
+            </div>
+
             <div class="product-card" data-name="ZTE Nubia Neo 5 GT" data-price="6490000" data-specs="• 6.7&quot; FHD+ 120Hz, Chip Gaming 5G, Pin 5000 mAh, Sạc nhanh 45W">
                 <img src="images - Sao chép.jpg" alt="ZTE Nubia Neo 5 GT">
                 <h4>ZTE Nubia Neo 5 GT</h4>
                 <div class="price">6.490.000₫</div>
                 <div class="specs-preview">• 6.7" 120Hz<br>• Chip Gaming 5G<br>• Pin: 5000 mAh, 45W</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
-            </div>
-
-            <div class="product-card" data-name="iPhone 17 Pro Max 256GB" data-price="33990000" data-specs="• 6.9&quot; OLED, Chip A19 Pro, Pin 4800 mAh, Camera 48MP">
-                <img src="iphone-17-pro-max-cam-thumb-600x600.jpg" alt="iPhone 17 Pro Max">
-                <h4>iPhone 17 Pro Max 256GB</h4>
-                <div class="price">33.990.000₫</div>
-                <div class="specs-preview">• 6.9" OLED<br>• Chip: A19 Pro<br>• Pin: 4800 mAh</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('ZTE Nubia Neo 5 GT')">So sánh</button>
+                </div>
             </div>
 
             <div class="product-card" data-name="Samsung Galaxy S26 FE 5G" data-price="16490000" data-specs="• 6.4&quot; Dynamic AMOLED, Chip Exynos 2400e, Pin 4500 mAh, Sạc 25W">
@@ -387,31 +463,10 @@
                 <h4>Samsung Galaxy S26 FE 5G</h4>
                 <div class="price">16.490.000₫</div>
                 <div class="specs-preview">• 6.4" Dynamic AMOLED<br>• Chip: Exynos 2400e<br>• Pin: 4500 mAh</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
-            </div>
-
-            <div class="product-card" data-name="Xiaomi Redmi Note 17" data-price="5290000" data-specs="• 6.67&quot; 120Hz, Chip Snapdragon 685, Pin 5000 mAh, Sạc nhanh 33W">
-                <img src="xiaomi-redmi-note-17-4g-purple-thumb-600x600.jpg" alt="Xiaomi Redmi Note 17">
-                <h4>Xiaomi Redmi Note 17</h4>
-                <div class="price">5.290.000₫</div>
-                <div class="specs-preview">• 6.67" 120Hz<br>• Chip: Snapdragon 685<br>• Pin: 5000 mAh, 33W</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
-            </div>
-            
-            <div class="product-card" data-name="ZTE Nubia A36 64GB" data-price="2190000" data-specs="• 6.56&quot; HD+, Camera AI, Pin 5000 mAh, RAM 4GB">
-                <img src="nubia-a36-4gb-64gb-vang-thumb-600x600.jpg" alt="Nubia A36">
-                <h4>ZTE Nubia A36 4GB/64GB</h4>
-                <div class="price">2.190.000₫</div>
-                <div class="specs-preview">• 6.56" HD+<br>• Camera AI<br>• Pin: 5000 mAh</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
-            </div>
-
-            <div class="product-card" data-name="ZTE Nubia A56 128GB" data-price="2790000" data-specs="• 6.75&quot; 90Hz, Matrix AI Camera, Pin 5000 mAh, Bộ nhớ 128GB">
-                <img src="nubia-a56-4gb-128gb-vang-thumb-600x600.jpg" alt="Nubia A56">
-                <h4>ZTE Nubia A56 4GB/128GB</h4>
-                <div class="price">2.790.000₫</div>
-                <div class="specs-preview">• 6.75" 90Hz<br>• Matrix AI Camera<br>• Pin: 5000 mAh</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Samsung Galaxy S26 FE 5G')">So sánh</button>
+                </div>
             </div>
 
             <div class="product-card" data-name="OPPO Reno16 F 5G" data-price="9990000" data-specs="• 6.7&quot; AMOLED, Camera Chân dung AI 64MP, Pin 5000 mAh, Sạc SUPERVOOC 45W">
@@ -419,12 +474,26 @@
                 <h4>OPPO Reno16 F 5G</h4>
                 <div class="price">9.990.000₫</div>
                 <div class="specs-preview">• 6.7" AMOLED<br>• Camera AI<br>• Pin: 5000 mAh, 45W</div>
-                <button class="btn add-to-cart">Chọn Mua</button>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('OPPO Reno16 F 5G')">So sánh</button>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Lịch sử sản phẩm vừa xem -->
+    <!-- TRANG LIÊN HỆ MỚI -->
+    <div class="contact-page" id="contact-view">
+        <h2>📞 Liên Hệ Với TechStore</h2>
+        <p style="margin-bottom: 15px; font-size: 14px;">Bạn có thắc mắc hoặc cần hỗ trợ dịch vụ? Hãy gửi tin nhắn cho chúng tôi!</p>
+        <form class="contact-form" id="contact-form-submit">
+            <input type="text" id="contact-name" placeholder="Họ và tên của bạn" required>
+            <input type="email" id="contact-email" placeholder="Địa chỉ Email" required>
+            <textarea id="contact-message" placeholder="Nội dung cần hỗ trợ..." required></textarea>
+            <button type="submit" class="btn" style="width: auto; padding: 10px 20px;">Gửi Tin Nhắn</button>
+        </form>
+    </div>
+
     <div class="recent-section" id="recent-viewed-section" style="display: none;">
         <div class="recent-header">
             <h3>👁️ Sản phẩm bạn vừa xem</h3>
@@ -433,7 +502,18 @@
         <div class="recent-grid" id="recent-grid"></div>
     </div>
 
-    <!-- ================= CHATBOT AI UI NÂNG CẤP ================= -->
+    <!-- THANH SO SÁNH NỔI -->
+    <div class="compare-bar" id="compare-bar">
+        <div>
+            <strong>So sánh điện thoại (<span id="compare-count">0</span>/3):</strong>
+            <span id="compare-names" style="font-size: 13px; margin-left: 10px; color: #aaa;">Chưa chọn sản phẩm</span>
+        </div>
+        <div>
+            <button class="btn" style="padding: 6px 12px; background: #28a745; width: auto;" onclick="openCompareModal()">Xem bảng so sánh</button>
+            <button class="btn-danger" style="padding: 6px 10px; margin-left: 5px;" onclick="clearCompare()">Hủy</button>
+        </div>
+    </div>
+
     <button class="chat-toggle-btn" id="chat-toggle-btn">
         💬 Tư vấn trực tuyến
     </button>
@@ -449,7 +529,6 @@
             <div class="message bot-msg">Chào bạn! Mình là Trợ lý AI của TechStore. Bạn đang quan tâm dòng điện thoại nào hoặc cần tìm smartphone theo tầm giá nào ạ?</div>
         </div>
         
-        <!-- Quick Replies (Gợi ý nhanh giống TGDĐ / FPT Shop) -->
         <div class="chat-quick-replies">
             <button class="quick-chip" onclick="sendQuickQuery('Điện thoại dưới 5 triệu')">📱 Dưới 5 triệu</button>
             <button class="quick-chip" onclick="sendQuickQuery('Tư vấn iPhone mới nhất')">🔥 iPhone mới</button>
@@ -463,7 +542,15 @@
         </div>
     </div>
 
-    <!-- Modal Chi Tiết Sản Phẩm -->
+    <!-- MODAL SO SÁNH -->
+    <div class="modal" id="compare-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close-modal" onclick="document.getElementById('compare-modal').style.display='none'">✖</span>
+            <h2>⚖️ Bảng So Sánh Điện Thoại</h2>
+            <div id="compare-table-container" style="overflow-x: auto; margin-top: 10px;"></div>
+        </div>
+    </div>
+
     <div class="modal" id="product-detail-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-detail">✖</span>
@@ -489,7 +576,6 @@
         </div>
     </div>
 
-    <!-- Modal Đăng nhập / Đăng ký -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-auth">✖</span>
@@ -506,7 +592,6 @@
         </div>
     </div>
 
-    <!-- Modal Giỏ Hàng -->
     <div class="modal" id="cart-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-cart">✖</span>
@@ -528,7 +613,6 @@
         </div>
     </div>
 
-    <!-- Modal Thông Tin Tài Khoản -->
     <div class="modal" id="user-info-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-user-info">✖</span>
@@ -540,7 +624,6 @@
         </div>
     </div>
 
-    <!-- Modal Xem Đơn Hàng -->
     <div class="modal" id="user-orders-modal">
         <div class="modal-content" style="max-width: 600px;">
             <span class="close-modal" id="close-user-orders">✖</span>
@@ -550,7 +633,6 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Nhân Sự -->
     <div class="modal" id="staff-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-staff-modal">✖</span>
@@ -588,7 +670,6 @@
         </div>
     </div>
 
-    <!-- Giao diện Quản trị Admin -->
     <div class="admin-dashboard" id="admin-dashboard">
         <div class="admin-header">
             <h2>👑 Bảng Quản Trị Cửa Hàng (Admin Dashboard)</h2>
@@ -612,6 +693,7 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
+                                <th>Mã NV</th>
                                 <th>Họ tên</th>
                                 <th>CCCD</th>
                                 <th>SĐT / Email</th>
@@ -673,7 +755,6 @@
         </div>
     </div>
 
-    <!-- Staff Dashboard -->
     <div class="admin-dashboard" id="staff-dashboard" style="background: #eef2f7;">
         <div class="admin-header">
             <h2>🛠️ TechStore - Giao Diện Nhân Viên (Staff Dashboard)</h2>
@@ -690,10 +771,10 @@
                             <tr><th>Tên sản phẩm</th><th>Giá bán</th><th>Tồn kho</th></tr>
                         </thead>
                         <tbody id="staff-inventory-tbody">
-                            <tr><td>ZTE Nubia Neo 5 GT</td><td>6.490.000₫</td><td style="color: green; font-weight: bold;">Còn (15)</td></tr>
-                            <tr><td>iPhone 17 Pro Max 256GB</td><td>33.990.000₫</td><td style="color: green; font-weight: bold;">Còn (8)</td></tr>
-                            <tr><td>Samsung Galaxy S26 FE 5G</td><td>16.490.000₫</td><td style="color: green; font-weight: bold;">Còn (12)</td></tr>
-                            <tr><td>Xiaomi Redmi Note 17</td><td>5.290.000₫</td><td style="color: green; font-weight: bold;">Còn (20)</td></tr>
+                            <tr><td>ZTE Nubia RedMagic Gaming Phone</td><td>19.990.000₫</td><td style="color: green; font-weight: bold;">Còn (10)</td></tr>
+                            <tr><td>Xiaomi Redmi 14C Tím</td><td>3.490.000₫</td><td style="color: green; font-weight: bold;">Còn (15)</td></tr>
+                            <tr><td>Xiaomi 14 Ultra Xanh Leica</td><td>24.990.000₫</td><td style="color: green; font-weight: bold;">Còn (8)</td></tr>
+                            <tr><td>Xiaomi Redmi Note 14 Tím Vân</td><td>4.790.000₫</td><td style="color: green; font-weight: bold;">Còn (20)</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -722,7 +803,6 @@
     </div>
 
     <script>
-        // Nhập API Key Gemini của bạn vào đây (hoặc để trống nếu dùng demo mô phỏng thông minh)
         const GEMINI_API_KEY = ""; 
 
         let ordersList = JSON.parse(localStorage.getItem('techstore_orders')) || [];
@@ -731,11 +811,17 @@
         let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [
             { username: "admin", password: "123", role: "Admin" }
         ];
+        
         let staffList = JSON.parse(localStorage.getItem('techstore_staff')) || [
-            { name: "Nguyễn Văn A", cccd: "079203001234", phone: "0901234567", email: "a.nv@techstore.vn", dept: "Thu ngân", role: "Nhân viên", shift: "Ca sáng (06:00 - 14:00)" }
+            { code: "NV1001", name: "Nguyễn Văn A", cccd: "079203001234", phone: "0901234567", email: "a.nv@techstore.vn", dept: "Thu ngân", role: "Nhân viên", shift: "Ca sáng (06:00 - 14:00)" },
+            { code: "NV1002", name: "Trần Thị B", cccd: "079203005678", phone: "0908765432", email: "b.tt@techstore.vn", dept: "Bán hàng", role: "Nhân viên", shift: "Ca chiều (14:00 - 22:00)" },
+            { code: "NV1003", name: "Lê Hoàng C", cccd: "079203009012", phone: "0912345678", email: "c.lh@techstore.vn", dept: "Kho", role: "Quản lý chi nhánh", shift: "Ca hành chính (08:00 - 17:00)" },
+            { code: "NV1004", name: "Phạm Thị Dung", cccd: "079203003456", phone: "0934567890", email: "dung.pt@techstore.vn", dept: "Kỹ thuật", role: "Nhân viên", shift: "Ca hành chính (08:00 - 17:00)" }
         ];
+
         let productReviews = JSON.parse(localStorage.getItem('techstore_reviews')) || {};
         let recentViewed = JSON.parse(localStorage.getItem('techstore_recent')) || [];
+        let compareList = [];
         let appliedDiscount = 0;
 
         function saveData() {
@@ -760,6 +846,102 @@
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
+        }
+
+        // Chuyển trang Home/Contact
+        function switchTab(tabName) {
+            const homeView = document.getElementById('home-view');
+            const contactView = document.getElementById('contact-view');
+            const banner = document.getElementById('main-banner');
+            const recentSec = document.getElementById('recent-viewed-section');
+
+            if (tabName === 'contact') {
+                homeView.style.display = 'none';
+                contactView.style.display = 'block';
+                if(banner) banner.style.display = 'none';
+                if(recentSec) recentSec.style.display = 'none';
+            } else {
+                homeView.style.display = 'grid';
+                contactView.style.display = 'none';
+                if(banner) banner.style.display = 'block';
+                if(recentViewed.length > 0) if(recentSec) recentSec.style.display = 'block';
+            }
+        }
+
+        document.getElementById('contact-form-submit').addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast("Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất.", "success");
+            e.target.reset();
+            switchTab('home');
+        });
+
+        // Tính năng So sánh điện thoại
+        function toggleCompare(name) {
+            if (compareList.includes(name)) {
+                compareList = compareList.filter(item => item !== name);
+                showToast(`Đã bỏ ${name} khỏi danh sách so sánh`, "success");
+            } else {
+                if (compareList.length >= 3) {
+                    showToast("Chỉ có thể so sánh tối đa 3 sản phẩm cùng lúc!", "error");
+                    return;
+                }
+                compareList.push(name);
+                showToast(`Đã thêm ${name} vào danh sách so sánh`, "success");
+            }
+            updateCompareBar();
+        }
+
+        function updateCompareBar() {
+            const bar = document.getElementById('compare-bar');
+            const countEl = document.getElementById('compare-count');
+            const namesEl = document.getElementById('compare-names');
+
+            countEl.textContent = compareList.length;
+            if (compareList.length > 0) {
+                bar.style.display = 'flex';
+                namesEl.textContent = compareList.join(', ');
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        function clearCompare() {
+            compareList = [];
+            updateCompareBar();
+            showToast("Đã xóa danh sách so sánh", "success");
+        }
+
+        function openCompareModal() {
+            if (compareList.length === 0) return;
+            const container = document.getElementById('compare-table-container');
+            let cards = Array.from(document.querySelectorAll('.product-card'));
+            
+            let html = `<table class="admin-table"><thead><tr><th>Tiêu chí</th>`;
+            compareList.forEach(name => {
+                let card = cards.find(c => c.getAttribute('data-name') === name);
+                html += `<th>${name}<br><img src="${card.querySelector('img').src}" style="width:60px; height:60px; object-fit:contain;"></th>`;
+            });
+            html += `</tr></thead><tbody>`;
+
+            // Hàng Giá
+            html += `<tr><td><strong>Giá bán</strong></td>`;
+            compareList.forEach(name => {
+                let card = cards.find(c => c.getAttribute('data-name') === name);
+                html += `<td style="color:var(--accent-color); font-weight:bold;">${card.querySelector('.price').textContent}</td>`;
+            });
+            html += `</tr>`;
+
+            // Hàng Thông số
+            html += `<tr><td><strong>Cấu hình & Specs</strong></td>`;
+            compareList.forEach(name => {
+                let card = cards.find(c => c.getAttribute('data-name') === name);
+                html += `<td>${card.getAttribute('data-specs')}</td>`;
+            });
+            html += `</tr>`;
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+            document.getElementById('compare-modal').style.display = 'flex';
         }
 
         let isLoginMode = true;
@@ -897,7 +1079,7 @@
             saveData();
             authMainBtn.textContent = "👤 Đăng nhập";
             adminPanelBtn.style.display = "none";
-            showToast("Đã đăng xuất!", "success");
+            showToast("Đăng xuất!", "success");
         });
 
         document.getElementById('close-user-info').addEventListener('click', () => userInfoModal.style.display = 'none');
@@ -995,15 +1177,19 @@
         const brandFilters = document.querySelectorAll('.brand-filter');
         const priceFilters = document.querySelectorAll('.price-filter');
 
+        // BỘ LỌC KẾT HỢP: Hãng + Khoảng giá cố định + Khoảng giá tùy chỉnh
         function filterProducts() {
             const checkedBrands = Array.from(brandFilters).filter(i => i.checked).map(i => i.value);
             const checkedPrices = Array.from(priceFilters).filter(i => i.checked).map(i => i.value);
+            const customMin = parseInt(document.getElementById('price-min').value) || 0;
+            const customMax = parseInt(document.getElementById('price-max').value) || Infinity;
 
             document.querySelectorAll('.product-grid .product-card').forEach(card => {
                 const name = card.getAttribute('data-name').toLowerCase();
                 const price = parseInt(card.getAttribute('data-price')) || 0;
 
                 const matchBrand = checkedBrands.length === 0 || checkedBrands.some(b => name.includes(b));
+                
                 let matchPrice = true;
                 if (checkedPrices.length > 0) {
                     matchPrice = checkedPrices.some(p => {
@@ -1013,7 +1199,11 @@
                         return false;
                     });
                 }
-                if (matchBrand && matchPrice) card.style.display = 'flex';
+
+                // Lọc theo khoảng giá tùy chỉnh nhập vào
+                const matchCustomPrice = price >= customMin && (document.getElementById('price-max').value === '' || price <= customMax);
+
+                if (matchBrand && matchPrice && matchCustomPrice) card.style.display = 'flex';
                 else card.style.display = 'none';
             });
         }
@@ -1044,20 +1234,24 @@
             const shift = document.getElementById('staff-shift').value;
 
             if (!name || !cccd || !phone || !email) { showToast("Vui lòng nhập đầy đủ thông tin nhân sự!", "error"); return; }
-            staffList.push({ name, cccd, phone, email, dept, role, shift });
+            
+            const newCode = "NV" + Math.floor(1000 + Math.random() * 9000);
+            
+            staffList.push({ code: newCode, name, cccd, phone, email, dept, role, shift });
             saveData();
             renderAdminStaff();
             staffModal.style.display = 'none';
             e.target.reset();
-            showToast("Thêm nhân sự mới thành công!", "success");
+            showToast(`Thêm nhân sự mới thành công! Mã: ${newCode}`, "success");
         });
 
         function renderAdminStaff() {
             const tbody = document.getElementById('admin-staff-tbody');
-            tbody.innerHTML = staffList.length === 0 ? '<tr><td colspan="7" style="text-align:center;">Chưa có hồ sơ nhân sự nào.</td></tr>' : '';
+            tbody.innerHTML = staffList.length === 0 ? '<tr><td colspan="8" style="text-align:center;">Chưa có hồ sơ nhân sự nào.</td></tr>' : '';
             staffList.forEach((s, i) => {
                 tbody.innerHTML += `
                     <tr>
+                        <td><strong style="color: var(--primary-color);">${s.code || ('NV100' + (i + 1))}</strong></td>
                         <td><strong>${s.name}</strong></td>
                         <td>${s.cccd}</td>
                         <td>${s.phone}<br>${s.email}</td>
@@ -1071,7 +1265,7 @@
         }
 
         function deleteStaff(i) {
-            if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name}?`)) {
+            if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name} (${staffList[i].code})?`)) {
                 staffList.splice(i, 1);
                 saveData();
                 renderAdminStaff();
@@ -1181,7 +1375,7 @@
             card.setAttribute('data-name', name);
             card.setAttribute('data-price', price);
             card.setAttribute('data-specs', specs);
-            card.innerHTML = `<img src="https://via.placeholder.com/200" alt=""><h4>${name}</h4><div class="price">${price.toLocaleString('vi-VN')}₫</div><div class="specs-preview">• ${specs}</div><button class="btn add-to-cart">Chọn Mua</button>`;
+            card.innerHTML = `<img src="https://via.placeholder.com/200" alt=""><h4>${name}</h4><div class="price">${price.toLocaleString('vi-VN')}₫</div><div class="specs-preview">• ${specs}</div><div style="display:flex; gap: 5px;"><button class="btn add-to-cart">Chọn Mua</button><button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('${name}')">So sánh</button></div>`;
             attachCardEvents(card);
             grid.appendChild(card);
             renderAdminProducts();
@@ -1272,7 +1466,7 @@
                     showToast("Đã thêm vào giỏ hàng!", "success");
                 });
             }
-            card.addEventListener('click', (e) => { if (!e.target.classList.contains('add-to-cart')) openProductDetail(card); });
+            card.addEventListener('click', (e) => { if (!e.target.classList.contains('add-to-cart') && !e.target.tagName.includes('BUTTON')) openProductDetail(card); });
         }
         document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
 
@@ -1299,7 +1493,6 @@
             } else { suggestionsBox.innerHTML = '<div style="color:#999">Không tìm thấy sản phẩm</div>'; }
         });
 
-        // ================= LOGIC CHATBOT AI NÂNG CẤP (GEMINI API + SMART CONTEXT) =================
         const chatWindow = document.getElementById('chat-window');
         document.getElementById('chat-toggle-btn').addEventListener('click', () => chatWindow.style.display = 'flex');
         document.getElementById('close-chat').addEventListener('click', () => chatWindow.style.display = 'none');
@@ -1313,7 +1506,6 @@
             body.scrollTop = body.scrollHeight;
         }
 
-        // Hiển thị hiệu ứng đang soạn tin nhắn (Typing Indicator)
         function showTypingIndicator() {
             const body = document.getElementById('chat-body');
             const typingDiv = document.createElement('div');
@@ -1329,7 +1521,6 @@
             if (typingDiv) typingDiv.remove();
         }
 
-        // Lấy danh sách sản phẩm hiện có trên web để làm ngữ cảnh tư vấn cho AI
         function getStoreProductsContext() {
             let products = [];
             document.querySelectorAll('.product-grid .product-card').forEach(card => {
@@ -1359,7 +1550,6 @@
             const storeContext = getStoreProductsContext();
 
             if (GEMINI_API_KEY && GEMINI_API_KEY.trim() !== "") {
-                // Gọi API Gemini thực tế nếu có Key
                 try {
                     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                         method: 'POST',
@@ -1367,7 +1557,7 @@
                         body: JSON.stringify({
                             contents: [{
                                 parts: [
-                                    { text: `Bạn là trợ lý AI chuyên nghiệp của cửa hàng điện thoại TechStore (giống FPT Shop / TGDĐ). Dưới đây là danh sách sản phẩm hiện có tại cửa hàng: ${storeContext}. Hãy tư vấn khách hàng ngắn gọn, lịch sự, chính xác về giá và cấu hình dựa trên danh sách này.` },
+                                    { text: `Bạn là trợ lý AI chuyên nghiệp của cửa hàng điện thoại TechStore. Dưới đây là danh sách sản phẩm hiện có: ${storeContext}. Hãy tư vấn khách hàng ngắn gọn, lịch sự.` },
                                     { text: text }
                                 ]
                             }]
@@ -1382,20 +1572,17 @@
                     appendMessage("Có lỗi kết nối đến hệ thống AI. Vui lòng thử lại!", false);
                 }
             } else {
-                // Chế độ mô phỏng thông minh (Smart Mock AI) nếu chưa cấu hình API Key
                 setTimeout(() => {
                     removeTypingIndicator();
-                    let reply = "Dạ, TechStore có rất nhiều dòng máy chính hãng giá tốt. Bạn có thể tham khảo trực tiếp trên danh mục website hoặc nhập tên hãng để tôi lọc giúp bạn nhé!";
+                    let reply = "Dạ, TechStore có rất nhiều dòng máy chính hãng giá tốt. Bạn có thể tham khảo trực tiếp trên danh mục website!";
                     const q = text.toLowerCase();
                     
                     if (q.includes('dưới 5 triệu') || q.includes('rẻ')) {
-                        reply = "Dạ trong tầm giá dưới 5 triệu, TechStore gợi ý cho bạn:<br>- **ZTE Nubia A36 (64GB)**: 2.190.000₫ (Pin 5000 mAh)<br>- **ZTE Nubia A56 (128GB)**: 2.790.000₫ (Màn hình 90Hz)<br>- **Xiaomi Redmi Note 17**: 5.290.000₫ (120Hz mượt mà)";
+                        reply = "Dạ trong tầm giá dưới 5 triệu, TechStore gợi ý cho bạn:\n- **Xiaomi Redmi 14C Tím**: 3.490.000₫\n- **Xiaomi Redmi Note 14 Tím Vân**: 4.790.000₫";
                     } else if (q.includes('iphone') || q.includes('apple')) {
-                        reply = "Dạ mẫu đỉnh cao nhất hiện tại là **iPhone 17 Pro Max 256GB** giá **33.990.000₫**, sở hữu chip A19 Pro siêu mạnh và camera 48MP đẳng cấp!";
+                        reply = "Dạ các mẫu iPhone nổi bật hiện có:\n- **iPhone 18 Pro Đỏ 256GB**: 35.990.000₫\n- **iPhone Duo Trắng 128GB**: 28.990.000₫";
                     } else if (q.includes('game') || q.includes('chơi game')) {
-                        reply = "Dạ để chiến game mượt mà, bạn nên chọn **ZTE Nubia Neo 5 GT** giá **6.490.000₫** với chip Gaming 5G, màn hình 120Hz và sạc nhanh 45W cực đỉnh!";
-                    } else if (q.includes('trả góp')) {
-                        reply = "TechStore hỗ trợ **Trả góp 0% lãi suất** qua thẻ tín dụng hoặc công ty tài chính, thủ tục nhanh gọn duyệt trong 15 phút ạ!";
+                        reply = "Dạ để chiến game mượt, bạn có thể chọn **ZTE Nubia RedMagic** giá **19.990.000₫** hoặc **ZTE Nubia Neo 5 GT** giá **6.490.000₫**!";
                     }
                     appendMessage(reply, false);
                 }, 800);
