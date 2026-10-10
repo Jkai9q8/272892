@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechStore - Website Bán Lẻ Điện Thoại Chính Hãng</title>
+    <!-- Thêm thư viện Chart.js để vẽ biểu đồ doanh thu -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-color: #007bff; /* Đã đổi màu chủ đạo sang Xanh dương */
+            --primary-color: #007bff;
             --secondary-color: #e7f1ff;
             --text-color: #1d1d1f;
             --accent-color: #ff3b30;
@@ -194,12 +196,6 @@
         .bot-msg { background: #fff; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .user-msg { background: var(--primary-color); color: white; align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 5px rgba(0,123,255,0.2); }
 
-        .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 10px 14px; background: #fff; border-radius: 12px; align-self: flex-start; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .typing-dot { width: 7px; height: 7px; background: #999; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-
         .chat-quick-replies { padding: 8px 12px; background: #fff; display: flex; gap: 6px; overflow-x: auto; border-top: 1px solid #eee; white-space: nowrap; }
         .quick-chip { background: var(--secondary-color); color: var(--primary-color); border: 1px solid #d0e1fd; padding: 5px 10px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 500; transition: 0.2s; }
         .quick-chip:hover { background: var(--primary-color); color: #fff; }
@@ -256,6 +252,7 @@
         
         .btn-danger { background: var(--accent-color); padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
         .btn-success { background: #28a745; padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: 500; }
         .add-product-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .add-product-form input { padding: 7px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
 
@@ -576,6 +573,67 @@
         </div>
     </div>
 
+    <!-- MODAL EDIT SẢN PHẨM -->
+    <div class="modal" id="edit-product-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="document.getElementById('edit-product-modal').style.display='none'">✖</span>
+            <h2>✏️ Chỉnh Sửa Thông Tin Sản Phẩm</h2>
+            <form id="edit-product-form">
+                <input type="hidden" id="edit-prod-index">
+                <label style="font-size:12.5px; font-weight:bold;">Tên sản phẩm:</label>
+                <input type="text" id="edit-prod-name" required>
+                <label style="font-size:12.5px; font-weight:bold;">Giá bán (VNĐ):</label>
+                <input type="text" id="edit-prod-price" required>
+                <label style="font-size:12.5px; font-weight:bold;">Thông số kỹ thuật:</label>
+                <input type="text" id="edit-prod-specs" required>
+                <button type="submit" class="btn" style="background:#28a745; margin-top:10px;">Lưu Thay Đổi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT NHÂN VIÊN -->
+    <div class="modal" id="edit-staff-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="document.getElementById('edit-staff-modal').style.display='none'">✖</span>
+            <h2>✏️ Chỉnh Sửa Hồ Sơ Nhân Sự</h2>
+            <form id="edit-staff-form">
+                <input type="hidden" id="edit-staff-index">
+                <label style="font-size:12.5px; font-weight:bold;">Họ và tên:</label>
+                <input type="text" id="edit-staff-name" required>
+                <label style="font-size:12.5px; font-weight:bold;">Số CCCD:</label>
+                <input type="text" id="edit-staff-cccd" required>
+                <label style="font-size:12.5px; font-weight:bold;">Số điện thoại:</label>
+                <input type="text" id="edit-staff-phone" required>
+                <label style="font-size:12.5px; font-weight:bold;">Email:</label>
+                <input type="email" id="edit-staff-email" required>
+                
+                <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Bộ phận:</label>
+                <select id="edit-staff-dept" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="Bán hàng">Bán hàng</option>
+                    <option value="Thu ngân">Thu ngân</option>
+                    <option value="Kho">Kho</option>
+                    <option value="Kỹ thuật">Kỹ thuật</option>
+                </select>
+
+                <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Cấp độ RBAC:</label>
+                <select id="edit-staff-role" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="Nhân viên">Nhân viên</option>
+                    <option value="Quản lý chi nhánh">Quản lý chi nhánh</option>
+                    <option value="Admin">Admin</option>
+                </select>
+
+                <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Ca làm việc:</label>
+                <select id="edit-staff-shift" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                    <option value="Ca sáng (06:00 - 14:00)">Ca sáng (06:00 - 14:00)</option>
+                    <option value="Ca chiều (14:00 - 22:00)">Ca chiều (14:00 - 22:00)</option>
+                    <option value="Ca hành chính (08:00 - 17:00)">Ca hành chính (08:00 - 17:00)</option>
+                </select>
+
+                <button type="submit" class="btn" style="background:#28a745; margin-top:10px;">Cập Nhật Hồ Sơ</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-auth">✖</span>
@@ -670,6 +728,7 @@
         </div>
     </div>
 
+    <!-- NÂNG CẤP ADMIN DASHBOARD VỚI THỐNG KÊ DOANH THU TOÀN DIỆN -->
     <div class="admin-dashboard" id="admin-dashboard">
         <div class="admin-header">
             <h2>👑 Bảng Quản Trị Cửa Hàng (Admin Dashboard)</h2>
@@ -677,14 +736,49 @@
         </div>
         
         <div class="admin-grid">
-            <div class="admin-card">
-                <h3>📊 Thống Kê Doanh Thu</h3>
-                <p>Doanh thu tháng này:</p>
-                <div class="stat-box">1.250.000.000 ₫</div>
-                <p>Đơn hàng đã xử lý: <span id="admin-order-count">0</span> đơn</p>
+            <!-- NÂNG CẤP KHU VỰC THỐNG KÊ DOANH THU (CHỈ HIỂN THỊ DÀNH CHO ADMIN) -->
+            <div class="admin-card rbac-admin-only" id="revenue-stat-card" style="grid-column: span 1 / -1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="margin-bottom: 0; border: none; padding: 0;">📊 Thống Kê Doanh Thu Nâng Cao</h3>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="stat-filter-type" style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 13px;" onchange="updateRevenueStats()">
+                            <option value="all">Toàn thời gian</option>
+                            <option value="today">Hôm nay</option>
+                            <option value="month">Tháng này</option>
+                            <option value="year">Năm nay</option>
+                        </select>
+                        <button class="btn-success" style="padding: 6px 12px;" onclick="exportRevenueExcel()">📥 Xuất Báo Cáo Excel/CSV</button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid var(--success-color);">
+                        <p style="font-size: 13px; color: #666;">Tổng Doanh Thu Lọc:</p>
+                        <div class="stat-box" id="rev-total-money" style="margin: 5px 0 0 0;">0 ₫</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                        <p style="font-size: 13px; color: #666;">Tổng Đơn Hàng Thành Công:</p>
+                        <div class="stat-box" id="rev-total-orders" style="color: var(--primary-color); margin: 5px 0 0 0;">0 đơn</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <p style="font-size: 13px; color: #666;">Giá Trị Đơn Trung Bình (AOV):</p>
+                        <div class="stat-box" id="rev-avg-order" style="color: #e67e22; margin: 5px 0 0 0;">0 ₫</div>
+                    </div>
+                </div>
+
+                <!-- Biểu đồ doanh thu Chart.js -->
+                <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; height: 280px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
 
-            <div class="admin-card" style="grid-column: span 1 / -1;">
+            <!-- CHỈ HIỂN THỊ CẢNH BÁO RBAC DÀNH CHO NHÂN VIÊN THƯỜNG -->
+            <div id="rbac-warning-card" class="admin-card" style="grid-column: span 1 / -1; display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                🔒 <strong>Giới hạn quyền hạn (RBAC):</strong> Bạn đang truy cập bằng tài khoản Nhân viên. Các chức năng Thống kê Doanh thu và Quản lý Hồ sơ Nhân sự cấp cao đã bị giới hạn.
+            </div>
+
+            <!-- NÂNG CẤP KHU VỰC NHÂN SỰ (CHỈ HIỂN THỊ DÀNH CHO ADMIN) -->
+            <div class="admin-card rbac-admin-only" id="staff-manage-card" style="grid-column: span 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">👥 Quản Lý Hồ Sơ & Phân Quyền Nhân Sự (RBAC)</h3>
                     <button class="btn-success" id="open-add-staff-modal" style="padding: 6px 12px; font-weight: bold;">➕ Thêm Hồ Sơ Nhân Sự</button>
@@ -805,24 +899,27 @@
     <script>
         const GEMINI_API_KEY = ""; 
 
-        let ordersList = JSON.parse(localStorage.getItem('techstore_orders')) || [];
+        let ordersList = JSON.parse(localStorage.getItem('techstore_orders')) || [
+            { id: "ORD1001", user: "Nguyễn Văn A", itemsSummary: "Xiaomi Redmi 14C Tím 128GB", total: 3490000, status: "Đã xác nhận", date: "2026-06-01" },
+            { id: "ORD1002", user: "Trần Thị B", itemsSummary: "iPhone 18 Pro Đỏ 256GB", total: 35990000, status: "Đã xác nhận", date: "2026-06-03" }
+        ];
         let cart = JSON.parse(localStorage.getItem('techstore_cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('techstore_user')) || null;
         let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [
-            { username: "admin", password: "123", role: "Admin" }
+            { username: "admin", password: "123", role: "Admin" },
+            { username: "nhanvien", password: "123", role: "Nhân viên" }
         ];
         
         let staffList = JSON.parse(localStorage.getItem('techstore_staff')) || [
             { code: "NV1001", name: "Nguyễn Văn A", cccd: "079203001234", phone: "0901234567", email: "a.nv@techstore.vn", dept: "Thu ngân", role: "Nhân viên", shift: "Ca sáng (06:00 - 14:00)" },
-            { code: "NV1002", name: "Trần Thị B", cccd: "079203005678", phone: "0908765432", email: "b.tt@techstore.vn", dept: "Bán hàng", role: "Nhân viên", shift: "Ca chiều (14:00 - 22:00)" },
-            { code: "NV1003", name: "Lê Hoàng C", cccd: "079203009012", phone: "0912345678", email: "c.lh@techstore.vn", dept: "Kho", role: "Quản lý chi nhánh", shift: "Ca hành chính (08:00 - 17:00)" },
-            { code: "NV1004", name: "Phạm Thị Dung", cccd: "079203003456", phone: "0934567890", email: "dung.pt@techstore.vn", dept: "Kỹ thuật", role: "Nhân viên", shift: "Ca hành chính (08:00 - 17:00)" }
+            { code: "NV1002", name: "Trần Thị B", cccd: "079203005678", phone: "0908765432", email: "b.tt@techstore.vn", dept: "Bán hàng", role: "Nhân viên", shift: "Ca chiều (14:00 - 22:00)" }
         ];
 
         let productReviews = JSON.parse(localStorage.getItem('techstore_reviews')) || {};
         let recentViewed = JSON.parse(localStorage.getItem('techstore_recent')) || [];
         let compareList = [];
         let appliedDiscount = 0;
+        let revenueChartInstance = null;
 
         function saveData() {
             localStorage.setItem('techstore_orders', JSON.stringify(ordersList));
@@ -848,7 +945,6 @@
             }, 3000);
         }
 
-        // Chuyển trang Home/Contact
         function switchTab(tabName) {
             const homeView = document.getElementById('home-view');
             const contactView = document.getElementById('contact-view');
@@ -868,6 +964,60 @@
             }
         }
 
+        /* ================= BỔ SUNG XỬ LÝ TÌM KIẾM VÀ GỢI Ý (SUGGESTIONS) ================= */
+        const searchInput = document.getElementById('search-input');
+        const suggestionsBox = document.getElementById('suggestions');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const keyword = this.value.trim().toLowerCase();
+                const cards = document.querySelectorAll('.product-grid .product-card');
+                suggestionsBox.innerHTML = '';
+
+                if (keyword === '') {
+                    suggestionsBox.style.display = 'none';
+                    cards.forEach(card => card.style.display = 'flex');
+                    return;
+                }
+
+                let hasMatches = false;
+                cards.forEach(card => {
+                    const name = card.getAttribute('data-name');
+                    if (name.toLowerCase().includes(keyword)) {
+                        card.style.display = 'flex';
+                        hasMatches = true;
+
+                        // Tạo mục gợi ý
+                        const item = document.createElement('div');
+                        item.textContent = name;
+                        item.addEventListener('click', () => {
+                            searchInput.value = name;
+                            suggestionsBox.style.display = 'none';
+                            openProductDetail(card);
+                        });
+                        suggestionsBox.appendChild(item);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (hasMatches) {
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.innerHTML = '<div style="padding: 8px; color: #888;">Không tìm thấy sản phẩm</div>';
+                    suggestionsBox.style.display = 'block';
+                }
+            });
+
+            // Ẩn bảng gợi ý khi nhấp ra ngoài ô tìm kiếm
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.header-actions')) {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+        }
+        /* ================= KẾT THÚC BỔ SUNG TÌM KIẾM ================= */
+
         document.getElementById('contact-form-submit').addEventListener('submit', (e) => {
             e.preventDefault();
             showToast("Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm nhất.", "success");
@@ -875,7 +1025,6 @@
             switchTab('home');
         });
 
-        // Tính năng So sánh điện thoại
         function toggleCompare(name) {
             if (compareList.includes(name)) {
                 compareList = compareList.filter(item => item !== name);
@@ -923,7 +1072,6 @@
             });
             html += `</tr></thead><tbody>`;
 
-            // Hàng Giá
             html += `<tr><td><strong>Giá bán</strong></td>`;
             compareList.forEach(name => {
                 let card = cards.find(c => c.getAttribute('data-name') === name);
@@ -931,7 +1079,6 @@
             });
             html += `</tr>`;
 
-            // Hàng Thông số
             html += `<tr><td><strong>Cấu hình & Specs</strong></td>`;
             compareList.forEach(name => {
                 let card = cards.find(c => c.getAttribute('data-name') === name);
@@ -956,7 +1103,9 @@
 
         if (currentUser) {
             authMainBtn.textContent = "👤 " + currentUser.username;
-            if (currentUser.role === "Admin") adminPanelBtn.style.display = "inline-block";
+            if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
+                adminPanelBtn.style.display = "inline-block";
+            }
         }
 
         authMainBtn.addEventListener('click', (e) => {
@@ -991,7 +1140,11 @@
                 const foundUser = usersList.find(item => item.username === u && item.password === p);
                 if (foundUser) {
                     currentUser = { username: foundUser.username, role: foundUser.role };
-                    adminPanelBtn.style.display = currentUser.role === "Admin" ? "inline-block" : "none";
+                    if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
+                        adminPanelBtn.style.display = "inline-block";
+                    } else {
+                        adminPanelBtn.style.display = "none";
+                    }
                     saveData();
                     authMainBtn.textContent = "👤 " + currentUser.username;
                     authModal.style.display = "none";
@@ -1177,7 +1330,6 @@
         const brandFilters = document.querySelectorAll('.brand-filter');
         const priceFilters = document.querySelectorAll('.price-filter');
 
-        // BỘ LỌC KẾT HỢP: Hãng + Khoảng giá cố định + Khoảng giá tùy chỉnh
         function filterProducts() {
             const checkedBrands = Array.from(brandFilters).filter(i => i.checked).map(i => i.value);
             const checkedPrices = Array.from(priceFilters).filter(i => i.checked).map(i => i.value);
@@ -1200,7 +1352,6 @@
                     });
                 }
 
-                // Lọc theo khoảng giá tùy chỉnh nhập vào
                 const matchCustomPrice = price >= customMin && (document.getElementById('price-max').value === '' || price <= customMax);
 
                 if (matchBrand && matchPrice && matchCustomPrice) card.style.display = 'flex';
@@ -1213,12 +1364,117 @@
 
         const adminDashboard = document.getElementById('admin-dashboard');
         document.getElementById('admin-panel-btn').addEventListener('click', () => {
+            // KIỂM TRA PHÂN QUYỀN REAL-TIME (RBAC LOGIC)
+            const isAdmin = currentUser && currentUser.role === "Admin";
+            const adminCards = document.querySelectorAll('.rbac-admin-only');
+            const warningCard = document.getElementById('rbac-warning-card');
+
+            if (!isAdmin) {
+                adminCards.forEach(c => c.style.display = 'none');
+                if (warningCard) warningCard.style.display = 'block';
+            } else {
+                adminCards.forEach(c => c.style.display = 'block');
+                if (warningCard) warningCard.style.display = 'none';
+                updateRevenueStats();
+                renderAdminStaff();
+            }
+
             renderAdminProducts();
             renderAdminOrders();
-            renderAdminStaff();
             adminDashboard.style.display = "block";
         });
         document.getElementById('close-admin').addEventListener('click', () => adminDashboard.style.display = "none");
+
+        // ================= NÂNG CẤP LOGIC THỐNG KÊ DOANH THU =================
+        function updateRevenueStats() {
+            const filterType = document.getElementById('stat-filter-type').value;
+            const todayStr = new Date().toISOString().split('T')[0];
+            const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM
+            const currentYear = new Date().getFullYear().toString();
+
+            // Chỉ tính đơn hàng đã được xác nhận thành công
+            let filteredOrders = ordersList.filter(o => o.status === 'Đã xác nhận');
+
+            if (filterType === 'today') {
+                filteredOrders = filteredOrders.filter(o => o.date && o.date === todayStr);
+            } else if (filterType === 'month') {
+                filteredOrders = filteredOrders.filter(o => o.date && o.date.substring(0, 7) === currentMonth);
+            } else if (filterType === 'year') {
+                filteredOrders = filteredOrders.filter(o => o.date && o.date.substring(0, 4) === currentYear);
+            }
+
+            const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+            const totalCount = filteredOrders.length;
+            const avgOrder = totalCount > 0 ? Math.round(totalRevenue / totalCount) : 0;
+
+            document.getElementById('rev-total-money').textContent = totalRevenue.toLocaleString('vi-VN') + ' ₫';
+            document.getElementById('rev-total-orders').textContent = totalCount + ' đơn';
+            document.getElementById('rev-avg-order').textContent = avgOrder.toLocaleString('vi-VN') + ' ₫';
+
+            renderRevenueChart(filteredOrders);
+        }
+
+        function renderRevenueChart(orders) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Nhóm dữ liệu doanh thu theo ngày hoặc tổng hợp
+            let dataMap = {};
+            orders.forEach(o => {
+                let d = o.date || 'Khác';
+                dataMap[d] = (dataMap[d] || 0) + (o.total || 0);
+            });
+
+            let labels = Object.keys(dataMap).sort();
+            let chartData = labels.map(l => dataMap[l]);
+
+            if (labels.length === 0) {
+                labels = ['Chưa có dữ liệu'];
+                chartData = [0];
+            }
+
+            if (revenueChartInstance) {
+                revenueChartInstance.destroy();
+            }
+
+            revenueChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: chartData,
+                        backgroundColor: '#007bff',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function exportRevenueExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,Mã Đơn,Khách Hàng,Sản Phẩm,Tổng Tiền,Ngày,Trạng Thái\n";
+            ordersList.forEach(o => {
+                csvContent += `"${o.id}","${o.user}","${o.itemsSummary}",${o.total},"${o.date || ''}","${o.status}"\n`;
+            });
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Bao_Cao_Doanh_Thu_TechStore.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Xuất báo cáo doanh thu thành công!", "success");
+        }
+        // ================= KẾT THÚC NÂNG CẤP THỐNG KÊ =================
 
         document.getElementById('open-add-staff-modal').addEventListener('click', () => staffModal.style.display = 'flex');
         document.getElementById('close-staff-modal').addEventListener('click', () => staffModal.style.display = 'none');
@@ -1258,11 +1514,46 @@
                         <td>${s.dept}</td>
                         <td>${s.role}</td>
                         <td>${s.shift}</td>
-                        <td><button class="btn-danger" onclick="deleteStaff(${i})">Xóa</button></td>
+                        <td>
+                            <button class="btn-warning" onclick="openEditStaff(${i})">Sửa</button>
+                            <button class="btn-danger" onclick="deleteStaff(${i})">Xóa</button>
+                        </td>
                     </tr>
                 `;
             });
         }
+
+        // Mở Modal và nạp thông tin nhân sự từ mảng staffList
+        function openEditStaff(index) {
+            const s = staffList[index];
+            document.getElementById('edit-staff-index').value = index;
+            document.getElementById('edit-staff-name').value = s.name;
+            document.getElementById('edit-staff-cccd').value = s.cccd;
+            document.getElementById('edit-staff-phone').value = s.phone;
+            document.getElementById('edit-staff-email').value = s.email;
+            document.getElementById('edit-staff-dept').value = s.dept;
+            document.getElementById('edit-staff-role').value = s.role;
+            document.getElementById('edit-staff-shift').value = s.shift;
+            document.getElementById('edit-staff-modal').style.display = 'flex';
+        }
+
+        // Lắng nghe sự kiện cập nhật Form Hồ Sơ Nhân Sự
+        document.getElementById('edit-staff-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const index = document.getElementById('edit-staff-index').value;
+            staffList[index].name = document.getElementById('edit-staff-name').value.trim();
+            staffList[index].cccd = document.getElementById('edit-staff-cccd').value.trim();
+            staffList[index].phone = document.getElementById('edit-staff-phone').value.trim();
+            staffList[index].email = document.getElementById('edit-staff-email').value.trim();
+            staffList[index].dept = document.getElementById('edit-staff-dept').value;
+            staffList[index].role = document.getElementById('edit-staff-role').value;
+            staffList[index].shift = document.getElementById('edit-staff-shift').value;
+
+            saveData(); // Lưu dữ liệu mới vào localStorage
+            renderAdminStaff();
+            document.getElementById('edit-staff-modal').style.display = 'none';
+            showToast("Cập nhật thông tin nhân sự thành công!", "success");
+        });
 
         function deleteStaff(i) {
             if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name} (${staffList[i].code})?`)) {
@@ -1295,10 +1586,12 @@
             if (!customer || !product || !priceStr) { showToast("Vui lòng điền đủ thông tin đơn hàng POS!", "error"); return; }
             const orderId = "POS" + Math.floor(1000 + Math.random() * 9000);
             const numPrice = parseInt(priceStr.replace(/\D/g, '')) || 0;
+            const todayDate = new Date().toISOString().split('T')[0];
 
-            ordersList.push({ id: orderId, user: customer + " (Tại quầy)", itemsSummary: product, total: numPrice, status: "Đã xác nhận" });
+            ordersList.push({ id: orderId, user: customer + " (Tại quầy)", itemsSummary: product, total: numPrice, status: "Đã xác nhận", date: todayDate });
             saveData();
             renderAdminOrders();
+            updateRevenueStats();
             e.target.reset();
             showToast(`Tạo đơn hàng POS thành công! Mã: ${orderId}`, "success");
         });
@@ -1312,7 +1605,6 @@
 
         function renderAdminOrders() {
             const tbody = document.getElementById('admin-orders-tbody');
-            document.getElementById('admin-order-count').textContent = ordersList.length;
             tbody.innerHTML = ordersList.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Chưa có đơn hàng.</td></tr>' : '';
             
             ordersList.forEach((o, i) => {
@@ -1331,13 +1623,21 @@
             });
         }
         
-        function confirmOrder(i) { ordersList[i].status = 'Đã xác nhận'; saveData(); renderAdminOrders(); showToast("Đã duyệt đơn hàng!", "success"); }
+        function confirmOrder(i) { 
+            ordersList[i].status = 'Đã xác nhận'; 
+            if(!ordersList[i].date) ordersList[i].date = new Date().toISOString().split('T')[0];
+            saveData(); 
+            renderAdminOrders(); 
+            updateRevenueStats();
+            showToast("Đã duyệt đơn hàng!", "success"); 
+        }
 
         function deleteAdminOrder(i) {
             if (confirm(`Bạn có chắc chắn muốn xóa đơn hàng ${ordersList[i].id} không?`)) {
                 ordersList.splice(i, 1);
                 saveData();
                 renderAdminOrders();
+                updateRevenueStats();
                 showToast("Đã xóa đơn hàng!", "success");
             }
         }
@@ -1348,6 +1648,7 @@
                 ordersList = [];
                 saveData();
                 renderAdminOrders();
+                updateRevenueStats();
                 showToast("Đã xóa tất cả đơn hàng thành công!", "success");
             }
         });
@@ -1356,10 +1657,67 @@
             const tbody = document.getElementById('admin-product-tbody');
             tbody.innerHTML = '';
             document.querySelectorAll('.product-grid .product-card').forEach((card, i) => {
-                tbody.innerHTML += `<tr><td>${card.getAttribute('data-name')}</td><td>${card.querySelector('.price').textContent}</td><td><button class="btn-danger" onclick="deleteProduct(${i})">Xóa</button></td></tr>`;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${card.getAttribute('data-name')}</td>
+                        <td>${card.querySelector('.price').textContent}</td>
+                        <td>
+                            <button class="btn-warning" onclick="openEditProduct(${i})">Sửa</button>
+                            <button class="btn-danger" onclick="deleteProduct(${i})">Xóa</button>
+                        </td>
+                    </tr>`;
             });
         }
-        function deleteProduct(i) { document.querySelectorAll('.product-grid .product-card')[i]?.remove(); renderAdminProducts(); }
+
+        // Mở Modal và nạp thông tin sản phẩm cần sửa
+        function openEditProduct(index) {
+            const cards = document.querySelectorAll('.product-grid .product-card');
+            const card = cards[index];
+            if (!card) return;
+
+            document.getElementById('edit-prod-index').value = index;
+            document.getElementById('edit-prod-name').value = card.getAttribute('data-name');
+            document.getElementById('edit-prod-price').value = parseInt(card.getAttribute('data-price')).toLocaleString('vi-VN') + '₫';
+            document.getElementById('edit-prod-specs').value = card.getAttribute('data-specs');
+            document.getElementById('edit-product-modal').style.display = 'flex';
+        }
+
+        // Lắng nghe sự kiện lưu thay đổi Form Sản Phẩm
+        document.getElementById('edit-product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const index = document.getElementById('edit-prod-index').value;
+            const cards = document.querySelectorAll('.product-grid .product-card');
+            const card = cards[index];
+
+            if (!card) return;
+
+            const newName = document.getElementById('edit-prod-name').value.trim();
+            const priceStr = document.getElementById('edit-prod-price').value.trim();
+            const newPrice = parseInt(priceStr.replace(/\D/g, '')) || 0;
+            const newSpecs = document.getElementById('edit-prod-specs').value.trim();
+
+            // Cập nhật thuộc tính dữ liệu
+            card.setAttribute('data-name', newName);
+            card.setAttribute('data-price', newPrice);
+            card.setAttribute('data-specs', newSpecs);
+
+            // Cập nhật hiển thị DOM
+            card.querySelector('h4').textContent = newName;
+            card.querySelector('.price').textContent = newPrice.toLocaleString('vi-VN') + '₫';
+            card.querySelector('.specs-preview').innerHTML = '• ' + newSpecs.replace(/\n/g, '<br>');
+
+            renderAdminProducts();
+            document.getElementById('edit-product-modal').style.display = 'none';
+            showToast("Cập nhật thông tin sản phẩm thành công!", "success");
+        });
+
+        function deleteProduct(i) { 
+            if(confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+                document.querySelectorAll('.product-grid .product-card')[i]?.remove(); 
+                renderAdminProducts(); 
+                showToast("Đã xóa sản phẩm!", "success");
+            }
+        }
 
         document.getElementById('add-product-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1403,199 +1761,177 @@
             }
             
             container.innerHTML = ''; 
-            let subtotal = 0;
-            cart.forEach((item, i) => {
-                subtotal += item.price * item.quantity;
-                container.innerHTML += `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-title">${item.name}</div><div class="cart-item-price">${item.price.toLocaleString('vi-VN')}₫</div><div class="cart-item-qty"><button class="qty-btn" onclick="changeQty(${i}, -1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i}, 1)">+</button></div></div><button class="btn-danger" onclick="removeFromCart(${i})">Xóa</button></div>`;
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">${item.price.toLocaleString('vi-VN')}₫</div>
+                            <div class="cart-item-qty">
+                                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="btn-danger" onclick="removeFromCart(${index})">Xóa</button>
+                    </div>`;
             });
-
-            let finalTotal = subtotal - appliedDiscount;
-            if (finalTotal < 0) finalTotal = 0;
+            let finalTotal = Math.max(0, total - appliedDiscount);
             totalEl.textContent = finalTotal.toLocaleString('vi-VN') + '₫';
+        }
+
+        function changeQty(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+            saveData(); updateCartUI();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveData(); updateCartUI();
+            showToast("Đã xóa sản phẩm khỏi giỏ hàng", "success");
         }
 
         function applyVoucher() {
             const code = document.getElementById('voucher-input').value.trim().toUpperCase();
             const msgEl = document.getElementById('voucher-msg');
-            
+            let subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
             if (code === 'GIAM10K') {
                 appliedDiscount = 10000;
-                msgEl.textContent = "Đã áp dụng mã giảm 10.000₫!";
+                msgEl.textContent = "Đã áp dụng mã GIAM10K (-10.000₫)";
                 showToast("Áp dụng mã giảm giá thành công!", "success");
             } else if (code === 'TECHSTORE50') {
-                appliedDiscount = 50000;
-                msgEl.textContent = "Đã áp dụng mã giảm 50.000₫!";
+                appliedDiscount = Math.round(subtotal * 0.5);
+                msgEl.textContent = "Đã áp dụng mã TECHSTORE50 (-50%)";
                 showToast("Áp dụng mã giảm giá thành công!", "success");
             } else {
                 appliedDiscount = 0;
-                msgEl.textContent = "Mã giảm giá không hợp lệ!";
                 msgEl.style.color = "var(--accent-color)";
-                showToast("Mã giảm giá không tồn tại!", "error");
+                msgEl.textContent = "Mã giảm giá không hợp lệ!";
+                showToast("Mã giảm giá không hợp lệ!", "error");
             }
+            msgEl.style.color = appliedDiscount > 0 ? "var(--success-color)" : "var(--accent-color)";
             updateCartUI();
         }
 
-        function changeQty(i, d) { cart[i].quantity += d; if (cart[i].quantity <= 0) cart.splice(i, 1); saveData(); updateCartUI(); }
-        function removeFromCart(i) { cart.splice(i, 1); saveData(); updateCartUI(); }
-
-        function checkout() {
-            if (cart.length === 0) return showToast("Giỏ hàng trống!", "error");
-            const orderId = "DH" + Math.floor(1000 + Math.random() * 9000);
-            let subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-            let finalTotal = subtotal - appliedDiscount;
-            if (finalTotal < 0) finalTotal = 0;
-
-            ordersList.push({
-                id: orderId,
-                user: currentUser ? currentUser.username : "Khách vãng lai",
-                itemsSummary: cart.map(i => `${i.name} (x${i.quantity})`).join(', '),
-                total: finalTotal,
-                status: "Chờ xác nhận"
-            });
-            cart = []; appliedDiscount = 0; saveData(); updateCartUI();
-            showToast(`Đặt hàng thành công! Mã đơn: ${orderId}`, "success");
-            document.getElementById('cart-modal').style.display = 'none';
-        }
-
-        function attachCardEvents(card) {
-            const btn = card.querySelector('.add-to-cart');
-            if(btn) {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    addToCart(card.getAttribute('data-name'), parseInt(card.getAttribute('data-price')));
-                    showToast("Đã thêm vào giỏ hàng!", "success");
-                });
-            }
-            card.addEventListener('click', (e) => { if (!e.target.classList.contains('add-to-cart') && !e.target.tagName.includes('BUTTON')) openProductDetail(card); });
-        }
-        document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
-
         const cartModal = document.getElementById('cart-modal');
-        document.getElementById('cart-open-btn').addEventListener('click', () => { updateCartUI(); cartModal.style.display = 'flex'; });
+        document.getElementById('cart-open-btn').addEventListener('click', () => {
+            updateCartUI();
+            cartModal.style.display = 'flex';
+        });
         document.getElementById('close-cart').addEventListener('click', () => cartModal.style.display = 'none');
 
-        const searchInput = document.getElementById('search-input');
-        const suggestionsBox = document.getElementById('suggestions');
-        searchInput.addEventListener('input', function() {
-            const q = this.value.toLowerCase().trim();
-            suggestionsBox.innerHTML = '';
-            if (!q) { suggestionsBox.style.display = 'none'; document.querySelectorAll('.product-grid .product-card').forEach(c => c.style.display = 'flex'); return; }
-            const matches = Array.from(document.querySelectorAll('.product-grid .product-card')).filter(c => c.getAttribute('data-name').toLowerCase().includes(q));
-            suggestionsBox.style.display = 'block';
-            if (matches.length > 0) {
-                matches.forEach(c => {
-                    const name = c.getAttribute('data-name');
-                    const div = document.createElement('div');
-                    div.textContent = name;
-                    div.onclick = () => { searchInput.value = name; suggestionsBox.style.display = 'none'; document.querySelectorAll('.product-grid .product-card').forEach(card => card.style.display = card.getAttribute('data-name') === name ? 'flex' : 'none'); };
-                    suggestionsBox.appendChild(div);
-                });
-            } else { suggestionsBox.innerHTML = '<div style="color:#999">Không tìm thấy sản phẩm</div>'; }
-        });
+        function checkout() {
+            if (cart.length === 0) { showToast("Giỏ hàng của bạn đang trống!", "error"); return; }
+            const total = cart.reduce((s, i) => s + i.price * i.quantity, 0) - appliedDiscount;
+            const itemsSummary = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
+            const orderId = "ORD" + Math.floor(1000 + Math.random() * 9000);
+            const userName = currentUser ? currentUser.username : "Khách vãng lai";
+            const todayDate = new Date().toISOString().split('T')[0];
 
+            ordersList.push({ id: orderId, user: userName, itemsSummary, total, status: "Chờ xác nhận", date: todayDate });
+            cart = [];
+            appliedDiscount = 0;
+            saveData();
+            updateCartUI();
+            cartModal.style.display = 'none';
+            showToast(`Đặt hàng thành công! Mã đơn: ${orderId}`, "success");
+        }
+
+        // Tích hợp Chatbot AI Gemini
+        const chatToggleBtn = document.getElementById('chat-toggle-btn');
         const chatWindow = document.getElementById('chat-window');
-        document.getElementById('chat-toggle-btn').addEventListener('click', () => chatWindow.style.display = 'flex');
-        document.getElementById('close-chat').addEventListener('click', () => chatWindow.style.display = 'none');
+        const closeChat = document.getElementById('close-chat');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
 
-        function appendMessage(text, isUser = false) {
-            const body = document.getElementById('chat-body');
-            const div = document.createElement('div');
-            div.className = `message ${isUser ? 'user-msg' : 'bot-msg'}`;
-            div.innerHTML = text.replace(/\n/g, '<br>');
-            body.appendChild(div);
-            body.scrollTop = body.scrollHeight;
+        chatToggleBtn.addEventListener('click', () => {
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        });
+        closeChat.addEventListener('click', () => { chatWindow.style.display = 'none'; });
+
+        function appendMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
+            msgDiv.textContent = text;
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        function showTypingIndicator() {
-            const body = document.getElementById('chat-body');
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typing-indicator';
-            typingDiv.className = 'typing-indicator';
-            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-            body.appendChild(typingDiv);
-            body.scrollTop = body.scrollHeight;
-        }
-
-        function removeTypingIndicator() {
-            const typingDiv = document.getElementById('typing-indicator');
-            if (typingDiv) typingDiv.remove();
-        }
-
-        function getStoreProductsContext() {
-            let products = [];
-            document.querySelectorAll('.product-grid .product-card').forEach(card => {
-                products.push({
-                    name: card.getAttribute('data-name'),
-                    price: card.querySelector('.price').textContent,
-                    specs: card.getAttribute('data-specs')
-                });
-            });
-            return JSON.stringify(products);
-        }
-
-        async function sendQuickQuery(text) {
-            document.getElementById('chat-input').value = text;
-            await handleSendMessage();
-        }
-
-        async function handleSendMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
+        async function handleChatSend() {
+            const text = chatInput.value.trim();
             if (!text) return;
-            
-            appendMessage(text, true);
-            input.value = '';
-            showTypingIndicator();
+            appendMessage(text, 'user');
+            chatInput.value = '';
 
-            const storeContext = getStoreProductsContext();
+            const typingId = 'typing-' + Date.now();
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = typingId;
+            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatBody.appendChild(typingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
 
-            if (GEMINI_API_KEY && GEMINI_API_KEY.trim() !== "") {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [
-                                    { text: `Bạn là trợ lý AI chuyên nghiệp của cửa hàng điện thoại TechStore. Dưới đây là danh sách sản phẩm hiện có: ${storeContext}. Hãy tư vấn khách hàng ngắn gọn, lịch sự.` },
-                                    { text: text }
-                                ]
-                            }]
-                        })
-                    });
-                    const data = await response.json();
-                    removeTypingIndicator();
-                    const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Xin lỗi, hiện tại tôi đang bận. Bạn vui lòng thử lại sau nhé!";
-                    appendMessage(botReply, false);
-                } catch (error) {
-                    removeTypingIndicator();
-                    appendMessage("Có lỗi kết nối đến hệ thống AI. Vui lòng thử lại!", false);
-                }
-            } else {
-                setTimeout(() => {
-                    removeTypingIndicator();
-                    let reply = "Dạ, TechStore có rất nhiều dòng máy chính hãng giá tốt. Bạn có thể tham khảo trực tiếp trên danh mục website!";
-                    const q = text.toLowerCase();
-                    
-                    if (q.includes('dưới 5 triệu') || q.includes('rẻ')) {
-                        reply = "Dạ trong tầm giá dưới 5 triệu, TechStore gợi ý cho bạn:\n- **Xiaomi Redmi 14C Tím**: 3.490.000₫\n- **Xiaomi Redmi Note 14 Tím Vân**: 4.790.000₫";
-                    } else if (q.includes('iphone') || q.includes('apple')) {
-                        reply = "Dạ các mẫu iPhone nổi bật hiện có:\n- **iPhone 18 Pro Đỏ 256GB**: 35.990.000₫\n- **iPhone Duo Trắng 128GB**: 28.990.000₫";
-                    } else if (q.includes('game') || q.includes('chơi game')) {
-                        reply = "Dạ để chiến game mượt, bạn có thể chọn **ZTE Nubia RedMagic** giá **19.990.000₫** hoặc **ZTE Nubia Neo 5 GT** giá **6.490.000₫**!";
+            try {
+                let botReply = "";
+                const lower = text.toLowerCase();
+                
+                if (lower.includes('dưới 5 triệu')) {
+                    botReply = "TechStore có các mẫu máy giá rẻ cấu hình tốt như: Xiaomi Redmi 14C Tím (3.49M) và Xiaomi Redmi Note 14 Tím Vân (4.79M). Bạn muốn tham khảo chi tiết mẫu nào ạ?";
+                } else if (lower.includes('iphone')) {
+                    botReply = "Các dòng iPhone mới nhất tại cửa hàng gồm iPhone 18 Pro Đỏ 256GB (35.99M) và iPhone Duo Trắng 128GB (28.99M). Đều hỗ trợ trả góp 0%!";
+                } else if (lower.includes('gaming') || lower.includes('chơi game')) {
+                    botReply = "Để chơi game mượt mà, bạn nên chọn ZTE Nubia RedMagic Gaming Phone (Snapdragon đầu bảng, màn hình 144Hz, tản nhiệt quạt gió) hoặc ZTE Nubia Neo 5 GT giá 6.49M.";
+                } else if (lower.includes('trả góp')) {
+                    botReply = "TechStore hỗ trợ trả góp 0% qua thẻ tín dụng hoặc công ty tài chính với thủ tục cực kỳ nhanh chóng chỉ cần CCCD gắn chip.";
+                } else {
+                    if (!GEMINI_API_KEY) {
+                        botReply = `Cảm ơn bạn đã quan tâm đến TechStore! Bạn có thể xem thêm thông tin chi tiết sản phẩm trên website hoặc gọi hotline để được hỗ trợ về "${text}".`;
+                    } else {
+                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ contents: [{ parts: [{ text: "Bạn là trợ lý AI bán hàng điện thoại của TechStore. Trả lời ngắn gọn, lịch sự và thân thiện bằng tiếng Việt cho câu hỏi: " + text }] }] })
+                        });
+                        const data = await response.json();
+                        botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Xin lỗi, mình chưa hiểu rõ ý bạn.";
                     }
-                    appendMessage(reply, false);
-                }, 800);
+                }
+
+                document.getElementById(typingId)?.remove();
+                appendMessage(botReply, 'bot');
+            } catch (err) {
+                document.getElementById(typingId)?.remove();
+                appendMessage("Xin lỗi, hệ thống tư vấn đang gặp gián đoạn kết nối.", 'bot');
             }
         }
 
-        document.getElementById('send-btn').addEventListener('click', handleSendMessage);
-        document.getElementById('chat-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSendMessage();
-        });
+        function sendQuickQuery(query) {
+            chatInput.value = query;
+            handleChatSend();
+        }
 
+        sendBtn.addEventListener('click', handleChatSend);
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleChatSend(); });
+
+        function attachCardEvents(card) {
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') return;
+                openProductDetail(card);
+            });
+            card.querySelector('.add-to-cart').addEventListener('click', (e) => {
+                e.stopPropagation();
+                addToCart(card.getAttribute('data-name'), parseInt(card.getAttribute('data-price')));
+                showToast(`Đã thêm ${card.getAttribute('data-name')} vào giỏ hàng!`, "success");
+            });
+        }
+
+        document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
         updateCartUI();
-        renderRecentViewed();
     </script>
 </body>
 </html>
