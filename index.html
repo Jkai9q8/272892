@@ -198,7 +198,7 @@
         /* Layout Main Grid */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
         
-        /* Sidebar lọc */
+        /* Sidebar lọc (Tối ưu cố định cho PC) */
         .sidebar { background: #fff; padding: 15px; border-radius: 10px; height: fit-content; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .sidebar h3 { margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 6px; }
         .filter-group { margin-bottom: 15px; }
@@ -332,6 +332,16 @@
         .add-product-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .add-product-form input { padding: 7px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
 
+        /* ================= TỐI ƯU HÓA RESPONSIVE RIÊNG CHO PC & MOBILE ================= */
+        @media (min-width: 769px) {
+            /* Giữ sidebar cố định thông minh khi cuộn trang trên PC */
+            .sidebar {
+                position: sticky;
+                top: 80px;
+                align-self: start;
+            }
+        }
+
         @media (max-width: 768px) { 
             header { flex-direction: column; align-items: stretch; padding: 10px 3%; gap: 8px; }
             .logo { text-align: center; font-size: 20px; }
@@ -356,7 +366,10 @@
             .product-card h4 { font-size: 13.5px; height: 35px; }
             .price { font-size: 14.5px; }
             .specs-preview { display: none; }
-            .btn { padding: 6px 8px; font-size: 12.5px; }
+            
+            /* Tăng kích thước vùng chạm nút bấm trên mobile */
+            .btn { padding: 10px 10px; font-size: 13.5px; }
+            .qty-btn { width: 28px; height: 28px; font-size: 14px; }
 
             .add-product-form { grid-template-columns: 1fr; }
             .add-product-form button { grid-column: span 1 !important; }
@@ -1010,7 +1023,6 @@
         let wishlist = JSON.parse(localStorage.getItem('techstore_wishlist')) || [];
         let currentUser = JSON.parse(localStorage.getItem('techstore_user')) || null;
         
-        // Khởi tạo danh sách tài khoản, đảm bảo tài khoản nhân viên (nhanvien) có mật khẩu giống admin (123)
         let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [];
         const defaultUsers = [
             { username: "admin", password: "123", role: "Admin" },
@@ -1020,7 +1032,6 @@
             if (!usersList.some(u => u.username === defU.username)) {
                 usersList.push(defU);
             } else {
-                // Đồng bộ mật khẩu nếu tài khoản đã tồn tại nhưng khác mật khẩu
                 let existing = usersList.find(u => u.username === defU.username);
                 if (existing) existing.password = defU.password;
             }
@@ -1081,11 +1092,9 @@
             }
         }
 
-        // ================= DARK MODE & WISHLIST LOGIC =================
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeText = document.getElementById('theme-text');
 
-        // Khởi tạo giao diện Sáng / Tối từ localStorage
         const currentTheme = localStorage.getItem('techstore_theme');
         if (currentTheme === 'dark') {
             document.body.classList.add('dark-mode');
@@ -1175,9 +1184,7 @@
         });
         document.getElementById('close-wishlist').addEventListener('click', () => wishlistModal.style.display = 'none');
         document.getElementById('close-wishlist-btn').addEventListener('click', () => wishlistModal.style.display = 'none');
-        // ================= KẾT THÚC DARK MODE & WISHLIST =================
 
-        /* ================= TÌM KIẾM VÀ GỢI Ý ================= */
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('suggestions');
 
@@ -2043,7 +2050,6 @@
             showToast(`Đặt hàng thành công! Mã đơn: ${orderId}`, "success");
         }
 
-        // Chatbot AI Gemini
         const chatToggleBtn = document.getElementById('chat-toggle-btn');
         const chatWindow = document.getElementById('chat-window');
         const closeChat = document.getElementById('close-chat');
@@ -2134,7 +2140,6 @@
 
         document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
         
-        // Khởi chạy đồng bộ trạng thái khi load trang
         updateCartUI();
         updateWishlistUI();
         updateWishlistIcons();
