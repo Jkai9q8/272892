@@ -16,8 +16,86 @@
             --success-color: #28a745;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; }
+        body { background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s; }
         
+        /* ================= CHẾ ĐỘ TỐI (DARK MODE) ================= */
+        body.dark-mode {
+            --primary-color: #3b82f6;
+            --secondary-color: #121212;
+            --text-color: #f3f4f6;
+            --admin-bg: #1e1e1e;
+            background-color: #18181b;
+            color: var(--text-color);
+        }
+
+        body.dark-mode header,
+        body.dark-mode .sidebar,
+        body.dark-mode .product-card,
+        body.dark-mode .admin-card,
+        body.dark-mode .modal-content,
+        body.dark-mode .contact-page {
+            background-color: #242428;
+            color: #f3f4f6;
+            border-color: #333;
+        }
+
+        body.dark-mode .Header-actions input[type="text"],
+        body.dark-mode .modal-content input,
+        body.dark-mode .modal-content select,
+        body.dark-mode .contact-page input,
+        body.dark-mode .contact-page textarea,
+        body.dark-mode .location-selector select,
+        body.dark-mode .chat-footer input,
+        body.dark-mode .review-input-box input,
+        body.dark-mode .voucher-box input {
+            background-color: #2a2a2e;
+            color: #fff;
+            border-color: #444;
+        }
+
+        body.dark-mode .cart-btn-header,
+        body.dark-mode .auth-btn {
+            border-color: #444;
+            color: #f3f4f6;
+        }
+        body.dark-mode .cart-btn-header:hover {
+            background: #333;
+        }
+
+        body.dark-mode .specs-preview {
+            background: #1a1a1e;
+            color: #b0b0b5;
+        }
+
+        body.dark-mode .chat-window,
+        body.dark-mode .chat-body,
+        body.dark-mode .chat-footer,
+        body.dark-mode .chat-quick-replies {
+            background: #1e1e22;
+            color: #f3f4f6;
+        }
+        body.dark-mode .bot-msg {
+            background: #2a2a2e;
+            color: #fff;
+            border-color: #444;
+        }
+
+        /* Nút Thả tim (Wishlist) trên thẻ sản phẩm */
+        .wishlist-btn {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            transition: transform 0.2s;
+        }
+        .wishlist-btn:hover {
+            transform: scale(1.2);
+        }
+
         /* Toast Notification Container */
         #toast-container {
             position: fixed;
@@ -84,7 +162,7 @@
             white-space: nowrap;
         }
         .cart-btn-header:hover { background: #f0f0f0; }
-        #cart-count { background: var(--accent-color); color: white; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: bold; }
+        #cart-count, #wishlist-count { background: var(--accent-color); color: white; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: bold; }
         
         .user-menu-container { position: relative; }
         .auth-btn, .admin-btn { padding: 8px 12px; border-radius: 20px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: bold; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
@@ -109,7 +187,7 @@
 
         /* Gợi ý tìm kiếm */
         .search-suggestions { position: absolute; top: 40px; left: 0; background: white; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 5px; display: none; z-index: 1100; max-height: 200px; overflow-y: auto; }
-        .search-suggestions div { padding: 8px 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 13px; }
+        .search-suggestions div { padding: 8px 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 13px; color: #333; }
         .search-suggestions div:hover { background: var(--secondary-color); }
 
         /* Banner */
@@ -158,10 +236,8 @@
 
         /* Giao diện So sánh điện thoại */
         .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #333; color: white; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1500; }
-        .compare-list-preview { display: flex; gap: 10px; }
-        .compare-thumb { width: 40px; height: 40px; background: #fff; border-radius: 4px; object-fit: contain; }
 
-        /* ================= CHATBOT AI NÂNG CẤP ================= */
+        /* ================= CHATBOT AI ================= */
         .chat-toggle-btn { 
             position: fixed; bottom: 20px; right: 20px; 
             background: linear-gradient(135deg, var(--primary-color), #4dabf7); 
@@ -220,7 +296,7 @@
         .review-input-box { display: flex; gap: 5px; margin-top: 8px; }
         .review-input-box input { flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; margin: 0; }
         .review-list { max-height: 120px; overflow-y: auto; margin-top: 8px; font-size: 12.5px; background: #fafafa; padding: 8px; border-radius: 5px; }
-        .review-item { border-bottom: 1px solid #eee; padding-bottom: 4px; margin-bottom: 4px; }
+        .review-item { border-bottom: 1px solid #eee; padding-bottom: 4px; margin-bottom: 4px; color: #333; }
 
         .modal-content input { width: 100%; padding: 9px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; }
         .switch-auth { margin-top: 8px; font-size: 12.5px; text-align: center; }
@@ -231,7 +307,7 @@
         .cart-item-title { font-weight: bold; font-size: 13.5px; }
         .cart-item-price { color: var(--accent-color); font-size: 12.5px; }
         .cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-        .qty-btn { background: #eee; border: none; width: 22px; height: 22px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .qty-btn { background: #eee; border: none; width: 22px; height: 22px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px; color: #333; }
         
         .voucher-box { display: flex; gap: 8px; margin: 12px 0; }
         .voucher-box input { margin: 0; }
@@ -248,7 +324,7 @@
         
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px; min-width: 550px; }
         .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
-        .admin-table th { background-color: var(--secondary-color); }
+        .admin-table th { background-color: var(--secondary-color); color: #333; }
         
         .btn-danger { background: var(--accent-color); padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
         .btn-success { background: #28a745; padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
@@ -326,6 +402,16 @@
                 <div id="suggestions" class="search-suggestions"></div>
             </div>
             
+            <!-- Nút Chuyển đổi Sáng / Tối -->
+            <button class="cart-btn-header" id="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
+                🌙 <span id="theme-text">Tối</span>
+            </button>
+
+            <!-- Nút danh sách Yêu thích -->
+            <button class="cart-btn-header" id="wishlist-open-btn" title="Sản phẩm yêu thích">
+                ❤️ <span id="wishlist-count">0</span>
+            </button>
+
             <button class="cart-btn-header" id="cart-open-btn">
                 🛒 <span id="cart-count">0</span>
             </button>
@@ -379,6 +465,7 @@
 
         <main class="product-grid" id="product-list">
             <div class="product-card" data-name="ZTE Nubia RedMagic Gaming Phone" data-price="19990000" data-specs="• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh">
+                <button class="wishlist-btn" onclick="toggleWishlist('ZTE Nubia RedMagic Gaming Phone', 19990000, 'images.jpg', '• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh')" title="Yêu thích">🤍</button>
                 <img src="images.jpg" alt="ZTE Nubia RedMagic Gaming Phone">
                 <h4>ZTE Nubia RedMagic Gaming Phone</h4>
                 <div class="price">19.990.000₫</div>
@@ -390,6 +477,7 @@
             </div>
 
             <div class="product-card" data-name="Xiaomi Redmi 14C Tím" data-price="3490000" data-specs="• 6.88&quot; 120Hz, Chip Helio G81-Ultra, Pin 5160 mAh, Camera AI">
+                <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi Redmi 14C Tím', 3490000, 'images (1).jpg', '• 6.88&quot; 120Hz, Chip Helio G81-Ultra, Pin 5160 mAh, Camera AI')" title="Yêu thích">🤍</button>
                 <img src="images (1).jpg" alt="Xiaomi Redmi 14C Tím">
                 <h4>Xiaomi Redmi 14C Tím 128GB</h4>
                 <div class="price">3.490.000₫</div>
@@ -401,6 +489,7 @@
             </div>
 
             <div class="product-card" data-name="Xiaomi 14 Ultra Xanh Leica" data-price="24990000" data-specs="• 6.73&quot; AMOLED 120Hz, Chip Snapdragon 8 Gen 3, Camera Leica 50MP, Pin 5000 mAh">
+                <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi 14 Ultra Xanh Leica', 24990000, 'images (2).jpg', '• 6.73&quot; AMOLED 120Hz, Chip Snapdragon 8 Gen 3, Camera Leica 50MP, Pin 5000 mAh')" title="Yêu thích">🤍</button>
                 <img src="images (2).jpg" alt="Xiaomi 14 Ultra Xanh">
                 <h4>Xiaomi 14 Ultra Xanh Leica</h4>
                 <div class="price">24.990.000₫</div>
@@ -412,6 +501,7 @@
             </div>
 
             <div class="product-card" data-name="Xiaomi Redmi Note 14 Tím Vân" data-price="4790000" data-specs="• 6.67&quot; AMOLED 120Hz, Pin 5000 mAh, Sạc nhanh 33W, Camera AI">
+                <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi Redmi Note 14 Tím Vân', 4790000, 'images (3).jpg', '• 6.67&quot; AMOLED 120Hz, Pin 5000 mAh, Sạc nhanh 33W, Camera AI')" title="Yêu thích">🤍</button>
                 <img src="images (3).jpg" alt="Xiaomi Redmi Note 14 Tím">
                 <h4>Xiaomi Redmi Note 14 Tím Vân</h4>
                 <div class="price">4.790.000₫</div>
@@ -423,6 +513,7 @@
             </div>
 
             <div class="product-card" data-name="iPhone 18 Pro Đỏ 256GB" data-price="35990000" data-specs="• 6.3&quot; OLED 120Hz, Chip A20 Pro, Pin 5000 mAh, Camera 48MP">
+                <button class="wishlist-btn" onclick="toggleWishlist('iPhone 18 Pro Đỏ 256GB', 35990000, 'iphone-18-pro-do-thumb-600x600.jpg', '• 6.3&quot; OLED 120Hz, Chip A20 Pro, Pin 5000 mAh, Camera 48MP')" title="Yêu thích">🤍</button>
                 <img src="iphone-18-pro-do-thumb-600x600.jpg" alt="iPhone 18 Pro Đỏ">
                 <h4>iPhone 18 Pro Đỏ 256GB</h4>
                 <div class="price">35.990.000₫</div>
@@ -434,6 +525,7 @@
             </div>
 
             <div class="product-card" data-name="iPhone Duo Trắng 128GB" data-price="28990000" data-specs="• 6.1&quot; Super Retina, Chip A19, Pin 4600 mAh, Camera kép">
+                <button class="wishlist-btn" onclick="toggleWishlist('iPhone Duo Trắng 128GB', 28990000, 'iphone-duo-white-thumb-600x600.jpg', '• 6.1&quot; Super Retina, Chip A19, Pin 4600 mAh, Camera kép')" title="Yêu thích">🤍</button>
                 <img src="iphone-duo-white-thumb-600x600.jpg" alt="iPhone Duo Trắng">
                 <h4>iPhone Duo Trắng 128GB</h4>
                 <div class="price">28.990.000₫</div>
@@ -445,6 +537,7 @@
             </div>
 
             <div class="product-card" data-name="ZTE Nubia Neo 5 GT" data-price="6490000" data-specs="• 6.7&quot; FHD+ 120Hz, Chip Gaming 5G, Pin 5000 mAh, Sạc nhanh 45W">
+                <button class="wishlist-btn" onclick="toggleWishlist('ZTE Nubia Neo 5 GT', 6490000, 'images - Sao chép.jpg', '• 6.7&quot; FHD+ 120Hz, Chip Gaming 5G, Pin 5000 mAh, Sạc nhanh 45W')" title="Yêu thích">🤍</button>
                 <img src="images - Sao chép.jpg" alt="ZTE Nubia Neo 5 GT">
                 <h4>ZTE Nubia Neo 5 GT</h4>
                 <div class="price">6.490.000₫</div>
@@ -456,6 +549,7 @@
             </div>
 
             <div class="product-card" data-name="Samsung Galaxy S26 FE 5G" data-price="16490000" data-specs="• 6.4&quot; Dynamic AMOLED, Chip Exynos 2400e, Pin 4500 mAh, Sạc 25W">
+                <button class="wishlist-btn" onclick="toggleWishlist('Samsung Galaxy S26 FE 5G', 16490000, 'samsung-galaxy-s26-fe-5g-blue-thumb-600x600.jpg', '• 6.4&quot; Dynamic AMOLED, Chip Exynos 2400e, Pin 4500 mAh, Sạc 25W')" title="Yêu thích">🤍</button>
                 <img src="samsung-galaxy-s26-fe-5g-blue-thumb-600x600.jpg" alt="Samsung Galaxy S26 FE">
                 <h4>Samsung Galaxy S26 FE 5G</h4>
                 <div class="price">16.490.000₫</div>
@@ -467,6 +561,7 @@
             </div>
 
             <div class="product-card" data-name="OPPO Reno16 F 5G" data-price="9990000" data-specs="• 6.7&quot; AMOLED, Camera Chân dung AI 64MP, Pin 5000 mAh, Sạc SUPERVOOC 45W">
+                <button class="wishlist-btn" onclick="toggleWishlist('OPPO Reno16 F 5G', 9990000, 'oppo-reno16-f-trang-thumb-600x600.jpg', '• 6.7&quot; AMOLED, Camera Chân dung AI 64MP, Pin 5000 mAh, Sạc SUPERVOOC 45W')" title="Yêu thích">🤍</button>
                 <img src="oppo-reno16-f-trang-thumb-600x600.jpg" alt="OPPO Reno16 F">
                 <h4>OPPO Reno16 F 5G</h4>
                 <div class="price">9.990.000₫</div>
@@ -479,7 +574,7 @@
         </main>
     </div>
 
-    <!-- TRANG LIÊN HỆ MỚI -->
+    <!-- TRANG LIÊN HỆ -->
     <div class="contact-page" id="contact-view">
         <h2>📞 Liên Hệ Với TechStore</h2>
         <p style="margin-bottom: 15px; font-size: 14px;">Bạn có thắc mắc hoặc cần hỗ trợ dịch vụ? Hãy gửi tin nhắn cho chúng tôi!</p>
@@ -545,6 +640,18 @@
             <span class="close-modal" onclick="document.getElementById('compare-modal').style.display='none'">✖</span>
             <h2>⚖️ Bảng So Sánh Điện Thoại</h2>
             <div id="compare-table-container" style="overflow-x: auto; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- MODAL YÊU THÍCH (WISHLIST) -->
+    <div class="modal" id="wishlist-modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close-modal" id="close-wishlist">✖</span>
+            <h2>❤️ Sản Phẩm Yêu Thích Của Bạn</h2>
+            <div id="wishlist-items-container" style="max-height: 350px; overflow-y: auto; margin-top: 10px;">
+                <p style="text-align: center; color: #777;">Chưa có sản phẩm yêu thích nào.</p>
+            </div>
+            <button class="btn" id="close-wishlist-btn" style="margin-top: 15px;">Đóng</button>
         </div>
     </div>
 
@@ -728,7 +835,7 @@
         </div>
     </div>
 
-    <!-- NÂNG CẤP ADMIN DASHBOARD VỚI THỐNG KÊ DOANH THU TOÀN DIỆN -->
+    <!-- ADMIN DASHBOARD -->
     <div class="admin-dashboard" id="admin-dashboard">
         <div class="admin-header">
             <h2>👑 Bảng Quản Trị Cửa Hàng (Admin Dashboard)</h2>
@@ -736,7 +843,6 @@
         </div>
         
         <div class="admin-grid">
-            <!-- NÂNG CẤP KHU VỰC THỐNG KÊ DOANH THU (CHỈ HIỂN THỊ DÀNH CHO ADMIN) -->
             <div class="admin-card rbac-admin-only" id="revenue-stat-card" style="grid-column: span 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">📊 Thống Kê Doanh Thu Nâng Cao</h3>
@@ -766,18 +872,15 @@
                     </div>
                 </div>
 
-                <!-- Biểu đồ doanh thu Chart.js -->
                 <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; height: 280px;">
                     <canvas id="revenueChart"></canvas>
                 </div>
             </div>
 
-            <!-- CHỈ HIỂN THỊ CẢNH BÁO RBAC DÀNH CHO NHÂN VIÊN THƯỜNG -->
             <div id="rbac-warning-card" class="admin-card" style="grid-column: span 1 / -1; display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
                 🔒 <strong>Giới hạn quyền hạn (RBAC):</strong> Bạn đang truy cập bằng tài khoản Nhân viên. Các chức năng Thống kê Doanh thu và Quản lý Hồ sơ Nhân sự cấp cao đã bị giới hạn.
             </div>
 
-            <!-- NÂNG CẤP KHU VỰC NHÂN SỰ (CHỈ HIỂN THỊ DÀNH CHO ADMIN) -->
             <div class="admin-card rbac-admin-only" id="staff-manage-card" style="grid-column: span 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">👥 Quản Lý Hồ Sơ & Phân Quyền Nhân Sự (RBAC)</h3>
@@ -904,11 +1007,24 @@
             { id: "ORD1002", user: "Trần Thị B", itemsSummary: "iPhone 18 Pro Đỏ 256GB", total: 35990000, status: "Đã xác nhận", date: "2026-06-03" }
         ];
         let cart = JSON.parse(localStorage.getItem('techstore_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('techstore_wishlist')) || [];
         let currentUser = JSON.parse(localStorage.getItem('techstore_user')) || null;
-        let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [
+        
+        // Khởi tạo danh sách tài khoản, đảm bảo tài khoản nhân viên (nhanvien) có mật khẩu giống admin (123)
+        let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [];
+        const defaultUsers = [
             { username: "admin", password: "123", role: "Admin" },
             { username: "nhanvien", password: "123", role: "Nhân viên" }
         ];
+        defaultUsers.forEach(defU => {
+            if (!usersList.some(u => u.username === defU.username)) {
+                usersList.push(defU);
+            } else {
+                // Đồng bộ mật khẩu nếu tài khoản đã tồn tại nhưng khác mật khẩu
+                let existing = usersList.find(u => u.username === defU.username);
+                if (existing) existing.password = defU.password;
+            }
+        });
         
         let staffList = JSON.parse(localStorage.getItem('techstore_staff')) || [
             { code: "NV1001", name: "Nguyễn Văn A", cccd: "079203001234", phone: "0901234567", email: "a.nv@techstore.vn", dept: "Thu ngân", role: "Nhân viên", shift: "Ca sáng (06:00 - 14:00)" },
@@ -924,6 +1040,7 @@
         function saveData() {
             localStorage.setItem('techstore_orders', JSON.stringify(ordersList));
             localStorage.setItem('techstore_cart', JSON.stringify(cart));
+            localStorage.setItem('techstore_wishlist', JSON.stringify(wishlist));
             localStorage.setItem('techstore_user', JSON.stringify(currentUser));
             localStorage.setItem('techstore_users', JSON.stringify(usersList));
             localStorage.setItem('techstore_staff', JSON.stringify(staffList));
@@ -964,7 +1081,103 @@
             }
         }
 
-        /* ================= BỔ SUNG XỬ LÝ TÌM KIẾM VÀ GỢI Ý (SUGGESTIONS) ================= */
+        // ================= DARK MODE & WISHLIST LOGIC =================
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeText = document.getElementById('theme-text');
+
+        // Khởi tạo giao diện Sáng / Tối từ localStorage
+        const currentTheme = localStorage.getItem('techstore_theme');
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeText.textContent = 'Sáng';
+            themeToggleBtn.innerHTML = '☀️ <span id="theme-text">Sáng</span>';
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            let theme = 'light';
+            if (document.body.classList.contains('dark-mode')) {
+                theme = 'dark';
+                themeToggleBtn.innerHTML = '☀️ <span id="theme-text">Sáng</span>';
+                showToast("Đã bật chế độ Tối (Dark Mode)", "success");
+            } else {
+                themeToggleBtn.innerHTML = '🌙 <span id="theme-text">Tối</span>';
+                showToast("Đã bật chế độ Sáng (Light Mode)", "success");
+            }
+            localStorage.setItem('techstore_theme', theme);
+        });
+
+        function toggleWishlist(name, price, imgSrc, specs) {
+            const index = wishlist.findIndex(item => item.name === name);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast(`Đã xóa ${name} khỏi danh sách yêu thích`, "success");
+            } else {
+                wishlist.push({ name, price, imgSrc, specs });
+                showToast(`Đã thêm ${name} vào danh sách yêu thích ❤️`, "success");
+            }
+            saveData();
+            updateWishlistUI();
+            updateWishlistIcons();
+        }
+
+        function updateWishlistUI() {
+            document.getElementById('wishlist-count').textContent = wishlist.length;
+        }
+
+        function updateWishlistIcons() {
+            document.querySelectorAll('.product-card').forEach(card => {
+                const name = card.getAttribute('data-name');
+                const btn = card.querySelector('.wishlist-btn');
+                if (btn) {
+                    const isLiked = wishlist.some(item => item.name === name);
+                    btn.textContent = isLiked ? '❤️' : '🤍';
+                }
+            });
+        }
+
+        function renderWishlistItems() {
+            const container = document.getElementById('wishlist-items-container');
+            if (wishlist.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: #777; padding: 20px;">Chưa có sản phẩm yêu thích nào.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            wishlist.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.imgSrc}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: contain; background: #f9f9f9; border-radius: 4px;">
+                        <div class="cart-item-info" style="margin-left: 10px;">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">${item.price.toLocaleString('vi-VN')}₫</div>
+                        </div>
+                        <button class="btn" style="width: auto; padding: 6px 12px; background: var(--primary-color);" onclick="addToCart('${item.name}', ${item.price}); showToast('Đã thêm vào giỏ hàng!', 'success');">Chọn mua</button>
+                        <button class="btn-danger" style="margin-left: 5px;" onclick="removeFromWishlist(${index})">Xóa</button>
+                    </div>
+                `;
+            });
+        }
+
+        function removeFromWishlist(index) {
+            wishlist.splice(index, 1);
+            saveData();
+            updateWishlistUI();
+            renderWishlistItems();
+            updateWishlistIcons();
+            showToast("Đã xóa khỏi danh sách yêu thích", "success");
+        }
+
+        const wishlistModal = document.getElementById('wishlist-modal');
+        document.getElementById('wishlist-open-btn').addEventListener('click', () => {
+            renderWishlistItems();
+            wishlistModal.style.display = 'flex';
+        });
+        document.getElementById('close-wishlist').addEventListener('click', () => wishlistModal.style.display = 'none');
+        document.getElementById('close-wishlist-btn').addEventListener('click', () => wishlistModal.style.display = 'none');
+        // ================= KẾT THÚC DARK MODE & WISHLIST =================
+
+        /* ================= TÌM KIẾM VÀ GỢI Ý ================= */
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('suggestions');
 
@@ -987,7 +1200,6 @@
                         card.style.display = 'flex';
                         hasMatches = true;
 
-                        // Tạo mục gợi ý
                         const item = document.createElement('div');
                         item.textContent = name;
                         item.addEventListener('click', () => {
@@ -1009,14 +1221,12 @@
                 }
             });
 
-            // Ẩn bảng gợi ý khi nhấp ra ngoài ô tìm kiếm
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.header-actions')) {
                     suggestionsBox.style.display = 'none';
                 }
             });
         }
-        /* ================= KẾT THÚC BỔ SUNG TÌM KIẾM ================= */
 
         document.getElementById('contact-form-submit').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1364,7 +1574,6 @@
 
         const adminDashboard = document.getElementById('admin-dashboard');
         document.getElementById('admin-panel-btn').addEventListener('click', () => {
-            // KIỂM TRA PHÂN QUYỀN REAL-TIME (RBAC LOGIC)
             const isAdmin = currentUser && currentUser.role === "Admin";
             const adminCards = document.querySelectorAll('.rbac-admin-only');
             const warningCard = document.getElementById('rbac-warning-card');
@@ -1385,14 +1594,12 @@
         });
         document.getElementById('close-admin').addEventListener('click', () => adminDashboard.style.display = "none");
 
-        // ================= NÂNG CẤP LOGIC THỐNG KÊ DOANH THU =================
         function updateRevenueStats() {
             const filterType = document.getElementById('stat-filter-type').value;
             const todayStr = new Date().toISOString().split('T')[0];
-            const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM
+            const currentMonth = new Date().toISOString().substring(0, 7);
             const currentYear = new Date().getFullYear().toString();
 
-            // Chỉ tính đơn hàng đã được xác nhận thành công
             let filteredOrders = ordersList.filter(o => o.status === 'Đã xác nhận');
 
             if (filterType === 'today') {
@@ -1416,8 +1623,6 @@
 
         function renderRevenueChart(orders) {
             const ctx = document.getElementById('revenueChart').getContext('2d');
-            
-            // Nhóm dữ liệu doanh thu theo ngày hoặc tổng hợp
             let dataMap = {};
             orders.forEach(o => {
                 let d = o.date || 'Khác';
@@ -1450,12 +1655,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: true }
-                    }
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
                 }
             });
         }
@@ -1474,7 +1675,6 @@
             document.body.removeChild(link);
             showToast("Xuất báo cáo doanh thu thành công!", "success");
         }
-        // ================= KẾT THÚC NÂNG CẤP THỐNG KÊ =================
 
         document.getElementById('open-add-staff-modal').addEventListener('click', () => staffModal.style.display = 'flex');
         document.getElementById('close-staff-modal').addEventListener('click', () => staffModal.style.display = 'none');
@@ -1492,7 +1692,6 @@
             if (!name || !cccd || !phone || !email) { showToast("Vui lòng nhập đầy đủ thông tin nhân sự!", "error"); return; }
             
             const newCode = "NV" + Math.floor(1000 + Math.random() * 9000);
-            
             staffList.push({ code: newCode, name, cccd, phone, email, dept, role, shift });
             saveData();
             renderAdminStaff();
@@ -1523,7 +1722,6 @@
             });
         }
 
-        // Mở Modal và nạp thông tin nhân sự từ mảng staffList
         function openEditStaff(index) {
             const s = staffList[index];
             document.getElementById('edit-staff-index').value = index;
@@ -1537,7 +1735,6 @@
             document.getElementById('edit-staff-modal').style.display = 'flex';
         }
 
-        // Lắng nghe sự kiện cập nhật Form Hồ Sơ Nhân Sự
         document.getElementById('edit-staff-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const index = document.getElementById('edit-staff-index').value;
@@ -1549,14 +1746,14 @@
             staffList[index].role = document.getElementById('edit-staff-role').value;
             staffList[index].shift = document.getElementById('edit-staff-shift').value;
 
-            saveData(); // Lưu dữ liệu mới vào localStorage
+            saveData();
             renderAdminStaff();
             document.getElementById('edit-staff-modal').style.display = 'none';
             showToast("Cập nhật thông tin nhân sự thành công!", "success");
         });
 
         function deleteStaff(i) {
-            if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name} (${staffList[i].code})?`)) {
+            if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name}?`)) {
                 staffList.splice(i, 1);
                 saveData();
                 renderAdminStaff();
@@ -1669,7 +1866,6 @@
             });
         }
 
-        // Mở Modal và nạp thông tin sản phẩm cần sửa
         function openEditProduct(index) {
             const cards = document.querySelectorAll('.product-grid .product-card');
             const card = cards[index];
@@ -1682,7 +1878,6 @@
             document.getElementById('edit-product-modal').style.display = 'flex';
         }
 
-        // Lắng nghe sự kiện lưu thay đổi Form Sản Phẩm
         document.getElementById('edit-product-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const index = document.getElementById('edit-prod-index').value;
@@ -1696,12 +1891,10 @@
             const newPrice = parseInt(priceStr.replace(/\D/g, '')) || 0;
             const newSpecs = document.getElementById('edit-prod-specs').value.trim();
 
-            // Cập nhật thuộc tính dữ liệu
             card.setAttribute('data-name', newName);
             card.setAttribute('data-price', newPrice);
             card.setAttribute('data-specs', newSpecs);
 
-            // Cập nhật hiển thị DOM
             card.querySelector('h4').textContent = newName;
             card.querySelector('.price').textContent = newPrice.toLocaleString('vi-VN') + '₫';
             card.querySelector('.specs-preview').innerHTML = '• ' + newSpecs.replace(/\n/g, '<br>');
@@ -1733,7 +1926,16 @@
             card.setAttribute('data-name', name);
             card.setAttribute('data-price', price);
             card.setAttribute('data-specs', specs);
-            card.innerHTML = `<img src="https://via.placeholder.com/200" alt=""><h4>${name}</h4><div class="price">${price.toLocaleString('vi-VN')}₫</div><div class="specs-preview">• ${specs}</div><div style="display:flex; gap: 5px;"><button class="btn add-to-cart">Chọn Mua</button><button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('${name}')">So sánh</button></div>`;
+            card.innerHTML = `
+                <button class="wishlist-btn" onclick="toggleWishlist('${name}', ${price}, 'https://via.placeholder.com/200', '${specs}')" title="Yêu thích">🤍</button>
+                <img src="https://via.placeholder.com/200" alt="">
+                <h4>${name}</h4>
+                <div class="price">${price.toLocaleString('vi-VN')}₫</div>
+                <div class="specs-preview">• ${specs}</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('${name}')">So sánh</button>
+                </div>`;
             attachCardEvents(card);
             grid.appendChild(card);
             renderAdminProducts();
@@ -1841,7 +2043,7 @@
             showToast(`Đặt hàng thành công! Mã đơn: ${orderId}`, "success");
         }
 
-        // Tích hợp Chatbot AI Gemini
+        // Chatbot AI Gemini
         const chatToggleBtn = document.getElementById('chat-toggle-btn');
         const chatWindow = document.getElementById('chat-window');
         const closeChat = document.getElementById('close-chat');
@@ -1870,9 +2072,9 @@
 
             const typingId = 'typing-' + Date.now();
             const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
+            typingDiv.className = 'message bot-msg';
             typingDiv.id = typingId;
-            typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            typingDiv.textContent = "Đang trả lời...";
             chatBody.appendChild(typingDiv);
             chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -1931,7 +2133,11 @@
         }
 
         document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
+        
+        // Khởi chạy đồng bộ trạng thái khi load trang
         updateCartUI();
+        updateWishlistUI();
+        updateWishlistIcons();
     </script>
 </body>
 </html>
