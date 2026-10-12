@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>TechStore - Website Bán Lẻ Điện Thoại Chính Hãng</title>
     <!-- Thêm thư viện Chart.js để vẽ biểu đồ doanh thu -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -376,6 +376,41 @@
             
             .chat-window { width: 100%; right: 0; bottom: 0; height: 85vh; border-radius: 16px 16px 0 0; }
         }
+        /* ===== Badge trạng thái đơn hàng ===== */
+        .status-badge { display: inline-block; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11.5px; white-space: nowrap; }
+
+        /* ===== Thanh trượt khoảng giá ===== */
+        .price-slider-box { margin-top: 10px; }
+        .price-slider-labels { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+        .price-slider-box input[type="range"] { width: 100%; padding: 0; border: none; accent-color: var(--primary-color); cursor: pointer; }
+
+        /* ===== Menu hamburger (mobile) ===== */
+        .hamburger-btn { display: none; background: transparent; border: 1px solid #ddd; border-radius: 8px; font-size: 20px; line-height: 1; padding: 6px 10px; cursor: pointer; color: var(--text-color); }
+        .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; }
+        .nav-overlay.show { display: block; }
+
+        /* ===== Thanh so sánh: tránh bị che bởi thanh trình duyệt/vạch Home, tự xuống dòng trên màn nhỏ ===== */
+        .compare-bar { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); flex-wrap: wrap; gap: 8px; }
+        body.has-compare { padding-bottom: var(--compare-h, 0px); }
+        body.has-compare .chat-toggle-btn { bottom: calc(var(--compare-h, 0px) + 12px); }
+        body.has-compare .chat-window { bottom: calc(var(--compare-h, 0px) + 72px); }
+        body.dark-mode nav { background-color: #242428; }
+        body.dark-mode nav a { border-color: #333; }
+
+        @media (max-width: 768px) {
+            .hamburger-btn { display: block; }
+            header > div:first-child { justify-content: flex-start !important; gap: 10px; }
+            .logo { flex: 1; text-align: left; }
+            nav {
+                position: fixed; top: 0; left: 0; height: 100%; width: 260px; max-width: 80%;
+                background: #fff; flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; gap: 0;
+                padding: 70px 20px 20px; box-shadow: 4px 0 16px rgba(0,0,0,0.2);
+                transform: translateX(-105%); transition: transform 0.25s ease; z-index: 2000; overflow-y: auto;
+            }
+            nav.open { transform: translateX(0); }
+            nav a { display: block; padding: 14px 4px; font-size: 15px; border-bottom: 1px solid #eee; }
+            body.has-compare .chat-window { bottom: 0; }
+        }
     </style>
 </head>
 <body>
@@ -384,10 +419,11 @@
 
     <header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="Mở menu" aria-expanded="false">☰</button>
             <div class="logo" onclick="switchTab('home')">📱 TechStore</div>
         </div>
 
-        <nav>
+        <nav id="main-nav">
             <a onclick="switchTab('home')">Trang chủ</a>
             <a onclick="switchTab('home')">Điện thoại</a>
             <a onclick="switchTab('home')">Phụ kiện</a>
@@ -442,6 +478,7 @@
             </div>
         </div>
     </header>
+    <div class="nav-overlay" id="nav-overlay"></div>
 
     <div class="banner" id="main-banner">
         <h1>Siêu Hội Smartphone - Giảm Đến 50%</h1>
@@ -472,6 +509,11 @@
                 <input type="number" id="price-min" placeholder="Từ">
                 <span>-</span>
                 <input type="number" id="price-max" placeholder="Đến">
+            </div>
+            <div class="price-slider-box">
+                <div class="price-slider-labels"><span id="price-min-label">0₫</span><span id="price-max-label">Không giới hạn</span></div>
+                <input type="range" id="price-min-range" min="0" max="40000000" step="500000" value="0" aria-label="Giá thấp nhất">
+                <input type="range" id="price-max-range" min="0" max="40000000" step="500000" value="40000000" aria-label="Giá cao nhất">
             </div>
             <button class="btn" style="margin-top: 8px; font-size: 12px; padding: 5px;" onclick="filterProducts()">Lọc giá</button>
         </aside>
@@ -953,6 +995,7 @@
                     <button type="submit" class="btn" style="grid-column: span 2;">➕ Thêm Điện Thoại Mới</button>
                 </form>
 
+                <p style="font-size: 12.5px; margin-bottom: 4px; color: #666;">🗄 Bộ nhớ trình duyệt đã dùng: <strong id="storage-usage">--</strong></p>
                 <p style="font-size: 12.5px; margin-bottom: 8px; color: #666;">💡 Sửa giá nhanh: gõ giá mới vào ô giá trong bảng rồi bấm <strong>Lưu giá</strong>. Mọi thay đổi được lưu tự động trên trình duyệt này.</p>
                 <button type="button" class="btn-danger" id="reset-products-btn" style="margin-bottom: 8px;">↩ Khôi phục danh sách gốc</button>
 
@@ -1056,6 +1099,10 @@
         let revenueChartInstance = null;
 
         function saveData() {
+            try { _saveDataRaw(); }
+            catch (err) { showToast('Bộ nhớ trình duyệt đã đầy! Hãy xóa bớt dữ liệu/ảnh lớn.', 'error'); }
+        }
+        function _saveDataRaw() {
             localStorage.setItem('techstore_orders', JSON.stringify(ordersList));
             localStorage.setItem('techstore_cart', JSON.stringify(cart));
             localStorage.setItem('techstore_wishlist', JSON.stringify(wishlist));
@@ -1273,8 +1320,11 @@
             if (compareList.length > 0) {
                 bar.style.display = 'flex';
                 namesEl.textContent = compareList.join(', ');
+                document.body.classList.add('has-compare');
+                document.body.style.setProperty('--compare-h', bar.offsetHeight + 'px');
             } else {
                 bar.style.display = 'none';
+                document.body.classList.remove('has-compare');
             }
         }
 
@@ -1427,7 +1477,7 @@
                     <div style="border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 10px; background: #fafafa; font-size: 13.5px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
                             <strong>Mã đơn: ${escapeHtml(o.id)}</strong>
-                            <span style="color: ${o.status === 'Đã xác nhận' ? 'green' : '#e67e22'}; font-weight: bold;">${o.status}</span>
+                            <span style="color: ${statusColor(o.status)}; font-weight: bold;">${escapeHtml(o.status)}</span>
                         </div>
                         <p style="margin-bottom: 4px;"><strong>Sản phẩm:</strong> ${escapeHtml(o.itemsSummary)}</p>
                         <p style="margin-bottom: 8px;"><strong>Tổng tiền:</strong> <span style="color: var(--accent-color); font-weight: bold;">${o.total.toLocaleString('vi-VN')}₫</span></p>
@@ -1541,7 +1591,6 @@
                     </div>
                 `;
             });
-            grid.querySelectorAll('.product-card').forEach(attachCardEvents);
         }
 
         document.getElementById('clear-recent-btn').addEventListener('click', () => {
@@ -1614,7 +1663,7 @@
             const currentMonth = new Date().toISOString().substring(0, 7);
             const currentYear = new Date().getFullYear().toString();
 
-            let filteredOrders = ordersList.filter(o => o.status === 'Đã xác nhận');
+            let filteredOrders = ordersList.filter(o => isRevenueStatus(o.status));
 
             if (filterType === 'today') {
                 filteredOrders = filteredOrders.filter(o => o.date && o.date === todayStr);
@@ -1803,7 +1852,7 @@
             const numPrice = parseInt(priceStr.replace(/\D/g, '')) || 0;
             const todayDate = new Date().toISOString().split('T')[0];
 
-            ordersList.push({ id: orderId, user: customer + " (Tại quầy)", itemsSummary: product, total: numPrice, status: "Đã xác nhận", date: todayDate });
+            ordersList.push({ id: orderId, user: customer + " (Tại quầy)", itemsSummary: product, total: numPrice, status: "Hoàn thành", date: todayDate });
             saveData();
             renderAdminOrders();
             updateRevenueStats();
@@ -1829,22 +1878,40 @@
                         <td>${escapeHtml(o.user)}</td>
                         <td>${escapeHtml(o.itemsSummary)}</td>
                         <td>${o.total.toLocaleString('vi-VN')}₫</td>
-                        <td>${o.status}</td>
+                        <td><span class="status-badge" style="background: ${statusColor(o.status)};">${escapeHtml(o.status)}</span></td>
                         <td>
-                            <button class="btn-success" onclick="confirmOrder(${i})">Duyệt</button>
+                            ${nextStatus(o)
+                                ? `<button class="btn-success" onclick="confirmOrder(${i})">${statusIndex(o.status) === 0 ? 'Duyệt' : '→ ' + nextStatus(o)}</button>`
+                                : `<button class="btn-success" disabled style="opacity:0.6; cursor:default;">✔ Xong</button>`}
                             <button class="btn-danger" onclick="deleteAdminOrder(${i})" style="margin-top: 4px;">Xóa</button>
                         </td>
                     </tr>`;
             });
         }
         
-        function confirmOrder(i) { 
-            ordersList[i].status = 'Đã xác nhận'; 
-            if(!ordersList[i].date) ordersList[i].date = new Date().toISOString().split('T')[0];
-            saveData(); 
-            renderAdminOrders(); 
+        // Quy trình đơn hàng: Chờ xác nhận -> Đang đóng gói -> Đang giao -> Hoàn thành
+        // (trạng thái cũ "Đã xác nhận" được coi như "Đang đóng gói")
+        const STATUS_FLOW = ['Chờ xác nhận', 'Đang đóng gói', 'Đang giao', 'Hoàn thành'];
+        function statusIndex(status) { return status === 'Đã xác nhận' ? 1 : STATUS_FLOW.indexOf(status); }
+        function nextStatus(order) {
+            const idx = statusIndex(order.status);
+            return (idx < 0 || idx >= STATUS_FLOW.length - 1) ? null : STATUS_FLOW[idx + 1];
+        }
+        function isRevenueStatus(status) { return statusIndex(status) >= 1; }
+        function statusColor(status) {
+            const idx = statusIndex(status);
+            return ['#e67e22', '#8e44ad', '#007bff', '#28a745'][idx] || '#777';
+        }
+
+        function confirmOrder(i) {
+            const next = nextStatus(ordersList[i]);
+            if (!next) return;
+            ordersList[i].status = next;
+            if (!ordersList[i].date) ordersList[i].date = new Date().toISOString().split('T')[0];
+            saveData();
+            renderAdminOrders();
             updateRevenueStats();
-            showToast("Đã duyệt đơn hàng!", "success"); 
+            showToast(`Đơn ${ordersList[i].id}: ${next}`, "success");
         }
 
         function deleteAdminOrder(i) {
@@ -1892,21 +1959,79 @@
         }
 
         // Gắn lại nút Yêu thích / So sánh để luôn dùng thông tin mới nhất của thẻ (kể cả sau khi sửa tên)
+        // Chuẩn hóa thẻ: bỏ onclick nội tuyến (đã dùng ủy quyền sự kiện bên dưới) và đánh dấu nút So sánh
         function upgradeCard(card) {
-            const heart = card.querySelector('.wishlist-btn');
-            if (heart) {
-                heart.removeAttribute('onclick');
-                heart.onclick = (e) => {
-                    e.stopPropagation();
-                    toggleWishlist(card.dataset.name, parseInt(card.dataset.price) || 0, card.querySelector('img').getAttribute('src'), card.dataset.specs);
-                };
-            }
+            card.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
             const cmp = Array.from(card.querySelectorAll('button')).find(b => !b.classList.contains('add-to-cart') && !b.classList.contains('wishlist-btn'));
-            if (cmp) {
-                cmp.removeAttribute('onclick');
-                cmp.onclick = (e) => { e.stopPropagation(); toggleCompare(card.dataset.name); };
-            }
+            if (cmp) cmp.classList.add('compare-btn');
         }
+
+        // Event Delegation: chỉ 1 trình nghe cho cả lưới sản phẩm thay vì mỗi thẻ 1-3 trình nghe
+        function handleCardClick(e) {
+            const card = e.target.closest('.product-card');
+            if (!card || !e.currentTarget.contains(card)) return;
+            const d = card.dataset;
+            if (e.target.closest('.wishlist-btn')) {
+                toggleWishlist(d.name, parseInt(d.price) || 0, card.querySelector('img').getAttribute('src'), d.specs);
+                return;
+            }
+            if (e.target.closest('.compare-btn')) { toggleCompare(d.name); return; }
+            if (e.target.closest('.add-to-cart')) {
+                addToCart(d.name, parseInt(d.price) || 0);
+                showToast(`Đã thêm ${d.name} vào giỏ hàng!`, "success");
+                return;
+            }
+            if (e.target.closest('button')) return;
+            openProductDetail(card);
+        }
+        productGrid.addEventListener('click', handleCardClick);
+        document.getElementById('recent-grid').addEventListener('click', handleCardClick);
+
+        // Thanh trượt khoảng giá (đồng bộ với 2 ô nhập tay)
+        (function initPriceSliders() {
+            const minR = document.getElementById('price-min-range'), maxR = document.getElementById('price-max-range');
+            const minI = document.getElementById('price-min'), maxI = document.getElementById('price-max');
+            const minL = document.getElementById('price-min-label'), maxL = document.getElementById('price-max-label');
+            const MAX = parseInt(maxR.max);
+            function labels() {
+                minL.textContent = formatVND(+minR.value);
+                maxL.textContent = +maxR.value >= MAX ? 'Không giới hạn' : formatVND(+maxR.value);
+            }
+            function fromSliders(src) {
+                let lo = +minR.value, hi = +maxR.value;
+                if (lo > hi) { if (src === minR) { hi = lo; maxR.value = hi; } else { lo = hi; minR.value = lo; } }
+                minI.value = lo > 0 ? lo : '';
+                maxI.value = hi < MAX ? hi : '';
+                labels();
+                filterProducts();
+            }
+            function fromInputs() {
+                minR.value = Math.min(parseInt(minI.value) || 0, MAX);
+                maxR.value = maxI.value === '' ? MAX : Math.min(parseInt(maxI.value) || 0, MAX);
+                labels();
+                filterProducts();
+            }
+            minR.addEventListener('input', () => fromSliders(minR));
+            maxR.addEventListener('input', () => fromSliders(maxR));
+            minI.addEventListener('input', fromInputs);
+            maxI.addEventListener('input', fromInputs);
+            labels();
+        })();
+
+        // Menu trượt cạnh trái (mobile)
+        (function initOffCanvasNav() {
+            const btn = document.getElementById('hamburger-btn'), nav = document.getElementById('main-nav'), overlay = document.getElementById('nav-overlay');
+            function setOpen(open) {
+                nav.classList.toggle('open', open);
+                overlay.classList.toggle('show', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+            btn.addEventListener('click', () => setOpen(!nav.classList.contains('open')));
+            overlay.addEventListener('click', () => setOpen(false));
+            nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+            window.addEventListener('resize', () => { if (window.innerWidth > 768) setOpen(false); });
+        })();
 
         // Ảnh bị lỗi/thiếu file -> hiện ảnh tạm thay vì ô trống
         function fixBrokenImage(im) {
@@ -1952,7 +2077,6 @@
             card.querySelector('img').src = p.img || PLACEHOLDER_IMG;
             applyProductData(card, p);
             upgradeCard(card);
-            attachCardEvents(card);
             return card;
         }
 
@@ -1964,6 +2088,14 @@
             card.querySelector('h4').textContent = p.name;
             card.querySelector('.price').textContent = formatVND(p.price);
             card.querySelector('.specs-preview').innerHTML = '• ' + escapeHtml(p.specs).replace(/\n/g, '<br>');
+        }
+
+        // Kiểm tra file ảnh trước khi xử lý (tối đa 10MB, đúng định dạng ảnh)
+        function validImageFile(file) {
+            if (!file) return true;
+            if (!file.type.startsWith('image/')) { showToast('File được chọn không phải là ảnh!', 'error'); return false; }
+            if (file.size > 10 * 1024 * 1024) { showToast('Ảnh quá lớn (tối đa 10MB)!', 'error'); return false; }
+            return true;
         }
 
         // Thu nhỏ ảnh để lưu gọn trong trình duyệt
@@ -1990,7 +2122,19 @@
             reader.readAsDataURL(file);
         }
 
+        function updateStorageUsage() {
+            let chars = 0;
+            try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); chars += k.length + (localStorage.getItem(k) || '').length; } } catch (e) {}
+            const el = document.getElementById('storage-usage');
+            if (el) {
+                const kb = Math.round(chars / 1024);
+                el.textContent = kb + ' KB / ~5.000 KB';
+                el.style.color = kb > 4000 ? 'var(--accent-color)' : 'inherit';
+            }
+        }
+
         function renderAdminProducts() {
+            updateStorageUsage();
             const tbody = document.getElementById('admin-product-tbody');
             tbody.innerHTML = '';
             productGrid.querySelectorAll('.product-card').forEach((card, i) => {
@@ -2048,7 +2192,9 @@
             const newSpecs = cleanSpecs(document.getElementById('edit-prod-specs').value);
             if (!newName || !newPrice) { showToast('Vui lòng nhập tên và giá hợp lệ!', 'error'); return; }
 
-            readImageFile(document.getElementById('edit-prod-img').files[0], (dataUrl) => {
+            const editFile = document.getElementById('edit-prod-img').files[0];
+            if (!validImageFile(editFile)) return;
+            readImageFile(editFile, (dataUrl) => {
                 const oldName = card.dataset.name;
                 applyProductData(card, { name: newName, price: newPrice, specs: newSpecs });
                 if (dataUrl) card.querySelector('img').src = dataUrl;
@@ -2085,7 +2231,9 @@
 
             if (!name || !price) { showToast('Vui lòng điền tên và giá sản phẩm!', 'error'); return; }
 
-            readImageFile(document.getElementById('new-prod-img').files[0], (dataUrl) => {
+            const newFile = document.getElementById('new-prod-img').files[0];
+            if (!validImageFile(newFile)) return;
+            readImageFile(newFile, (dataUrl) => {
                 productGrid.appendChild(buildCard({ name, price, specs, img: dataUrl }));
                 saveProducts();
                 renderAdminProducts();
@@ -2098,7 +2246,7 @@
             if (!confirm('Khôi phục toàn bộ danh sách điện thoại về ban đầu? Mọi chỉnh sửa/sản phẩm đã thêm sẽ mất.')) return;
             localStorage.removeItem(PRODUCTS_KEY);
             productGrid.innerHTML = ORIGINAL_PRODUCTS_HTML;
-            productGrid.querySelectorAll('.product-card').forEach(c => { upgradeCard(c); attachCardEvents(c); });
+            productGrid.querySelectorAll('.product-card').forEach(upgradeCard);
             compareList = [];
             updateCompareBar();
             updateWishlistIcons();
@@ -2282,19 +2430,6 @@
         sendBtn.addEventListener('click', handleChatSend);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleChatSend(); });
 
-        function attachCardEvents(card) {
-            card.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') return;
-                openProductDetail(card);
-            });
-            card.querySelector('.add-to-cart').addEventListener('click', (e) => {
-                e.stopPropagation();
-                addToCart(card.getAttribute('data-name'), parseInt(card.getAttribute('data-price')));
-                showToast(`Đã thêm ${card.getAttribute('data-name')} vào giỏ hàng!`, "success");
-            });
-        }
-
-        document.querySelectorAll('.product-grid .product-card').forEach(attachCardEvents);
         
         updateCartUI();
         updateWishlistUI();
