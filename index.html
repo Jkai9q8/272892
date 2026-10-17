@@ -15,8 +15,8 @@
             --admin-bg: #1e1e2d;
             --success-color: #28a745;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s; padding-bottom: env(safe-area-inset-bottom); }
         
         /* ================= CHẾ ĐỘ TỐI (DARK MODE) ================= */
         body.dark-mode {
@@ -83,12 +83,17 @@
         .wishlist-btn {
             background: transparent;
             border: none;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 10;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.2s;
         }
         .wishlist-btn:hover {
@@ -137,20 +142,20 @@
             z-index: 1000; 
             gap: 15px; 
         }
-        .logo { font-size: 22px; font-weight: bold; color: var(--primary-color); cursor: pointer; white-space: nowrap; }
+        .logo { font-size: 22px; font-weight: bold; color: var(--primary-color); cursor: pointer; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
         
         nav { display: flex; gap: 15px; }
-        nav a { text-decoration: none; color: var(--text-color); font-weight: 500; cursor: pointer; font-size: 14px; }
+        nav a { text-decoration: none; color: var(--text-color); font-weight: 500; cursor: pointer; font-size: 14px; padding: 8px 12px; min-height: 44px; display: flex; align-items: center; }
         nav a:hover { color: var(--primary-color); }
         
         /* Ô tìm kiếm & Hành động */
         .header-actions { display: flex; align-items: center; gap: 10px; position: relative; }
-        .header-actions input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; width: 180px; font-size: 13.5px; }
+        .header-actions input[type="text"] { padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; width: 180px; font-size: 13.5px; min-height: 44px; }
         
         .cart-btn-header { 
             background: transparent; 
             border: 1px solid #ddd; 
-            padding: 8px 12px; 
+            padding: 8px 14px; 
             border-radius: 20px; 
             cursor: pointer; 
             font-weight: 500; 
@@ -159,12 +164,15 @@
             gap: 5px; 
             font-size: 13.5px;
             white-space: nowrap;
+            min-height: 44px;
+            min-width: 44px;
+            justify-content: center;
         }
         .cart-btn-header:hover { background: #f0f0f0; }
         #cart-count, #wishlist-count { background: var(--accent-color); color: white; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: bold; }
         
         .user-menu-container { position: relative; }
-        .auth-btn, .admin-btn { padding: 8px 12px; border-radius: 20px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: bold; cursor: pointer; font-size: 13.5px; white-space: nowrap; }
+        .auth-btn, .admin-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: bold; cursor: pointer; font-size: 13.5px; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
         .auth-btn:hover { background: var(--primary-color); color: #fff; }
         .admin-btn { background: #333; color: #fff; border: none; display: none; }
         
@@ -173,20 +181,20 @@
             display: none;
             position: absolute;
             right: 0;
-            top: 40px;
+            top: 45px;
             background: #fff;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border-radius: 8px;
-            width: 170px;
+            width: 190px;
             z-index: 1100;
             overflow: hidden;
         }
-        .user-dropdown div { padding: 10px 15px; cursor: pointer; font-size: 13.5px; border-bottom: 1px solid #eee; }
+        .user-dropdown div { padding: 12px 15px; cursor: pointer; font-size: 13.5px; border-bottom: 1px solid #eee; min-height: 44px; display: flex; align-items: center; }
         .user-dropdown div:hover { background: var(--secondary-color); color: var(--primary-color); }
 
         /* Gợi ý tìm kiếm */
-        .search-suggestions { position: absolute; top: 40px; left: 0; background: white; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 5px; display: none; z-index: 1100; max-height: 200px; overflow-y: auto; }
-        .search-suggestions div { padding: 8px 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 13px; color: #333; }
+        .search-suggestions { position: absolute; top: 48px; left: 0; background: white; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 5px; display: none; z-index: 1100; max-height: 200px; overflow-y: auto; }
+        .search-suggestions div { padding: 10px 12px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 13px; color: #333; min-height: 44px; display: flex; align-items: center; }
         .search-suggestions div:hover { background: var(--secondary-color); }
 
         /* Banner */
@@ -201,40 +209,46 @@
         .sidebar { background: #fff; padding: 15px; border-radius: 10px; height: fit-content; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .sidebar h3 { margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 6px; }
         .filter-group { margin-bottom: 15px; }
-        .filter-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13.5px; }
+        .filter-group label { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13.5px; min-height: 36px; }
+        .filter-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
         
         /* Khoảng giá tùy chỉnh */
         .custom-price-box { display: flex; gap: 5px; align-items: center; margin-top: 8px; }
-        .custom-price-box input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
+        .custom-price-box input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; min-height: 40px; }
 
         /* Danh sách sản phẩm */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
         .product-card { background: #fff; border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        /* PC Hover effect */
+        @media (hover: hover) and (pointer: fine) {
+            .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        }
         .product-card img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 10px; background: #f9f9f9; border-radius: 5px; }
         .product-card h4 { font-size: 15px; margin-bottom: 8px; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .price { color: var(--accent-color); font-weight: bold; font-size: 16px; margin-bottom: 10px; }
         .specs-preview { font-size: 11.5px; color: #666; background: var(--secondary-color); padding: 6px; border-radius: 5px; margin-bottom: 12px; text-align: left; }
-        .btn { background: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: 500; width: 100%; transition: 0.2s; font-size: 13.5px; }
+        .btn { background: var(--primary-color); color: white; border: none; padding: 10px 14px; border-radius: 5px; cursor: pointer; font-weight: 500; width: 100%; transition: 0.2s; font-size: 13.5px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
         .btn:hover { opacity: 0.9; }
 
         /* Lịch sử sản phẩm vừa xem */
         .recent-section { max-width: 1200px; margin: 30px auto; padding: 0 15px; }
         .recent-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 8px; margin-bottom: 15px; }
         .recent-header h3 { font-size: 18px; margin-bottom: 0; border: none; padding: 0; }
-        .clear-recent-btn { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
+        .clear-recent-btn { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; min-height: 40px; }
         .clear-recent-btn:hover { background: var(--accent-color); color: white; }
-        .recent-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; }
+        .recent-grid { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .recent-grid::-webkit-scrollbar { height: 6px; }
+        .recent-grid::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
         .recent-grid .product-card { min-width: 200px; flex: 0 0 auto; }
 
         /* Trang liên hệ */
         .contact-page { display: none; max-width: 800px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .contact-page h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 22px; }
-        .contact-form input, .contact-form textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-height: 44px; }
         .contact-form textarea { height: 120px; resize: vertical; }
 
         /* Giao diện So sánh điện thoại */
-        .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #333; color: white; padding: 10px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1500; }
+        .compare-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #333; color: white; padding: 12px 20px; display: none; justify-content: space-between; align-items: center; z-index: 1500; }
 
         /* ================= CHATBOT AI & TƯ VẤN CSKH ================= */
         .chat-toggle-btn { 
@@ -244,12 +258,13 @@
             padding: 12px 20px; font-weight: bold; cursor: pointer; 
             box-shadow: 0 4px 15px rgba(0,123,255,0.4); z-index: 9999; 
             font-size: 14px; display: flex; align-items: center; gap: 8px;
+            min-height: 48px;
             transition: transform 0.2s;
         }
         .chat-toggle-btn:hover { transform: scale(1.05); }
 
         .chat-window { 
-            position: fixed; bottom: 80px; right: 20px; width: 370px; max-width: calc(100vw - 30px); 
+            position: fixed; bottom: 85px; right: 20px; width: 370px; max-width: calc(100vw - 30px); 
             height: 540px; background: #fff; border-radius: 16px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: none; flex-direction: column; 
             z-index: 9999; overflow: hidden; border: 1px solid #e1e1e1; 
@@ -265,11 +280,11 @@
         .chat-status-text .title { font-size: 13.5px; font-weight: 700; }
         .chat-status-text .subtitle { font-size: 11px; opacity: 0.9; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
         .chat-header-info span.dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px #2ecc71; }
-        .chat-header span.close-chat { cursor: pointer; font-size: 18px; opacity: 0.8; }
+        .chat-header span.close-chat { cursor: pointer; font-size: 18px; opacity: 0.8; padding: 10px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
         .chat-header span.close-chat:hover { opacity: 1; }
 
         .chat-body { 
-            flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #f4f6f8; 
+            flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #f4f6f8; -webkit-overflow-scrolling: touch; 
         }
         .message { padding: 10px 14px; border-radius: 12px; max-width: 88%; font-size: 13.5px; line-height: 1.5; word-wrap: break-word; position: relative; }
         .bot-msg { background: #fff; color: #333; align-self: flex-start; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; }
@@ -290,24 +305,24 @@
         .chat-rich-card-info h5 { font-size: 13px; margin-bottom: 2px; color: var(--text-color); line-height: 1.3; }
         .chat-rich-card-info .card-price { font-size: 13px; font-weight: bold; color: var(--accent-color); margin-bottom: 6px; }
         .chat-rich-card-actions { display: flex; gap: 6px; }
-        .chat-rich-btn { padding: 4px 8px; border-radius: 4px; font-size: 11.5px; border: none; cursor: pointer; font-weight: 600; }
+        .chat-rich-btn { padding: 8px 12px; border-radius: 4px; font-size: 11.5px; border: none; cursor: pointer; font-weight: 600; min-height: 36px; display: inline-flex; align-items: center; }
         .chat-rich-btn-buy { background: var(--primary-color); color: white; }
         .chat-rich-btn-view { background: #eee; color: #333; }
 
-        .chat-quick-replies { padding: 8px 12px; background: #fff; display: flex; gap: 6px; overflow-x: auto; border-top: 1px solid #eee; white-space: nowrap; }
-        .quick-chip { background: var(--secondary-color); color: var(--primary-color); border: 1px solid #d0e1fd; padding: 5px 10px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .chat-quick-replies { padding: 8px 12px; background: #fff; display: flex; gap: 6px; overflow-x: auto; border-top: 1px solid #eee; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+        .quick-chip { background: var(--secondary-color); color: var(--primary-color); border: 1px solid #d0e1fd; padding: 8px 12px; border-radius: 15px; font-size: 12px; cursor: pointer; font-weight: 500; transition: 0.2s; min-height: 36px; display: inline-flex; align-items: center; }
         .quick-chip:hover { background: var(--primary-color); color: #fff; }
 
         .chat-footer { padding: 10px; background: #fff; display: flex; border-top: 1px solid #ddd; gap: 8px; align-items: center; }
-        .chat-footer input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; font-size: 13.5px; }
-        .chat-footer button { background: var(--primary-color); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: 0.2s; }
+        .chat-footer input { flex: 1; padding: 10px 14px; border: 1px solid #ccc; border-radius: 20px; outline: none; font-size: 13.5px; min-height: 44px; }
+        .chat-footer button { background: var(--primary-color); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: 0.2s; flex-shrink: 0; }
         .chat-footer button:hover { opacity: 0.9; transform: scale(1.05); }
 
         /* Modal Chung */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #fff; padding: 20px; border-radius: 10px; width: 100%; max-width: 450px; position: relative; max-height: 85vh; overflow-y: auto; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3500; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #fff; padding: 20px; border-radius: 10px; width: 100%; max-width: 450px; position: relative; max-height: 85vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .modal-content h2 { margin-bottom: 12px; font-size: 18px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 6px; }
-        .close-modal { position: absolute; top: 12px; right: 15px; cursor: pointer; font-size: 18px; color: #888; }
+        .close-modal { position: absolute; top: 12px; right: 15px; cursor: pointer; font-size: 18px; color: #888; padding: 10px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
         
         .product-detail-body { text-align: center; }
         .product-detail-body img { width: 100%; max-height: 180px; object-fit: contain; margin-bottom: 10px; }
@@ -316,27 +331,27 @@
         .reviews-section { text-align: left; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; }
         .rating-stars { color: #f5a623; font-size: 14px; margin-bottom: 5px; }
         .review-input-box { display: flex; gap: 5px; margin-top: 8px; }
-        .review-input-box input { flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; margin: 0; }
+        .review-input-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; margin: 0; min-height: 44px; }
         .review-list { max-height: 120px; overflow-y: auto; margin-top: 8px; font-size: 12.5px; background: #fafafa; padding: 8px; border-radius: 5px; }
         .review-item { border-bottom: 1px solid #eee; padding-bottom: 4px; margin-bottom: 4px; color: #333; }
 
-        .modal-content input { width: 100%; padding: 9px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; }
+        .modal-content input { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; min-height: 44px; }
         .switch-auth { margin-top: 8px; font-size: 12.5px; text-align: center; }
-        .switch-auth a { color: var(--primary-color); text-decoration: none; font-weight: bold; cursor: pointer; }
+        .switch-auth a { color: var(--primary-color); text-decoration: none; font-weight: bold; cursor: pointer; padding: 5px; display: inline-block; }
 
-        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 8px 0; gap: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; gap: 10px; }
         .cart-item-info { flex: 1; }
         .cart-item-title { font-weight: bold; font-size: 13.5px; }
         .cart-item-price { color: var(--accent-color); font-size: 12.5px; }
-        .cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-        .qty-btn { background: #eee; border: none; width: 22px; height: 22px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 12px; color: #333; }
+        .cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+        .qty-btn { background: #eee; border: none; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; color: #333; display: flex; align-items: center; justify-content: center; }
         
         .voucher-box { display: flex; gap: 8px; margin: 12px 0; }
         .voucher-box input { margin: 0; }
         .cart-total { margin-top: 12px; text-align: right; font-size: 15px; font-weight: bold; border-top: 2px solid var(--secondary-color); padding-top: 8px; }
 
         /* Admin Dashboard & Staff Dashboard */
-        .admin-dashboard { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 3000; overflow-y: auto; padding: 15px; }
+        .admin-dashboard { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f0f2f5; z-index: 3000; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
         .admin-header h2 { font-size: 18px; }
         .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
@@ -345,14 +360,14 @@
         .stat-box { font-size: 20px; font-weight: bold; color: #28a745; margin: 8px 0; }
         
         .admin-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12.5px; min-width: 550px; }
-        .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+        .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; }
         .admin-table th { background-color: var(--secondary-color); color: #333; }
         
-        .btn-danger { background: var(--accent-color); padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
-        .btn-success { background: #28a745; padding: 4px 8px; border: none; color: white; border-radius: 3px; cursor: pointer; font-size: 12px; }
-        .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; font-weight: 500; }
+        .btn-danger { background: var(--accent-color); padding: 8px 12px; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 12px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-success { background: #28a745; padding: 8px 12px; border: none; color: white; border-radius: 4px; cursor: pointer; font-size: 12px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-warning { background: #ffc107; color: #000; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; }
         .add-product-form { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .add-product-form input { padding: 7px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
+        .add-product-form input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; min-height: 44px; }
 
         /* Chuông cảnh báo & Thông báo yêu cầu hỗ trợ người thật trên Dashboard Nhân Viên */
         .staff-alert-banner { display: none; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 13.5px; animation: pulse-alert 1.5s infinite; }
@@ -369,7 +384,7 @@
 
         @media (max-width: 768px) { 
             header { flex-direction: column; align-items: stretch; padding: 10px 3%; gap: 8px; }
-            .logo { text-align: center; font-size: 20px; }
+            .logo { text-align: left; font-size: 20px; }
             nav { justify-content: center; gap: 10px; flex-wrap: wrap; }
             nav a { font-size: 13px; margin: 0; }
             
@@ -382,7 +397,7 @@
             .banner p { font-size: 12.5px; }
 
             .sidebar { padding: 12px; }
-            .filter-group label { display: inline-block; margin-right: 12px; font-size: 13px; }
+            .filter-group label { display: inline-flex; margin-right: 12px; font-size: 13px; }
             .filter-group { display: flex; flex-wrap: wrap; gap: 5px; }
 
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -393,7 +408,7 @@
             .specs-preview { display: none; }
             
             .btn { padding: 10px 10px; font-size: 13.5px; }
-            .qty-btn { width: 28px; height: 28px; font-size: 14px; }
+            .qty-btn { width: 32px; height: 32px; font-size: 14px; }
 
             .add-product-form { grid-template-columns: 1fr; }
             .add-product-form button { grid-column: span 1 !important; }
@@ -401,17 +416,17 @@
             .chat-window { width: 100%; right: 0; bottom: 0; height: 85vh; border-radius: 16px 16px 0 0; }
         }
         
-        .status-badge { display: inline-block; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 11.5px; white-space: nowrap; }
+        .status-badge { display: inline-block; color: #fff; padding: 4px 10px; border-radius: 10px; font-size: 11.5px; white-space: nowrap; }
 
         .price-slider-box { margin-top: 10px; }
         .price-slider-labels { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-        .price-slider-box input[type="range"] { width: 100%; padding: 0; border: none; accent-color: var(--primary-color); cursor: pointer; }
+        .price-slider-box input[type="range"] { width: 100%; padding: 0; border: none; accent-color: var(--primary-color); cursor: pointer; height: 24px; }
 
-        .hamburger-btn { display: none; background: transparent; border: 1px solid #ddd; border-radius: 8px; font-size: 20px; line-height: 1; padding: 6px 10px; cursor: pointer; color: var(--text-color); }
+        .hamburger-btn { display: none; background: transparent; border: 1px solid #ddd; border-radius: 8px; font-size: 20px; line-height: 1; padding: 6px 12px; cursor: pointer; color: var(--text-color); min-height: 44px; min-width: 44px; align-items: center; justify-content: center; }
         .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; }
         .nav-overlay.show { display: block; }
 
-        .compare-bar { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); flex-wrap: wrap; gap: 8px; }
+        .compare-bar { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); flex-wrap: wrap; gap: 8px; }
         body.has-compare { padding-bottom: var(--compare-h, 0px); }
         body.has-compare .chat-toggle-btn { bottom: calc(var(--compare-h, 0px) + 12px); }
         body.has-compare .chat-window { bottom: calc(var(--compare-h, 0px) + 72px); }
@@ -419,14 +434,14 @@
         body.dark-mode nav a { border-color: #333; }
 
         @media (max-width: 768px) {
-            .hamburger-btn { display: block; }
+            .hamburger-btn { display: flex; }
             header > div:first-child { justify-content: flex-start !important; gap: 10px; }
             .logo { flex: 1; text-align: left; }
             nav {
                 position: fixed; top: 0; left: 0; height: 100%; width: 260px; max-width: 80%;
                 background: #fff; flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; gap: 0;
                 padding: 70px 20px 20px; box-shadow: 4px 0 16px rgba(0,0,0,0.2);
-                transform: translateX(-105%); transition: transform 0.25s ease; z-index: 2000; overflow-y: auto;
+                transform: translateX(-105%); transition: transform 0.25s ease; z-index: 2000; overflow-y: auto; -webkit-overflow-scrolling: touch;
             }
             nav.open { transform: translateX(0); }
             nav a { display: block; padding: 14px 4px; font-size: 15px; border-bottom: 1px solid #eee; }
@@ -521,7 +536,7 @@
                 <input type="range" id="price-min-range" min="0" max="40000000" step="500000" value="0" aria-label="Giá thấp nhất">
                 <input type="range" id="price-max-range" min="0" max="40000000" step="500000" value="40000000" aria-label="Giá cao nhất">
             </div>
-            <button class="btn" style="margin-top: 8px; font-size: 12px; padding: 5px;" onclick="filterProducts()">Lọc giá</button>
+            <button class="btn" style="margin-top: 8px; font-size: 13px; padding: 8px;" onclick="filterProducts()">Lọc giá</button>
         </aside>
 
         <main class="product-grid" id="product-list">
@@ -643,7 +658,7 @@
             <input type="text" id="contact-name" placeholder="Họ và tên của bạn" required>
             <input type="email" id="contact-email" placeholder="Địa chỉ Email" required>
             <textarea id="contact-message" placeholder="Nội dung cần hỗ trợ..." required></textarea>
-            <button type="submit" class="btn" style="width: auto; padding: 10px 20px;">Gửi Tin Nhắn</button>
+            <button type="submit" class="btn" style="width: auto; padding: 12px 20px;">Gửi Tin Nhắn</button>
         </form>
     </div>
 
@@ -662,8 +677,8 @@
             <span id="compare-names" style="font-size: 13px; margin-left: 10px; color: #aaa;">Chưa chọn sản phẩm</span>
         </div>
         <div>
-            <button class="btn" style="padding: 6px 12px; background: #28a745; width: auto;" onclick="openCompareModal()">Xem bảng so sánh</button>
-            <button class="btn-danger" style="padding: 6px 10px; margin-left: 5px;" onclick="clearCompare()">Hủy</button>
+            <button class="btn" style="padding: 8px 14px; background: #28a745; width: auto;" onclick="openCompareModal()">Xem bảng so sánh</button>
+            <button class="btn-danger" style="padding: 8px 12px; margin-left: 5px;" onclick="clearCompare()">Hủy</button>
         </div>
     </div>
 
@@ -729,7 +744,7 @@
             <span class="close-modal" id="close-detail">✖</span>
             <h2 id="detail-title">Chi Tiết Sản Phẩm</h2>
             <div class="product-detail-body">
-                <img id="detail-img" src="" alt="">
+                <img id="detail-img" src="" alt="" loading="lazy">
                 <h3 id="detail-price" class="price">0₫</h3>
                 <div id="detail-specs" class="product-detail-specs"></div>
                 
@@ -740,7 +755,7 @@
                     </div>
                     <div class="review-input-box">
                         <input type="text" id="review-input" placeholder="Viết đánh giá của bạn...">
-                        <button class="btn" style="width: auto; padding: 6px 12px;" id="submit-review-btn">Gửi</button>
+                        <button class="btn" style="width: auto; padding: 8px 14px;" id="submit-review-btn">Gửi</button>
                     </div>
                 </div>
 
@@ -776,17 +791,24 @@
             <h2>✏️ Chỉnh Sửa Hồ Sơ Nhân Sự</h2>
             <form id="edit-staff-form">
                 <input type="hidden" id="edit-staff-index">
+                
+                <label style="font-size:12.5px; font-weight:bold;">Mã nhân viên:</label>
+                <input type="text" id="edit-staff-code" required>
+
                 <label style="font-size:12.5px; font-weight:bold;">Họ và tên:</label>
                 <input type="text" id="edit-staff-name" required>
+
                 <label style="font-size:12.5px; font-weight:bold;">Số CCCD:</label>
                 <input type="text" id="edit-staff-cccd" required>
+
                 <label style="font-size:12.5px; font-weight:bold;">Số điện thoại:</label>
                 <input type="text" id="edit-staff-phone" required>
+
                 <label style="font-size:12.5px; font-weight:bold;">Email:</label>
                 <input type="email" id="edit-staff-email" required>
                 
                 <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Bộ phận:</label>
-                <select id="edit-staff-dept" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                <select id="edit-staff-dept" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; min-height: 44px;">
                     <option value="Bán hàng">Bán hàng</option>
                     <option value="Thu ngân">Thu ngân</option>
                     <option value="Kho">Kho</option>
@@ -794,14 +816,14 @@
                 </select>
 
                 <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Cấp độ RBAC:</label>
-                <select id="edit-staff-role" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                <select id="edit-staff-role" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; min-height: 44px;">
                     <option value="Nhân viên">Nhân viên</option>
                     <option value="Quản lý chi nhánh">Quản lý chi nhánh</option>
                     <option value="Admin">Admin</option>
                 </select>
 
                 <label style="font-size:12.5px; font-weight:bold; display:block; margin-bottom:4px;">Ca làm việc:</label>
-                <select id="edit-staff-shift" style="width: 100%; padding: 9px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px;">
+                <select id="edit-staff-shift" style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; min-height: 44px;">
                     <option value="Ca sáng (06:00 - 14:00)">Ca sáng (06:00 - 14:00)</option>
                     <option value="Ca chiều (14:00 - 22:00)">Ca chiều (14:00 - 22:00)</option>
                     <option value="Ca hành chính (08:00 - 17:00)">Ca hành chính (08:00 - 17:00)</option>
@@ -838,7 +860,7 @@
             
             <div class="voucher-box">
                 <input type="text" id="voucher-input" placeholder="Nhập mã (GIAM10K, TECHSTORE50)">
-                <button class="btn" style="width: auto; padding: 0 12px;" onclick="applyVoucher()">Áp dụng</button>
+                <button class="btn" style="width: auto; padding: 0 14px;" onclick="applyVoucher()">Áp dụng</button>
             </div>
             <div id="voucher-msg" style="font-size: 12px; color: var(--success-color); margin-bottom: 8px;"></div>
 
@@ -880,7 +902,7 @@
                 <input type="email" id="staff-email" placeholder="Email" required>
                 
                 <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px;">Bộ phận:</label>
-                <select id="staff-department" style="width: 100%; padding: 9px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px;">
+                <select id="staff-department" style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; min-height: 44px;">
                     <option value="Bán hàng">Bán hàng</option>
                     <option value="Thu ngân">Thu ngân</option>
                     <option value="Kho">Kho</option>
@@ -888,14 +910,14 @@
                 </select>
 
                 <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px;">Cấp độ RBAC:</label>
-                <select id="staff-role" style="width: 100%; padding: 9px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px;">
+                <select id="staff-role" style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; min-height: 44px;">
                     <option value="Nhân viên">Nhân viên</option>
                     <option value="Quản lý chi nhánh">Quản lý chi nhánh</option>
                     <option value="Admin">Admin</option>
                 </select>
 
                 <label style="font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px;">Ca làm việc:</label>
-                <select id="staff-shift" style="width: 100%; padding: 9px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px;">
+                <select id="staff-shift" style="width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13.5px; min-height: 44px;">
                     <option value="Ca sáng (06:00 - 14:00)">Ca sáng (06:00 - 14:00)</option>
                     <option value="Ca chiều (14:00 - 22:00)">Ca chiều (14:00 - 22:00)</option>
                     <option value="Ca hành chính (08:00 - 17:00)">Ca hành chính (08:00 - 17:00)</option>
@@ -918,13 +940,13 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">📊 Thống Kê Doanh Thu Nâng Cao</h3>
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <select id="stat-filter-type" style="padding: 6px 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 13px;" onchange="updateRevenueStats()">
+                        <select id="stat-filter-type" style="padding: 8px 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 13px; min-height: 40px;" onchange="updateRevenueStats()">
                             <option value="all">Toàn thời gian</option>
                             <option value="today">Hôm nay</option>
                             <option value="month">Tháng này</option>
                             <option value="year">Năm nay</option>
                         </select>
-                        <button class="btn-success" style="padding: 6px 12px;" onclick="exportRevenueExcel()">📥 Xuất Báo Cáo Excel/CSV</button>
+                        <button class="btn-success" style="padding: 8px 12px;" onclick="exportRevenueExcel()">📥 Xuất Báo Cáo Excel/CSV</button>
                     </div>
                 </div>
 
@@ -955,7 +977,7 @@
             <div class="admin-card rbac-admin-only" id="staff-manage-card" style="grid-column: span 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">👥 Quản Lý Hồ Sơ & Phân Quyền Nhân Sự (RBAC)</h3>
-                    <button class="btn-success" id="open-add-staff-modal" style="padding: 6px 12px; font-weight: bold;">➕ Thêm Hồ Sơ Nhân Sự</button>
+                    <button class="btn-success" id="open-add-staff-modal" style="padding: 8px 12px; font-weight: bold;">➕ Thêm Hồ Sơ Nhân Sự</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table class="admin-table">
@@ -979,7 +1001,7 @@
             <div class="admin-card" style="grid-column: span 1 / -1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px;">
                     <h3 style="margin-bottom: 0; border: none; padding: 0;">📦 Quản Lý Đơn Hàng Nâng Cao</h3>
-                    <button class="btn-danger" id="clear-all-orders-btn" style="padding: 6px 12px; font-weight: bold;">🗑️ Xóa tất cả đơn hàng</button>
+                    <button class="btn-danger" id="clear-all-orders-btn" style="padding: 8px 12px; font-weight: bold;">🗑️ Xóa tất cả đơn hàng</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table class="admin-table">
@@ -1039,13 +1061,13 @@
         <!-- Banner cảnh báo thông báo chớp đỏ khi có khách yêu cầu hỗ trợ người thật -->
         <div class="staff-alert-banner" id="staff-alert-banner">
             🔔 <strong>YÊU CẦU HỖ TRỢ NGƯỜI THẬT:</strong> Khách hàng đang cần kết nối trực tiếp với nhân viên CSKH/Kỹ thuật tại Chatbot!
-            <button class="btn" style="width: auto; padding: 4px 10px; margin-left: 10px; background: #28a745; font-size: 12px;" onclick="ackHumanSupport()">Tiếp nhận ngay</button>
+            <button class="btn" style="width: auto; padding: 6px 12px; margin-left: 10px; background: #28a745; font-size: 12px;" onclick="ackHumanSupport()">Tiếp nhận ngay</button>
         </div>
         
         <div class="admin-grid">
             <div class="admin-card">
                 <h3>📦 Tra Cứu Tồn Kho Sản Phẩm Nhanh</h3>
-                <input type="text" id="staff-search-inventory" placeholder="Tìm tên sản phẩm tồn kho..." style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;">
+                <input type="text" id="staff-search-inventory" placeholder="Tìm tên sản phẩm tồn kho..." style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; min-height: 44px;">
                 <div style="max-height: 200px; overflow-y: auto;">
                     <table class="admin-table">
                         <thead>
@@ -1064,9 +1086,9 @@
             <div class="admin-card">
                 <h3>⚡ Tạo Đơn Hàng Tại Quầy (POS)</h3>
                 <form id="pos-form">
-                    <input type="text" id="pos-customer" placeholder="Tên khách hàng" required style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;">
-                    <input type="text" id="pos-product" placeholder="Tên sản phẩm mua" required style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;">
-                    <input type="text" id="pos-price" placeholder="Tổng tiền (VNĐ)" required style="width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;">
+                    <input type="text" id="pos-customer" placeholder="Tên khách hàng" required style="width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; min-height: 44px;">
+                    <input type="text" id="pos-product" placeholder="Tên sản phẩm mua" required style="width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; min-height: 44px;">
+                    <input type="text" id="pos-price" placeholder="Tổng tiền (VNĐ)" required style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; min-height: 44px;">
                     <button type="submit" class="btn">Tạo Đơn Hàng Tại Quầy</button>
                 </form>
             </div>
@@ -1074,9 +1096,9 @@
             <div class="admin-card" style="grid-column: span 1 / -1;">
                 <h3>⏱️ Chấm Công & Hiệu Suất KPI / Hoa Hồng Cá Nhân</h3>
                 <p>Trạng thái hôm nay: <span id="attendance-status" style="color: var(--accent-color); font-weight: bold;">Chưa Check-in</span></p>
-                <div style="margin: 12px 0; display: flex; gap: 10px;">
-                    <button class="btn-success" id="check-in-btn" style="padding: 8px 16px;">📥 Check-in Vào Ca</button>
-                    <button class="btn-danger" id="check-out-btn" style="padding: 8px 16px;">📤 Check-out Tan Ca</button>
+                <div style="margin: 12px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn-success" id="check-in-btn" style="padding: 10px 18px;">📥 Check-in Vào Ca</button>
+                    <button class="btn-danger" id="check-out-btn" style="padding: 10px 18px;">📤 Check-out Tan Ca</button>
                 </div>
                 <p style="font-size: 13px; color: #555;">Thống kê tháng: Hoàn thành <strong>15 đơn hàng</strong> | Doanh thu mang lại: <span style="color: var(--success-color); font-weight: bold;">98.000.000₫</span> | Hoa hồng tạm tính: <span style="color: var(--accent-color); font-weight: bold;">1.960.000₫</span></p>
             </div>
@@ -1118,7 +1140,7 @@
         let compareList = [];
         let appliedDiscount = 0;
         let revenueChartInstance = null;
-        let unhandledBotCount = 0; // Đếm số lần chatbot chưa hiểu để tự động kích hoạt Human Handover
+        let unhandledBotCount = 0;
 
         function saveData() {
             try { _saveDataRaw(); }
@@ -1232,12 +1254,12 @@
             wishlist.forEach((item, index) => {
                 container.innerHTML += `
                     <div class="cart-item">
-                        <img src="${escapeHtml(item.imgSrc)}" alt="${escapeHtml(item.name)}" style="width: 50px; height: 50px; object-fit: contain; background: #f9f9f9; border-radius: 4px;">
+                        <img src="${escapeHtml(item.imgSrc)}" alt="${escapeHtml(item.name)}" style="width: 50px; height: 50px; object-fit: contain; background: #f9f9f9; border-radius: 4px;" loading="lazy">
                         <div class="cart-item-info" style="margin-left: 10px;">
                             <div class="cart-item-title">${escapeHtml(item.name)}</div>
                             <div class="cart-item-price">${item.price.toLocaleString('vi-VN')}₫</div>
                         </div>
-                        <button class="btn" style="width: auto; padding: 6px 12px; background: var(--primary-color);" onclick="addToCart(wishlist[${index}].name, wishlist[${index}].price); showToast('Đã thêm vào giỏ hàng!', 'success');">Chọn mua</button>
+                        <button class="btn" style="width: auto; padding: 8px 14px; background: var(--primary-color);" onclick="addToCart(wishlist[${index}].name, wishlist[${index}].price); showToast('Đã thêm vào giỏ hàng!', 'success');">Chọn mua</button>
                         <button class="btn-danger" style="margin-left: 5px;" onclick="removeFromWishlist(${index})">Xóa</button>
                     </div>
                 `;
@@ -1299,7 +1321,7 @@
                 if (hasMatches) {
                     suggestionsBox.style.display = 'block';
                 } else {
-                    suggestionsBox.innerHTML = '<div style="padding: 8px; color: #888;">Không tìm thấy sản phẩm</div>';
+                    suggestionsBox.innerHTML = '<div style="padding: 10px; color: #888;">Không tìm thấy sản phẩm</div>';
                     suggestionsBox.style.display = 'block';
                 }
             });
@@ -1364,7 +1386,7 @@
             let html = `<table class="admin-table"><thead><tr><th>Tiêu chí</th>`;
             compareList.forEach(name => {
                 let card = cards.find(c => c.getAttribute('data-name') === name);
-                html += `<th>${name}<br><img src="${card.querySelector('img').src}" style="width:60px; height:60px; object-fit:contain;"></th>`;
+                html += `<th>${name}<br><img src="${card.querySelector('img').src}" style="width:60px; height:60px; object-fit:contain;" loading="lazy"></th>`;
             });
             html += `</tr></thead><tbody>`;
 
@@ -1400,7 +1422,7 @@
         if (currentUser) {
             authMainBtn.textContent = "👤 " + currentUser.username;
             if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
-                adminPanelBtn.style.display = "inline-block";
+                adminPanelBtn.style.display = "flex";
             }
         }
 
@@ -1437,7 +1459,7 @@
                 if (foundUser) {
                     currentUser = { username: foundUser.username, role: foundUser.role };
                     if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
-                        adminPanelBtn.style.display = "inline-block";
+                        adminPanelBtn.style.display = "flex";
                     } else {
                         adminPanelBtn.style.display = "none";
                     }
@@ -1606,7 +1628,7 @@
             recentViewed.forEach(prod => {
                 grid.innerHTML += `
                     <div class="product-card" data-name="${escapeHtml(prod.name)}" data-price="${prod.price}" data-specs="${escapeHtml(prod.specs)}">
-                        <img src="${escapeHtml(prod.imgSrc)}" alt="${escapeHtml(prod.name)}">
+                        <img src="${escapeHtml(prod.imgSrc)}" alt="${escapeHtml(prod.name)}" loading="lazy">
                         <h4>${escapeHtml(prod.name)}</h4>
                         <div class="price">${prod.price.toLocaleString('vi-VN')}₫</div>
                         <button class="btn add-to-cart">Chọn Mua</button>
@@ -1811,9 +1833,14 @@
             });
         }
 
+        // HÀM MỞ BẢNG MODAL CHỈNH SỬA NHÂN SỰ
         function openEditStaff(index) {
             const s = staffList[index];
+            if (!s) return;
+            
+            // Gán dữ liệu cũ vào các ô input trong bảng modal
             document.getElementById('edit-staff-index').value = index;
+            document.getElementById('edit-staff-code').value = s.code || ('NV100' + (index + 1));
             document.getElementById('edit-staff-name').value = s.name;
             document.getElementById('edit-staff-cccd').value = s.cccd;
             document.getElementById('edit-staff-phone').value = s.phone;
@@ -1821,25 +1848,37 @@
             document.getElementById('edit-staff-dept').value = s.dept;
             document.getElementById('edit-staff-role').value = s.role;
             document.getElementById('edit-staff-shift').value = s.shift;
+            
+            // KÍCH HOẠT HIỆN BẢNG MODAL LÊN MÀN HÌNH
             document.getElementById('edit-staff-modal').style.display = 'flex';
         }
 
-        document.getElementById('edit-staff-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const index = document.getElementById('edit-staff-index').value;
-            staffList[index].name = document.getElementById('edit-staff-name').value.trim();
-            staffList[index].cccd = maskCccd(document.getElementById('edit-staff-cccd').value);
-            staffList[index].phone = document.getElementById('edit-staff-phone').value.trim();
-            staffList[index].email = document.getElementById('edit-staff-email').value.trim();
-            staffList[index].dept = document.getElementById('edit-staff-dept').value;
-            staffList[index].role = document.getElementById('edit-staff-role').value;
-            staffList[index].shift = document.getElementById('edit-staff-shift').value;
+        // Xử lý sự kiện lưu sau khi sửa thông tin nhân sự
+        const editStaffForm = document.getElementById('edit-staff-form');
+        if (editStaffForm) {
+            editStaffForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const index = document.getElementById('edit-staff-index').value;
+                
+                if (staffList[index]) {
+                    staffList[index].code = document.getElementById('edit-staff-code').value.trim();
+                    staffList[index].name = document.getElementById('edit-staff-name').value.trim();
+                    staffList[index].cccd = maskCccd(document.getElementById('edit-staff-cccd').value);
+                    staffList[index].phone = document.getElementById('edit-staff-phone').value.trim();
+                    staffList[index].email = document.getElementById('edit-staff-email').value.trim();
+                    staffList[index].dept = document.getElementById('edit-staff-dept').value;
+                    staffList[index].role = document.getElementById('edit-staff-role').value;
+                    staffList[index].shift = document.getElementById('edit-staff-shift').value;
 
-            saveData();
-            renderAdminStaff();
-            document.getElementById('edit-staff-modal').style.display = 'none';
-            showToast("Cập nhật thông tin nhân sự thành công!", "success");
-        });
+                    saveData();
+                    renderAdminStaff();
+                    
+                    // Đóng bảng modal sau khi lưu thành công
+                    document.getElementById('edit-staff-modal').style.display = 'none';
+                    showToast("Cập nhật thông tin nhân sự thành công!", "success");
+                }
+            });
+        }
 
         function deleteStaff(i) {
             if (confirm(`Bạn có chắc muốn xóa nhân sự ${staffList[i].name}?`)) {
@@ -1974,7 +2013,7 @@
                 clone.querySelectorAll('.product-card').forEach(c => { c.style.display = ''; if (!c.getAttribute('style')) c.removeAttribute('style'); });
                 localStorage.setItem(PRODUCTS_KEY, clone.innerHTML);
             } catch (err) {
-                showToast('Không lưu được (bộ nhớ trình duyệt đầy). Hãy dùng ảnh nhỏ hơn.', 'error');
+                showToast('Không lưu được do giới hạn dung lượng LocalStorage (5MB). Hãy dùng ảnh dung lượng nhỏ hơn.', 'error');
             }
         }
 
@@ -1982,6 +2021,8 @@
             card.querySelectorAll('[onclick]').forEach(el => el.removeAttribute('onclick'));
             const cmp = Array.from(card.querySelectorAll('button')).find(b => !b.classList.contains('add-to-cart') && !b.classList.contains('wishlist-btn'));
             if (cmp) cmp.classList.add('compare-btn');
+            const img = card.querySelector('img');
+            if (img && !img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
         }
 
         function handleCardClick(e) {
@@ -2078,7 +2119,7 @@
             card.className = 'product-card';
             card.innerHTML = `
                 <button class="wishlist-btn" title="Yêu thích">🤍</button>
-                <img src="" alt="">
+                <img src="" alt="" loading="lazy">
                 <h4></h4>
                 <div class="price"></div>
                 <div class="specs-preview"></div>
@@ -2152,7 +2193,7 @@
                 tr.innerHTML = `
                     <td class="p-name"></td>
                     <td style="white-space: nowrap;">
-                        <input type="text" class="quick-price" style="width: 120px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12.5px;">
+                        <input type="text" class="quick-price" style="width: 120px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12.5px; min-height: 36px;">
                         <button class="btn-warning save-price" style="background: #28a745; color: #fff;">Lưu giá</button>
                     </td>
                     <td>
@@ -2385,7 +2426,6 @@
             chatBody.scrollTop = chatBody.scrollHeight;
         }
 
-        // Tạo hiệu ứng Đang gõ ... (Typing indicator)
         function showTypingIndicator() {
             const typingDiv = document.createElement('div');
             typingDiv.className = 'message bot-msg typing-indicator';
@@ -2400,7 +2440,6 @@
             if (typingDiv) typingDiv.remove();
         }
 
-        // Tạo thẻ sản phẩm trực quan trong chat (Rich Card)
         function buildRichCardHtml(productCard) {
             if (!productCard) return '';
             const name = productCard.getAttribute('data-name');
@@ -2408,7 +2447,7 @@
             const imgSrc = productCard.querySelector('img').src;
             return `
                 <div class="chat-rich-card">
-                    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(name)}">
+                    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(name)}" loading="lazy">
                     <div class="chat-rich-card-info">
                         <h5>${escapeHtml(name)}</h5>
                         <div class="card-price">${price.toLocaleString('vi-VN')}₫</div>
@@ -2426,14 +2465,12 @@
             if (card) openProductDetail(card);
         }
 
-        // Cơ chế chuyển giao cho Nhân viên người thật (Human Handover)
         function requestHumanSupport() {
             showTypingIndicator();
             setTimeout(() => {
                 removeTypingIndicator();
                 appendMessage("Dạ vấn đề này để em kết nối ngay với bộ phận Kỹ thuật/Quản lý chi nhánh hỗ trợ anh/chị chi tiết hơn nhé ạ. Anh/chị vui lòng chờ giây lát, nhân viên bên em sẽ phản hồi ngay ạ!", "bot");
                 
-                // Hiển thị thông báo đỏ/chuông reo ở giao diện Nhân viên
                 const alertBanner = document.getElementById('staff-alert-banner');
                 if (alertBanner) alertBanner.style.display = 'block';
                 showToast("🔔 Đã phát thông báo yêu cầu người thật hỗ trợ tới Nhân viên!", "success");
@@ -2452,7 +2489,6 @@
             appendMessage(text, 'user');
             chatInput.value = '';
 
-            // Trạng thái đang gõ... (Typing indicator 0.5s - 1s)
             showTypingIndicator();
 
             setTimeout(async () => {
@@ -2463,9 +2499,6 @@
                 const lower = text.toLowerCase();
                 const cards = Array.from(document.querySelectorAll('.product-card'));
 
-                // TÍCH HỢP DỮ LIỆU THỜI GIAN THỰC & KỊCH BẢN TÂM LÝ CSKH
-
-                // 1. Tra cứu đơn hàng tự động từ ordersList hoặc Mã đơn/SĐT
                 const matchedOrder = ordersList.find(o => lower.includes(o.id.toLowerCase()) || lower.includes(o.user.toLowerCase()));
                 if (matchedOrder) {
                     botReply = `Dạ em kiểm tra thấy đơn hàng **${matchedOrder.id}** của anh/chị (${matchedOrder.itemsSummary}) hiện có trạng thái: **${matchedOrder.status}**. Tổng tiền: ${matchedOrder.total.toLocaleString('vi-VN')}₫ ạ!`;
@@ -2483,19 +2516,16 @@
                         botReply = `Dạ anh/chị vui lòng gõ trực tiếp **Mã đơn hàng** (ví dụ: ORD1001) hoặc Đăng nhập tài khoản để em tra cứu tiến độ giao hàng ngay cho mình nhé ạ!`;
                     }
                 }
-                // 2. Tầm giá dưới 5 triệu (Phễu gợi mở & Rich Card)
                 else if (lower.includes('dưới 5 triệu') || lower.includes('5tr') || lower.includes('giá rẻ')) {
                     const r14c = cards.find(c => c.getAttribute('data-name').includes('Xiaomi Redmi 14C'));
                     botReply = "Dạ trong tầm giá dưới 5 triệu, bên em có mẫu **Xiaomi Redmi 14C 128GB** pin trâu 5160mAh cực kỳ hời ạ. Em gửi thông tin máy ngay bên dưới anh/chị tham khảo nhé:";
                     if (r14c) richCardHtml = buildRichCardHtml(r14c);
                 }
-                // 3. Tư vấn iPhone mới (Chốt sale trả góp 0% khéo léo)
                 else if (lower.includes('iphone')) {
                     const ip18 = cards.find(c => c.getAttribute('data-name').includes('iPhone 18 Pro'));
                     botReply = "Dạ dòng iPhone 18 Pro Đỏ 256GB bên em mới về siêu mượt ạ! Dòng này cấu hình cực đỉnh anh ạ. Hiện tại bên em đang có chính sách **trả góp 0%** qua thẻ tín dụng hoặc chỉ cần CCCD, tính ra mỗi ngày chỉ vỏn vẹn hơn chục nghìn là sở hữu được máy rồi ạ. Anh có muốn em hướng dẫn thủ tục nhanh không ạ?";
                     if (ip18) richCardHtml = buildRichCardHtml(ip18);
                 }
-                // 4. Kiểm tra tồn kho & giá cả chính xác
                 else if (lower.includes('xiaomi 14 ultra') || lower.includes('14 ultra')) {
                     const mi14U = cards.find(c => c.getAttribute('data-name').includes('Xiaomi 14 Ultra'));
                     if (mi14U) {
@@ -2505,17 +2535,14 @@
                         botReply = `Dạ mẫu Xiaomi 14 Ultra hiện tại bên em vừa hết hàng tạm thời, anh/chị tham khảo sang Xiaomi Redmi Note 14 nhé ạ!`;
                     }
                 }
-                // 5. Gaming phone
                 else if (lower.includes('gaming') || lower.includes('chơi game')) {
                     const redMagic = cards.find(c => c.getAttribute('data-name').includes('RedMagic'));
                     botReply = "Dạ để chiến game mượt mà nhất, em tiến cử mẫu **ZTE Nubia RedMagic Gaming Phone** (Snapdragon đầu bảng, màn 144Hz có quạt tản nhiệt) ạ:";
                     if (redMagic) richCardHtml = buildRichCardHtml(redMagic);
                 }
-                // 6. Trả góp
                 else if (lower.includes('trả góp')) {
                     botReply = "Dạ TechStore hỗ trợ **trả góp 0% lãi suất** qua thẻ tín dụng hoặc công ty tài chính (chỉ cần CCCD gắn chip). Duyệt hồ sơ nhanh chỉ trong 5-10 phút thôi ạ!";
                 }
-                // 7. Hỏi đáp chung / Kích hoạt AI / Chuyển giao hỗ trợ người thật
                 else {
                     if (!GEMINI_API_KEY) {
                         unhandledBotCount++;
@@ -2547,7 +2574,7 @@
                 }
 
                 appendMessage(botReply, 'bot', richCardHtml);
-            }, 700); // Độ trễ phản hồi tạo cảm giác soạn tin nhắn người thật
+            }, 700);
         }
 
         function sendQuickQuery(query) {
