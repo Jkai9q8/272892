@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#007bff">
+    <meta name="description" content="TechStore - Bán lẻ điện thoại chính hãng, giá tốt, trả góp 0%, bảo hành 1 đổi 1.">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <title>TechStore - Website Bán Lẻ Điện Thoại Chính Hãng</title>
     <!-- Thêm thư viện Chart.js để vẽ biểu đồ doanh thu -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
         :root {
             --primary-color: #007bff;
@@ -447,9 +450,152 @@
             nav a { display: block; padding: 14px 4px; font-size: 15px; border-bottom: 1px solid #eee; }
             body.has-compare .chat-window { bottom: 0; }
         }
+
+        /* ================= TỐI ƯU CHO ĐIỆN THOẠI =================
+           Chỉ có tác dụng khi màn hình <= 768px (và <= 480px). Giao diện máy tính giữ nguyên. */
+        .filter-toggle-btn { display: none; }
+
+        @media (max-width: 768px) {
+            /* Header: không tràn ngang khi đã đăng nhập (có thêm nút Quản lý / tên tài khoản) */
+            .header-actions { flex-wrap: wrap; row-gap: 6px; }
+            .header-actions > div:first-child { flex: 1 1 110px; min-width: 0; }
+            .header-actions input[type="text"] { min-width: 0; }
+            .user-menu-container { flex: 0 1 auto; min-width: 0; }
+            .auth-btn { max-width: 44vw; overflow: hidden; text-overflow: ellipsis; }
+
+            /* Ô nhập >= 16px để iPhone Safari không tự phóng to trang khi chạm vào */
+            input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="hidden"]),
+            select, textarea { font-size: 16px !important; }
+
+            /* Bảng lọc thu gọn: bấm nút mới mở, để thấy sản phẩm ngay màn hình đầu */
+            .filter-toggle-btn {
+                display: flex; width: 100%; align-items: center; justify-content: space-between;
+                min-height: 44px; padding: 10px 14px; background: transparent; color: var(--primary-color);
+                border: 1px solid var(--primary-color); border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer;
+            }
+            .sidebar .filter-panel { display: none; margin-top: 12px; }
+            .sidebar.filters-open .filter-panel { display: block; }
+
+            /* Nút chat thu thành biểu tượng tròn, không che thanh trượt giá */
+            .chat-toggle-btn {
+                width: 56px; height: 56px; min-height: 56px; padding: 0; justify-content: center;
+                border-radius: 50%; font-size: 24px; right: 14px; bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+            .chat-toggle-btn .chat-label { display: none; }
+
+            /* Thông báo không tràn khỏi màn hình */
+            #toast-container { top: 10px; left: 10px; right: 10px; align-items: center; }
+            .toast { max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            /* Màn hình nhỏ: ô tìm kiếm chiếm cả dòng, các nút xếp dòng dưới; header không dính đầu trang để đỡ chiếm chỗ */
+            header { position: static; }
+            .header-actions { justify-content: space-between; }
+            .header-actions > div:first-child { flex: 1 1 100%; }
+            #theme-text { display: none; }
+            .header-actions { column-gap: 4px; }
+            .cart-btn-header, .auth-btn, .admin-btn { padding: 8px 8px; font-size: 12.5px; }
+            .auth-btn { max-width: 36vw; }
+        }
+
+        /* ================= TỐI ƯU BỔ SUNG: PC + MÁY TÍNH BẢNG + ĐIỆN THOẠI ================= */
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
+        img { max-width: 100%; }
+        button, a, .btn, .quick-chip, nav a, .close-modal, .close-chat { touch-action: manipulation; }
+        .modal, .chat-body, .admin-dashboard, nav { overscroll-behavior: contain; }
+        :focus-visible { outline: 3px solid rgba(0,123,255,0.55); outline-offset: 2px; }
+        .product-card:focus-within { box-shadow: 0 0 0 2px var(--primary-color); }
+
+        /* Ảnh lỗi: hiện khung biểu tượng thay vì icon vỡ */
+        img.img-broken { background: #f0f2f5 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle'%3E%F0%9F%93%B1%3C/text%3E%3C/svg%3E") center / 40% no-repeat !important; color: transparent; }
+
+        /* Tên sản phẩm 2 dòng không bị cắt chữ; nút So sánh không bị xuống dòng */
+        .product-card h4 { line-height: 1.35; height: 2.7em; }
+        .product-card .compare-btn { white-space: nowrap; padding-left: 10px; padding-right: 10px; }
+
+        /* Máy tính bảng */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            header { flex-wrap: wrap; padding: 10px 3%; gap: 10px; }
+            nav { gap: 2px; }
+            nav a { padding: 8px 8px; }
+            .header-actions { flex-wrap: wrap; row-gap: 6px; }
+            .header-actions input[type="text"] { width: 150px; }
+            .container { grid-template-columns: 200px 1fr; gap: 14px; padding: 0 12px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+            .product-card img { height: 140px; }
+            .sidebar { top: 70px; }
+        }
+
+        /* Màn hình PC lớn */
+        @media (min-width: 1400px) {
+            .container, .recent-section, .admin-grid { max-width: 1360px; }
+            .container { grid-template-columns: 260px 1fr; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+            .product-card img { height: 180px; }
+        }
+
+        /* Điện thoại rất nhỏ */
+        @media (max-width: 340px) {
+            .product-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Thanh so sánh trên điện thoại */
+        @media (max-width: 600px) {
+            .compare-bar { padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); }
+            .compare-bar > div { width: 100%; }
+            .compare-bar > div:last-child { display: flex; gap: 8px; }
+            .compare-bar > div:last-child .btn { flex: 1; }
+            #compare-names { display: block; margin-left: 0 !important; }
+            .admin-dashboard { padding: 10px; }
+            .admin-header { padding: 10px 12px; }
+        }
+        .admin-grid { grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
+
+        /* Chiều cao thật của màn hình điện thoại (thanh địa chỉ co/giãn) */
+        @supports (height: 100dvh) {
+            .chat-window { height: min(540px, calc(100dvh - 110px)); }
+            .modal-content { max-height: 88dvh; }
+            @media (max-width: 768px) { .chat-window { height: 85dvh; } }
+        }
+
+        /* Điện thoại xoay ngang: đỡ chiếm chỗ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { position: static; }
+            .chat-window { height: calc(100vh - 20px); bottom: 10px; }
+            .modal-content { max-height: 92vh; }
+            .banner { padding: 16px 10px; }
+        }
+
+        /* Người dùng bật "giảm chuyển động" */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* Bổ sung chế độ tối cho các phần trước đây bị chữ chìm vào nền */
+        body.dark-mode .admin-dashboard { background: #121214; color: #f3f4f6; }
+        body.dark-mode .admin-header,
+        body.dark-mode .user-dropdown,
+        body.dark-mode .search-suggestions,
+        body.dark-mode .chat-rich-card { background-color: #242428; color: #f3f4f6; border-color: #333; }
+        body.dark-mode .user-dropdown div,
+        body.dark-mode .search-suggestions div { color: #f3f4f6; border-color: #333; }
+        body.dark-mode .user-dropdown div:hover,
+        body.dark-mode .search-suggestions div:hover { background: #2f2f35; }
+        body.dark-mode .admin-table th { background: #2a2a2e; color: #f3f4f6; }
+        body.dark-mode .admin-table th,
+        body.dark-mode .admin-table td { border-color: #3a3a40; }
+        body.dark-mode .review-list { background: #1a1a1e; }
+        body.dark-mode .review-item { color: #e5e7eb; border-color: #333; }
+        body.dark-mode .cart-item,
+        body.dark-mode .recent-header,
+        body.dark-mode .reviews-section { border-color: #333; }
+        body.dark-mode .qty-btn,
+        body.dark-mode .chat-rich-btn-view { background: #3a3a40; color: #f3f4f6; }
     </style>
 </head>
 <body>
+    <script>try{var _t=localStorage.getItem("techstore_theme");if(_t==="dark"||(_t===null&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches))document.body.classList.add("dark-mode");}catch(e){}</script>
 
     <div id="toast-container"></div>
 
@@ -468,7 +614,7 @@
 
         <div class="header-actions">
             <div style="position: relative;">
-                <input type="text" id="search-input" placeholder="Tìm kiếm điện thoại...">
+                <input type="text" id="search-input" placeholder="Tìm kiếm điện thoại..." autocomplete="off" enterkeyhint="search" aria-label="Tìm kiếm điện thoại">
                 <div id="suggestions" class="search-suggestions"></div>
             </div>
             
@@ -509,6 +655,8 @@
     <!-- MAIN SHOPPING CONTAINER -->
     <div class="container" id="home-view">
         <aside class="sidebar">
+            <button type="button" class="filter-toggle-btn" id="filter-toggle-btn" aria-expanded="false" aria-controls="filter-panel"><span>🔎 Bộ lọc &amp; khoảng giá</span><span class="filter-arrow">▼</span></button>
+            <div class="filter-panel" id="filter-panel">
             <h3>Hãng sản xuất</h3>
             <div class="filter-group">
                 <label><input type="checkbox" class="brand-filter" value="iphone"> Apple (iPhone)</label>
@@ -527,9 +675,9 @@
 
             <h3>Khoảng giá tùy chỉnh (VNĐ)</h3>
             <div class="custom-price-box">
-                <input type="number" id="price-min" placeholder="Từ">
+                <input type="number" id="price-min" placeholder="Từ" inputmode="numeric" min="0">
                 <span>-</span>
-                <input type="number" id="price-max" placeholder="Đến">
+                <input type="number" id="price-max" placeholder="Đến" inputmode="numeric" min="0">
             </div>
             <div class="price-slider-box">
                 <div class="price-slider-labels"><span id="price-min-label">0₫</span><span id="price-max-label">Không giới hạn</span></div>
@@ -537,12 +685,13 @@
                 <input type="range" id="price-max-range" min="0" max="40000000" step="500000" value="40000000" aria-label="Giá cao nhất">
             </div>
             <button class="btn" style="margin-top: 8px; font-size: 13px; padding: 8px;" onclick="filterProducts()">Lọc giá</button>
+            </div>
         </aside>
 
         <main class="product-grid" id="product-list">
             <div class="product-card" data-name="ZTE Nubia RedMagic Gaming Phone" data-price="19990000" data-specs="• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh">
                 <button class="wishlist-btn" onclick="toggleWishlist('ZTE Nubia RedMagic Gaming Phone', 19990000, 'images.jpg', '• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="images.jpg" alt="ZTE Nubia RedMagic Gaming Phone">
+                <img decoding="async" fetchpriority="high" src="images.jpg" alt="ZTE Nubia RedMagic Gaming Phone">
                 <h4>ZTE Nubia RedMagic Gaming Phone</h4>
                 <div class="price">19.990.000₫</div>
                 <div class="specs-preview">• AMOLED 144Hz<br>• Chip Snapdragon đầu bảng<br>• Tản nhiệt quạt gió</div>
@@ -554,7 +703,7 @@
 
             <div class="product-card" data-name="Xiaomi Redmi 14C Tím" data-price="3490000" data-specs="• 6.88&quot; 120Hz, Chip Helio G81-Ultra, Pin 5160 mAh, Camera AI">
                 <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi Redmi 14C Tím', 3490000, 'images (1).jpg', '• 6.88&quot; 120Hz, Chip Helio G81-Ultra, Pin 5160 mAh, Camera AI')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="images (1).jpg" alt="Xiaomi Redmi 14C Tím">
+                <img decoding="async" src="images (1).jpg" alt="Xiaomi Redmi 14C Tím">
                 <h4>Xiaomi Redmi 14C Tím 128GB</h4>
                 <div class="price">3.490.000₫</div>
                 <div class="specs-preview">• 6.88" 120Hz<br>• Chip: Helio G81-Ultra<br>• Pin: 5160 mAh</div>
@@ -566,7 +715,7 @@
 
             <div class="product-card" data-name="Xiaomi 14 Ultra Xanh Leica" data-price="24990000" data-specs="• 6.73&quot; AMOLED 120Hz, Chip Snapdragon 8 Gen 3, Camera Leica 50MP, Pin 5000 mAh">
                 <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi 14 Ultra Xanh Leica', 24990000, 'images (2).jpg', '• 6.73&quot; AMOLED 120Hz, Chip Snapdragon 8 Gen 3, Camera Leica 50MP, Pin 5000 mAh')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="images (2).jpg" alt="Xiaomi 14 Ultra Xanh">
+                <img loading="lazy" decoding="async" src="images (2).jpg" alt="Xiaomi 14 Ultra Xanh">
                 <h4>Xiaomi 14 Ultra Xanh Leica</h4>
                 <div class="price">24.990.000₫</div>
                 <div class="specs-preview">• 6.73" AMOLED 120Hz<br>• Chip: Snapdragon 8 Gen 3<br>• Camera Leica 50MP</div>
@@ -578,7 +727,7 @@
 
             <div class="product-card" data-name="Xiaomi Redmi Note 14 Tím Vân" data-price="4790000" data-specs="• 6.67&quot; AMOLED 120Hz, Pin 5000 mAh, Sạc nhanh 33W, Camera AI">
                 <button class="wishlist-btn" onclick="toggleWishlist('Xiaomi Redmi Note 14 Tím Vân', 4790000, 'images (3).jpg', '• 6.67&quot; AMOLED 120Hz, Pin 5000 mAh, Sạc nhanh 33W, Camera AI')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="images (3).jpg" alt="Xiaomi Redmi Note 14 Tím">
+                <img loading="lazy" decoding="async" src="images (3).jpg" alt="Xiaomi Redmi Note 14 Tím">
                 <h4>Xiaomi Redmi Note 14 Tím Vân</h4>
                 <div class="price">4.790.000₫</div>
                 <div class="specs-preview">• 6.67" AMOLED 120Hz<br>• Pin: 5000 mAh, 33W<br>• Camera AI</div>
@@ -590,7 +739,7 @@
 
             <div class="product-card" data-name="iPhone 18 Pro Đỏ 256GB" data-price="35990000" data-specs="• 6.3&quot; OLED 120Hz, Chip A20 Pro, Pin 5000 mAh, Camera 48MP">
                 <button class="wishlist-btn" onclick="toggleWishlist('iPhone 18 Pro Đỏ 256GB', 35990000, 'iphone-18-pro-do-thumb-600x600.jpg', '• 6.3&quot; OLED 120Hz, Chip A20 Pro, Pin 5000 mAh, Camera 48MP')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="iphone-18-pro-do-thumb-600x600.jpg" alt="iPhone 18 Pro Đỏ">
+                <img loading="lazy" decoding="async" src="iphone-18-pro-do-thumb-600x600.jpg" alt="iPhone 18 Pro Đỏ">
                 <h4>iPhone 18 Pro Đỏ 256GB</h4>
                 <div class="price">35.990.000₫</div>
                 <div class="specs-preview">• 6.3" OLED 120Hz<br>• Chip: A20 Pro<br>• Pin: 5000 mAh</div>
@@ -602,7 +751,7 @@
 
             <div class="product-card" data-name="iPhone Duo Trắng 128GB" data-price="28990000" data-specs="• 6.1&quot; Super Retina, Chip A19, Pin 4600 mAh, Camera kép">
                 <button class="wishlist-btn" onclick="toggleWishlist('iPhone Duo Trắng 128GB', 28990000, 'iphone-duo-white-thumb-600x600.jpg', '• 6.1&quot; Super Retina, Chip A19, Pin 4600 mAh, Camera kép')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="iphone-duo-white-thumb-600x600.jpg" alt="iPhone Duo Trắng">
+                <img loading="lazy" decoding="async" src="iphone-duo-white-thumb-600x600.jpg" alt="iPhone Duo Trắng">
                 <h4>iPhone Duo Trắng 128GB</h4>
                 <div class="price">28.990.000₫</div>
                 <div class="specs-preview">• 6.1" Super Retina<br>• Chip: A19<br>• Pin: 4600 mAh</div>
@@ -614,7 +763,7 @@
 
             <div class="product-card" data-name="ZTE Nubia Neo 5 GT" data-price="6490000" data-specs="• 6.7&quot; FHD+ 120Hz, Chip Gaming 5G, Pin 5000 mAh, Sạc nhanh 45W">
                 <button class="wishlist-btn" onclick="toggleWishlist('ZTE Nubia Neo 5 GT', 6490000, 'images - Sao chép.jpg', '• 6.7&quot; FHD+ 120Hz, Chip Gaming 5G, Pin 5000 mAh, Sạc nhanh 45W')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="images - Sao chép.jpg" alt="ZTE Nubia Neo 5 GT">
+                <img loading="lazy" decoding="async" src="images - Sao chép.jpg" alt="ZTE Nubia Neo 5 GT">
                 <h4>ZTE Nubia Neo 5 GT</h4>
                 <div class="price">6.490.000₫</div>
                 <div class="specs-preview">• 6.7" 120Hz<br>• Chip Gaming 5G<br>• Pin: 5000 mAh, 45W</div>
@@ -626,7 +775,7 @@
 
             <div class="product-card" data-name="Samsung Galaxy S26 FE 5G" data-price="16490000" data-specs="• 6.4&quot; Dynamic AMOLED, Chip Exynos 2400e, Pin 4500 mAh, Sạc 25W">
                 <button class="wishlist-btn" onclick="toggleWishlist('Samsung Galaxy S26 FE 5G', 16490000, 'samsung-galaxy-s26-fe-5g-blue-thumb-600x600.jpg', '• 6.4&quot; Dynamic AMOLED, Chip Exynos 2400e, Pin 4500 mAh, Sạc 25W')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="samsung-galaxy-s26-fe-5g-blue-thumb-600x600.jpg" alt="Samsung Galaxy S26 FE">
+                <img loading="lazy" decoding="async" src="samsung-galaxy-s26-fe-5g-blue-thumb-600x600.jpg" alt="Samsung Galaxy S26 FE">
                 <h4>Samsung Galaxy S26 FE 5G</h4>
                 <div class="price">16.490.000₫</div>
                 <div class="specs-preview">• 6.4" Dynamic AMOLED<br>• Chip: Exynos 2400e<br>• Pin: 4500 mAh</div>
@@ -638,7 +787,7 @@
 
             <div class="product-card" data-name="OPPO Reno16 F 5G" data-price="9990000" data-specs="• 6.7&quot; AMOLED, Camera Chân dung AI 64MP, Pin 5000 mAh, Sạc SUPERVOOC 45W">
                 <button class="wishlist-btn" onclick="toggleWishlist('OPPO Reno16 F 5G', 9990000, 'oppo-reno16-f-trang-thumb-600x600.jpg', '• 6.7&quot; AMOLED, Camera Chân dung AI 64MP, Pin 5000 mAh, Sạc SUPERVOOC 45W')" title="Yêu thích">🤍</button>
-                <img loading="lazy" src="oppo-reno16-f-trang-thumb-600x600.jpg" alt="OPPO Reno16 F">
+                <img loading="lazy" decoding="async" src="oppo-reno16-f-trang-thumb-600x600.jpg" alt="OPPO Reno16 F">
                 <h4>OPPO Reno16 F 5G</h4>
                 <div class="price">9.990.000₫</div>
                 <div class="specs-preview">• 6.7" AMOLED<br>• Camera AI<br>• Pin: 5000 mAh, 45W</div>
@@ -655,8 +804,8 @@
         <h2>📞 Liên Hệ Với TechStore</h2>
         <p style="margin-bottom: 15px; font-size: 14px;">Bạn có thắc mắc hoặc cần hỗ trợ dịch vụ? Hãy gửi tin nhắn cho chúng tôi!</p>
         <form class="contact-form" id="contact-form-submit">
-            <input type="text" id="contact-name" placeholder="Họ và tên của bạn" required>
-            <input type="email" id="contact-email" placeholder="Địa chỉ Email" required>
+            <input type="text" id="contact-name" placeholder="Họ và tên của bạn" required autocomplete="name">
+            <input type="email" id="contact-email" placeholder="Địa chỉ Email" required autocomplete="email" inputmode="email">
             <textarea id="contact-message" placeholder="Nội dung cần hỗ trợ..." required></textarea>
             <button type="submit" class="btn" style="width: auto; padding: 12px 20px;">Gửi Tin Nhắn</button>
         </form>
@@ -683,10 +832,10 @@
     </div>
 
     <!-- CHATBOT KHUNG TƯ VẤN NÂNG CẤP CSKH -->
-    <button class="chat-toggle-btn" id="chat-toggle-btn">
-        💬 Tư vấn trực tuyến
+    <button class="chat-toggle-btn" id="chat-toggle-btn" aria-label="Tư vấn trực tuyến">
+        <span class="chat-btn-inner">💬 <span class="chat-label">Tư vấn trực tuyến</span></span>
     </button>
-    <div class="chat-window" id="chat-window">
+    <div class="chat-window" id="chat-window" role="dialog" aria-label="Tư vấn trực tuyến">
         <div class="chat-header">
             <div class="chat-header-info">
                 <!-- Avatar & Huy hiệu trạng thái trực tuyến động -->
@@ -696,7 +845,7 @@
                     <span class="subtitle"><span class="dot"></span> Hỗ trợ 24/7 (Sẵn sàng)</span>
                 </div>
             </div>
-            <span class="close-chat" id="close-chat">✖</span>
+            <span class="close-chat" id="close-chat" role="button" tabindex="0" aria-label="Đóng khung chat">✖</span>
         </div>
         <div class="chat-body" id="chat-body">
             <!-- Tin nhắn chào mừng cá nhân hóa & thấu cảm -->
@@ -713,8 +862,8 @@
         </div>
 
         <div class="chat-footer">
-            <input type="text" id="chat-input" placeholder="Nhập tin nhắn hoặc mã đơn ORD1001...">
-            <button id="send-btn">➤</button>
+            <input type="text" id="chat-input" placeholder="Nhập tin nhắn hoặc mã đơn ORD1001..." autocomplete="off" enterkeyhint="send" aria-label="Nhập tin nhắn">
+            <button id="send-btn" aria-label="Gửi tin nhắn">➤</button>
         </div>
     </div>
 
@@ -839,8 +988,8 @@
             <span class="close-modal" id="close-auth">✖</span>
             <h2 id="auth-title">Đăng Nhập</h2>
             <form id="auth-form">
-                <input type="text" id="auth-username" placeholder="Tên tài khoản" required>
-                <input type="password" id="auth-password" placeholder="Mật khẩu" required>
+                <input type="text" id="auth-username" placeholder="Tên tài khoản" required autocomplete="username" autocapitalize="none" autocorrect="off">
+                <input type="password" id="auth-password" placeholder="Mật khẩu" required autocomplete="current-password">
                 <button type="submit" class="btn" id="auth-submit-btn">Đăng nhập</button>
             </form>
             <div class="switch-auth">
@@ -1106,17 +1255,19 @@
     </div>
 
     <script>
+        function readLS(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+        function vnNorm(str) { return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd'); }
         const GEMINI_API_KEY = ""; 
 
-        let ordersList = JSON.parse(localStorage.getItem('techstore_orders')) || [
+        let ordersList = readLS('techstore_orders') || [
             { id: "ORD1001", user: "Nguyễn Văn A", itemsSummary: "Xiaomi Redmi 14C Tím 128GB", total: 3490000, status: "Đã xác nhận", date: "2026-06-01" },
             { id: "ORD1002", user: "Trần Thị B", itemsSummary: "iPhone 18 Pro Đỏ 256GB", total: 35990000, status: "Đã xác nhận", date: "2026-06-03" }
         ];
-        let cart = JSON.parse(localStorage.getItem('techstore_cart')) || [];
-        let wishlist = JSON.parse(localStorage.getItem('techstore_wishlist')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('techstore_user')) || null;
+        let cart = readLS('techstore_cart') || [];
+        let wishlist = readLS('techstore_wishlist') || [];
+        let currentUser = readLS('techstore_user') || null;
         
-        let usersList = JSON.parse(localStorage.getItem('techstore_users')) || [];
+        let usersList = readLS('techstore_users') || [];
         const defaultUsers = [
             { username: "admin", password: "123", role: "Admin" },
             { username: "nhanvien", password: "123", role: "Nhân viên" }
@@ -1130,13 +1281,13 @@
             }
         });
         
-        let staffList = JSON.parse(localStorage.getItem('techstore_staff')) || [
+        let staffList = readLS('techstore_staff') || [
             { code: "NV1001", name: "Nguyễn Văn A", cccd: "079203001234", phone: "0901234567", email: "a.nv@techstore.vn", dept: "Thu ngân", role: "Nhân viên", shift: "Ca sáng (06:00 - 14:00)" },
             { code: "NV1002", name: "Trần Thị B", cccd: "079203005678", phone: "0908765432", email: "b.tt@techstore.vn", dept: "Bán hàng", role: "Nhân viên", shift: "Ca chiều (14:00 - 22:00)" }
         ];
 
-        let productReviews = JSON.parse(localStorage.getItem('techstore_reviews')) || {};
-        let recentViewed = JSON.parse(localStorage.getItem('techstore_recent')) || [];
+        let productReviews = readLS('techstore_reviews') || {};
+        let recentViewed = readLS('techstore_recent') || [];
         let compareList = [];
         let appliedDiscount = 0;
         let revenueChartInstance = null;
@@ -1194,7 +1345,7 @@
         const themeText = document.getElementById('theme-text');
 
         const currentTheme = localStorage.getItem('techstore_theme');
-        if (currentTheme === 'dark') {
+        if (currentTheme === 'dark' || document.body.classList.contains('dark-mode')) {
             document.body.classList.add('dark-mode');
             themeText.textContent = 'Sáng';
             themeToggleBtn.innerHTML = '☀️ <span id="theme-text">Sáng</span>';
@@ -1288,7 +1439,7 @@
 
         if (searchInput) {
             searchInput.addEventListener('input', function() {
-                const keyword = this.value.trim().toLowerCase();
+                const keyword = vnNorm(this.value.trim());
                 const cards = document.querySelectorAll('.product-grid .product-card');
                 suggestionsBox.innerHTML = '';
 
@@ -1301,7 +1452,7 @@
                 let hasMatches = false;
                 cards.forEach(card => {
                     const name = card.getAttribute('data-name');
-                    if (name.toLowerCase().includes(keyword)) {
+                    if (vnNorm(name).includes(keyword)) {
                         card.style.display = 'flex';
                         hasMatches = true;
 
@@ -2583,11 +2734,64 @@
         }
 
         sendBtn.addEventListener('click', handleChatSend);
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleChatSend(); });
+        chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); handleChatSend(); } });
+
+        // Bảng lọc thu gọn trên điện thoại (nút chỉ hiện khi màn hình <= 768px)
+        (function initFilterToggle() {
+            const btn = document.getElementById('filter-toggle-btn');
+            const side = btn ? btn.closest('.sidebar') : null;
+            if (!btn || !side) return;
+            btn.addEventListener('click', () => {
+                const open = side.classList.toggle('filters-open');
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.querySelector('.filter-arrow').textContent = open ? '▲' : '▼';
+            });
+        })();
 
         updateCartUI();
         updateWishlistUI();
         updateWishlistIcons();
+    </script>
+
+    <script>
+    (function () {
+        // Menu/logo bấm được bằng bàn phím (Tab + Enter)
+        document.querySelectorAll('#main-nav a, header .logo').forEach(function (el) {
+            el.setAttribute('role', 'link'); el.tabIndex = 0;
+            el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
+        });
+        document.querySelectorAll('.close-modal, #close-chat').forEach(function (el) {
+            el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Đóng'); el.tabIndex = 0;
+            el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
+        });
+
+        // Nhấn Esc để đóng cửa sổ đang mở (PC)
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Escape') return;
+            var closed = false;
+            document.querySelectorAll('.modal').forEach(function (m) {
+                if (getComputedStyle(m).display !== 'none') { m.style.display = 'none'; closed = true; }
+            });
+            var cw = document.getElementById('chat-window');
+            if (!closed && cw && getComputedStyle(cw).display !== 'none') cw.style.display = 'none';
+        });
+
+        // Chạm vào nền tối bên ngoài để đóng cửa sổ (điện thoại)
+        document.querySelectorAll('.modal').forEach(function (m) {
+            m.addEventListener('click', function (e) { if (e.target === m) m.style.display = 'none'; });
+        });
+
+        // Ảnh bị lỗi/thiếu file: hiện khung thay thế, tự gỡ nếu ảnh tải lại được
+        document.addEventListener('error', function (e) {
+            var t = e.target; if (t && t.tagName === 'IMG') t.classList.add('img-broken');
+        }, true);
+        document.addEventListener('load', function (e) {
+            var t = e.target; if (t && t.tagName === 'IMG') t.classList.remove('img-broken');
+        }, true);
+        document.querySelectorAll('img').forEach(function (img) {
+            if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) img.classList.add('img-broken');
+        });
+    })();
     </script>
 </body>
 </html>
