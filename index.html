@@ -1120,7 +1120,7 @@
             </div>
 
             <div id="rbac-warning-card" class="admin-card" style="grid-column: span 1 / -1; display: none; background: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
-                🔒 <strong>Giới hạn quyền hạn (RBAC):</strong> Bạn đang truy cập bằng tài khoản Nhân viên. Các chức năng Thống kê Doanh thu và Quản lý Hồ sơ Nhân sự cấp cao đã bị giới hạn.
+                🔒 <strong>Giới hạn quyền hạn (RBAC):</strong> Bạn đang truy cập bằng tài khoản Quản lý chi nhánh. Chức năng Quản lý Hồ sơ &amp; Phân quyền Nhân sự chỉ dành cho Admin.
             </div>
 
             <div class="admin-card rbac-admin-only" id="staff-manage-card" style="grid-column: span 1 / -1;">
@@ -1570,12 +1570,18 @@
         const staffModal = document.getElementById('staff-modal');
         const staffDashboard = document.getElementById('staff-dashboard');
 
+        const staffDashMenuItem = document.getElementById('dropdown-staff-dash');
+        const canOpenAdmin = () => !!currentUser && (currentUser.role === "Admin" || currentUser.role === "Quản lý chi nhánh");
+        const canOpenStaff = () => !!currentUser && currentUser.role === "Nhân viên";
+        function updateRoleUI() {
+            adminPanelBtn.style.display = canOpenAdmin() ? "flex" : "none";
+            staffDashMenuItem.style.display = canOpenStaff() ? "flex" : "none";
+        }
+
         if (currentUser) {
             authMainBtn.textContent = "👤 " + currentUser.username;
-            if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
-                adminPanelBtn.style.display = "flex";
-            }
         }
+        updateRoleUI();
 
         authMainBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1609,11 +1615,7 @@
                 const foundUser = usersList.find(item => item.username === u && item.password === p);
                 if (foundUser) {
                     currentUser = { username: foundUser.username, role: foundUser.role };
-                    if (currentUser.role === "Admin" || currentUser.role === "Nhân viên" || currentUser.role === "Quản lý chi nhánh") {
-                        adminPanelBtn.style.display = "flex";
-                    } else {
-                        adminPanelBtn.style.display = "none";
-                    }
+                    updateRoleUI();
                     saveData();
                     authMainBtn.textContent = "👤 " + currentUser.username;
                     authModal.style.display = "none";
@@ -1629,7 +1631,7 @@
                 }
                 usersList.push({ username: u, password: p, role: "Khách hàng" });
                 currentUser = { username: u, role: "Khách hàng" };
-                adminPanelBtn.style.display = "none";
+                updateRoleUI();
                 saveData();
                 authMainBtn.textContent = "👤 " + currentUser.username;
                 authModal.style.display = "none";
@@ -1653,6 +1655,7 @@
         });
 
         document.getElementById('dropdown-staff-dash').addEventListener('click', () => {
+            if (!canOpenStaff()) { showToast("Bạn không có quyền truy cập giao diện này!", "error"); return; }
             staffDashboard.style.display = 'block';
         });
 
@@ -1700,7 +1703,9 @@
             currentUser = null;
             saveData();
             authMainBtn.textContent = "👤 Đăng nhập";
-            adminPanelBtn.style.display = "none";
+            updateRoleUI();
+            adminDashboard.style.display = "none";
+            staffDashboard.style.display = "none";
             showToast("Đăng xuất!", "success");
         });
 
@@ -1832,19 +1837,18 @@
 
         const adminDashboard = document.getElementById('admin-dashboard');
         document.getElementById('admin-panel-btn').addEventListener('click', () => {
-            const isAdmin = currentUser && currentUser.role === "Admin";
-            const adminCards = document.querySelectorAll('.rbac-admin-only');
+            if (!canOpenAdmin()) { showToast("Bạn không có quyền truy cập Bảng Quản Trị!", "error"); return; }
+            const isAdmin = currentUser.role === "Admin";
             const warningCard = document.getElementById('rbac-warning-card');
+            const revenueCard = document.getElementById('revenue-stat-card');
+            const staffCard = document.getElementById('staff-manage-card');
 
-            if (!isAdmin) {
-                adminCards.forEach(c => c.style.display = 'none');
-                if (warningCard) warningCard.style.display = 'block';
-            } else {
-                adminCards.forEach(c => c.style.display = 'block');
-                if (warningCard) warningCard.style.display = 'none';
-                updateRevenueStats();
-                renderAdminStaff();
-            }
+            // Admin: thấy tất cả. Quản lý chi nhánh: xem doanh thu, không quản lý hồ sơ/phân quyền nhân sự.
+            revenueCard.style.display = 'block';
+            staffCard.style.display = isAdmin ? 'block' : 'none';
+            if (warningCard) warningCard.style.display = isAdmin ? 'none' : 'block';
+            updateRevenueStats();
+            if (isAdmin) renderAdminStaff();
 
             renderAdminProducts();
             renderAdminOrders();
