@@ -175,9 +175,8 @@
         #cart-count, #wishlist-count { background: var(--accent-color); color: white; border-radius: 50%; padding: 1px 6px; font-size: 11px; font-weight: bold; }
         
         .user-menu-container { position: relative; }
-        .auth-btn, .admin-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: bold; cursor: pointer; font-size: 13.5px; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
+        .auth-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid var(--primary-color); background: transparent; color: var(--primary-color); font-weight: bold; cursor: pointer; font-size: 13.5px; white-space: nowrap; min-height: 44px; display: flex; align-items: center; }
         .auth-btn:hover { background: var(--primary-color); color: #fff; }
-        .admin-btn { background: #333; color: #fff; border: none; display: none; }
         
         /* Dropdown tài khoản */
         .user-dropdown {
@@ -495,7 +494,7 @@
             .header-actions > div:first-child { flex: 1 1 100%; }
             #theme-text { display: none; }
             .header-actions { column-gap: 4px; }
-            .cart-btn-header, .auth-btn, .admin-btn { padding: 8px 8px; font-size: 12.5px; }
+            .cart-btn-header, .auth-btn { padding: 8px 8px; font-size: 12.5px; }
             .auth-btn { max-width: 36vw; }
         }
 
@@ -632,13 +631,12 @@
                 🛒 <span id="cart-count">0</span>
             </button>
             
-            <button class="admin-btn" id="admin-panel-btn">⚙ Quản lý</button>
-
             <div class="user-menu-container">
                 <button class="auth-btn" id="auth-main-btn">👤 Đăng nhập</button>
                 <div class="user-dropdown" id="user-dropdown">
                     <div id="dropdown-account-info">📄 Thông tin tài khoản</div>
                     <div id="dropdown-orders">📦 Đơn hàng của tôi</div>
+                    <div id="admin-panel-btn" style="color: var(--primary-color); font-weight: bold;">⚙ Quản lý</div>
                     <div id="dropdown-staff-dash" style="color: var(--primary-color); font-weight: bold;">🛠 Giao diện Nhân viên</div>
                     <div id="dropdown-logout" style="color: var(--accent-color); font-weight: bold;">🚪 Đăng xuất</div>
                 </div>
@@ -649,7 +647,7 @@
 
     <div class="banner" id="main-banner">
         <h1>Siêu Hội Smartphone - Giảm Đến 50%</h1>
-        <p>Cam kết chính hãng 100% - Bảo hành đổi trả 1 đổi 1 trong 30 days</p>
+        <p>Cam kết chính hãng 100% - Bảo hành đổi trả 1 đổi 1 trong 30 ngày</p>
     </div>
 
     <!-- MAIN SHOPPING CONTAINER -->
@@ -2576,7 +2574,9 @@
         function appendMessage(text, sender, richCardHtml = '') {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
-            msgDiv.innerHTML = text + (richCardHtml ? richCardHtml : '');
+            // Luôn lọc ký tự HTML trước (tránh khách gõ mã HTML vào khung chat), sau đó mới đổi **chữ** thành chữ đậm
+            const safeText = escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            msgDiv.innerHTML = safeText + (richCardHtml ? richCardHtml : '');
             chatBody.appendChild(msgDiv);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
@@ -2638,6 +2638,237 @@
             showToast("Đã tiếp nhận yêu cầu CSKH từ Chatbot!", "success");
         }
 
+        // ================= BỘ NÃO CHATBOT TƯ VẤN (đọc dữ liệu sản phẩm thật đang hiển thị trên web) =================
+        const BOT = { last: [], fails: 0 };
+        const BOT_STOP = new Set(['dien', 'thoai', 'phone', '5g', '4g', 'tim', 'do', 'xanh', 'trang', 'den', 'van', 'vang', 'hong', 'la', 'cam', 'bac', 'xam', 'than', 'gaming']);
+        const BOT_CHIPS = [
+            ['📱 Dưới 5 triệu', 'Điện thoại dưới 5 triệu'], ['🎮 Chơi game', 'Máy chơi game mượt'], ['📷 Chụp ảnh đẹp', 'Máy chụp ảnh đẹp'],
+            ['🔥 iPhone mới', 'Tư vấn iPhone mới nhất'], ['💳 Trả góp 0%', 'Chính sách trả góp 0%'], ['🎁 Mã giảm giá', 'Có mã giảm giá nào không'], ['📦 Tra cứu đơn hàng', 'Tra cứu đơn hàng']
+        ];
+        const BOT_BUDGET_CHIPS = [['Dưới 5 triệu', 'Điện thoại dưới 5 triệu'], ['5 – 10 triệu', 'Điện thoại từ 5 đến 10 triệu'], ['10 – 20 triệu', 'Điện thoại từ 10 đến 20 triệu'], ['Trên 20 triệu', 'Điện thoại trên 20 triệu']];
+        const BOT_BRAND_NAME = { apple: 'Apple', samsung: 'Samsung', xiaomi: 'Xiaomi', oppo: 'OPPO', zte: 'ZTE Nubia' };
+        const BOT_NEED_TXT = { game: 'chơi game mượt', camera: 'chụp ảnh đẹp', pin: 'pin trâu dùng lâu', cheap: 'giá dễ tiếp cận', top: 'dòng cao cấp' };
+        const botM = v => (Math.round(v / 1e5) / 10).toString().replace('.', ',') + ' triệu';
+
+        function botCatalog() {
+            return Array.from(document.querySelectorAll('#product-list .product-card')).map(el => {
+                const name = el.dataset.name || '', specs = el.dataset.specs || '';
+                const norm = vnNorm(name), full = vnNorm(name + ' ' + specs);
+                const brand = /iphone|apple/.test(norm) ? 'apple' : /samsung|galaxy/.test(norm) ? 'samsung' : /xiaomi|redmi/.test(norm) ? 'xiaomi' : /oppo|reno/.test(norm) ? 'oppo' : /zte|nubia|redmagic/.test(norm) ? 'zte' : '';
+                return {
+                    el, name, price: parseInt(el.dataset.price) || 0, specs: cleanSpecs(specs), full, brand,
+                    mah: parseInt((full.match(/(\d{4})\s*mah/) || [])[1]) || 0,
+                    mp: Math.max(0, ...(full.match(/\d{2,3}(?=\s*mp)/g) || []).map(Number)),
+                    tokens: norm.split(/[^a-z0-9]+/).filter(w => w && !BOT_STOP.has(w) && !/^\d+(gb|tb)$/.test(w))
+                };
+            });
+        }
+
+        function botBrand(t) {
+            return /iphone|apple|\bios\b/.test(t) ? 'apple' : /samsung|galaxy/.test(t) ? 'samsung' : /xiaomi|redmi/.test(t) ? 'xiaomi' : /oppo|reno/.test(t) ? 'oppo' : /\bzte\b|nubia|redmagic/.test(t) ? 'zte' : '';
+        }
+
+        function botNeed(t) {
+            if (/game|gaming|pubg|lien quan|fps|do hoa/.test(t)) return 'game';
+            if (/camera|chup|quay phim|selfie|song ao|anh dep|leica|chan dung/.test(t)) return 'camera';
+            if (/\bpin\b|trau|sac nhanh|dung lau/.test(t)) return 'pin';
+            if (/gia re|re nhat|tiet kiem|sinh vien|hoc sinh|cho bo me|cho ba|cho me|nguoi lon tuoi/.test(t)) return 'cheap';
+            if (/cao cap|flagship|manh nhat|xin nhat|dinh nhat|tot nhat|moi nhat|moi ra|moi ve|doi moi/.test(t)) return 'top';
+            return '';
+        }
+
+        // Hiểu ngân sách: "dưới 5 triệu", "5tr", "tầm 10 củ", "từ 5 đến 10 triệu", "7 triệu rưỡi", "10.000.000"
+        function botBudget(t) {
+            const rg = t.match(/(\d+(?:[.,]\d+)?)\s*(?:trieu|tr|cu)?\s*(?:-|den|toi)\s*(\d+(?:[.,]\d+)?)\s*(?:trieu|tr|cu)/);
+            if (rg) return { min: parseFloat(rg[1].replace(',', '.')) * 1e6, max: parseFloat(rg[2].replace(',', '.')) * 1e6 };
+            const vals = [];
+            t.replace(/(\d{1,3}(?:[.,]\d{3}){2,}|\d{7,})|(\d+(?:[.,]\d+)?)\s*(?:trieu|tr|cu|m)\b(\s*ruoi)?/g, (m, big, num, half) => {
+                if (big) vals.push(parseInt(big.replace(/\D/g, '')));
+                else vals.push((parseFloat(num.replace(',', '.')) + (half ? 0.5 : 0)) * 1e6);
+                return m;
+            });
+            if (!vals.length) return null;
+            vals.sort((a, b) => a - b);
+            if (vals.length >= 2) return { min: vals[0], max: vals[vals.length - 1] };
+            const v = vals[0];
+            if (/duoi|toi da|khong qua|nho hon|re hon/.test(t)) return { max: v };
+            if (/tren|tro len|it nhat|lon hon|cao hon/.test(t)) return { min: v };
+            return { min: v * 0.8, max: v * 1.2 };
+        }
+        function botBudTxt(b) {
+            if (b.min == null) return 'dưới ' + botM(b.max);
+            if (b.max == null) return 'trên ' + botM(b.min);
+            return 'tầm ' + botM(b.min) + ' – ' + botM(b.max);
+        }
+
+        // Tìm máy được nhắc tên (ví dụ "iphone 18 pro", "xiaomi 14 ultra", "s26", "redmi 14c")
+        function botFind(t, cat, all) {
+            const words = new Set(t.split(/[^a-z0-9]+/).filter(Boolean));
+            const scored = cat.map(p => {
+                const hit = p.tokens.filter(w => words.has(w));
+                const ok = hit.length >= 2 || hit.some(w => /\d/.test(w) && /[a-z]/.test(w));
+                return { p, n: ok ? hit.length : 0 };
+            }).filter(x => x.n > 0).sort((a, b) => b.n - a.n);
+            if (!scored.length) return [];
+            return (all ? scored : scored.filter(x => x.n === scored[0].n)).map(x => x.p);
+        }
+
+        function botRank(list, need, bud) {
+            const score = {
+                game: p => (/game|gaming|144hz|tan nhiet|snapdragon 8|redmagic/.test(p.full) ? 100 : 0) + (/144hz/.test(p.full) ? 30 : /120hz/.test(p.full) ? 15 : 0) + p.price / 1e6,
+                camera: p => (/leica/.test(p.full) ? 60 : 0) + p.mp + (/camera/.test(p.full) ? 10 : 0),
+                pin: p => p.mah,
+                cheap: p => -p.price,
+                top: p => p.price
+            }[need];
+            if (score) return list.slice().sort((a, b) => score(b) - score(a));
+            if (bud && bud.min != null && bud.max != null) { const c = (bud.min + bud.max) / 2; return list.slice().sort((a, b) => Math.abs(a.price - c) - Math.abs(b.price - c)); }
+            if (bud && bud.min == null) return list.slice().sort((a, b) => b.price - a.price);
+            return list.slice().sort((a, b) => a.price - b.price);
+        }
+
+        function botCards(list) { BOT.last = list.map(p => p.el); return list.map(p => buildRichCardHtml(p.el)).join(''); }
+
+        // Trả về { text, cards, chips } | { human:true } | null (chưa hiểu)
+        function botThink(text) {
+            const t = vnNorm(text).trim();
+            const cat = botCatalog();
+            const byPrice = cat.slice().sort((a, b) => a.price - b.price);
+
+            if (/nhan vien|tu van vien|nguoi that|gap nguoi|tong dai|khieu nai|phan nan/.test(t)) return { human: true };
+
+            if (/^(xin chao|chao|hello|hi|alo|hey)\b/.test(t))
+                return { text: 'Dạ TechStore xin chào anh/chị ạ! 😊 Anh/chị cần em tư vấn máy theo **ngân sách** hay **nhu cầu** (chơi game, chụp ảnh, pin trâu), hay hỗ trợ **đơn hàng**, **trả góp** ạ?', chips: BOT_CHIPS };
+            if (/tam biet|\bbye\b|hen gap lai/.test(t)) return { text: 'Dạ cảm ơn anh/chị đã ghé TechStore, chúc anh/chị một ngày thật vui ạ! 👋', chips: BOT_CHIPS };
+            if (/cam on|thanks|thank|\btks\b/.test(t)) return { text: 'Dạ không có gì ạ! Anh/chị cần em hỗ trợ thêm gì cứ nhắn em nhé 😊', chips: BOT_CHIPS };
+
+            // Tra cứu đơn hàng
+            const matchedOrder = ordersList.find(o => t.includes(vnNorm(o.id)) || (vnNorm(o.user).length >= 4 && t.includes(vnNorm(o.user))));
+            if (matchedOrder)
+                return { text: `Dạ em kiểm tra thấy đơn hàng **${matchedOrder.id}** của anh/chị (${matchedOrder.itemsSummary}) hiện có trạng thái: **${matchedOrder.status}**. Tổng tiền: ${matchedOrder.total.toLocaleString('vi-VN')}₫ ạ!`, chips: BOT_CHIPS };
+            if (/don hang|ma don|tra cuu|kiem tra don|tinh trang don/.test(t)) {
+                if (currentUser) {
+                    const mine = ordersList.filter(o => o.user === currentUser.username);
+                    if (mine.length) { const o = mine[mine.length - 1]; return { text: `Dạ anh/chị ${currentUser.username} ơi, đơn hàng gần nhất **${o.id}** (${o.itemsSummary}) hiện đang: **${o.status}** ạ.`, chips: BOT_CHIPS }; }
+                    return { text: 'Dạ tài khoản của anh/chị hiện chưa có đơn hàng nào trên hệ thống. Anh/chị cần em tư vấn máy để đặt không ạ?', chips: BOT_CHIPS };
+                }
+                return { text: 'Dạ anh/chị vui lòng gõ trực tiếp **Mã đơn hàng** (ví dụ: ORD1001) hoặc đăng nhập tài khoản để em tra cứu tiến độ giao hàng ngay cho mình nhé ạ!', chips: BOT_CHIPS };
+            }
+
+            // Chính sách
+            if (/ma giam|voucher|khuyen mai|uu dai|giam gia|coupon|\bsale\b/.test(t))
+                return { text: 'Dạ ở bước **Giỏ hàng**, anh/chị nhập mã giảm giá đang có: **GIAM10K** (giảm 10.000₫) hoặc **TECHSTORE50** (giảm 50%) là hệ thống tự trừ vào tổng tiền ạ. Anh/chị cần em tư vấn máy để chọn đơn hợp ý không ạ?', chips: BOT_CHIPS };
+            if (/bao hanh|doi tra|1 doi 1|hoan tien|hang loi|may loi|chinh hang|hang that|hang gia|\bfake\b/.test(t))
+                return { text: 'Dạ sản phẩm bên em cam kết **chính hãng 100%**, có **bảo hành đổi trả 1 đổi 1 trong 30 ngày** theo cam kết trên website ạ. Điều kiện chi tiết cho từng máy, anh/chị cần em chuyển nhân viên xác nhận thêm không ạ?', chips: BOT_CHIPS };
+            if (/phi ship|phi giao|giao hang|\bship\b|van chuyen|nhan hang|bao lau/.test(t))
+                return { text: 'Dạ phí và thời gian giao hàng phụ thuộc vào khu vực nhận của anh/chị. Để báo chính xác nhất, em xin chuyển nhân viên xác nhận giúp mình nhé ạ — anh/chị bấm nút **Gặp tư vấn viên** bên dưới ạ!', chips: BOT_CHIPS };
+            if (/dia chi|o dau|gio lam|gio mo|mo cua|dong cua|hotline|so dien thoai|lien he|zalo|fanpage|chi nhanh/.test(t))
+                return { text: 'Dạ anh/chị gửi thông tin ở mục **Liên hệ** trên menu, hoặc bấm **Gặp tư vấn viên** bên dưới để nhân viên phản hồi trực tiếp về địa chỉ, giờ làm việc ạ!', chips: BOT_CHIPS };
+
+            // Trả góp: tính số tiền mỗi tháng
+            if (/tra gop|tra cham|tra dan|gop thang/.test(t)) {
+                const f = botFind(t, cat, false)[0];
+                const bud = botBudget(t);
+                const mo = parseInt((t.match(/(\d{1,2})\s*thang/) || [])[1]) || 12;
+                const months = mo >= 3 && mo <= 36 ? mo : 12;
+                let name = '', price = 0;
+                if (f) { name = f.name; price = f.price; BOT.last = [f.el]; }
+                else if (bud) price = Math.round(bud.min != null && bud.max != null ? (bud.min + bud.max) / 2 : (bud.max || bud.min));
+                else if (BOT.last[0] && /may nay|may do|may tren|may dau|cai nay|con nay/.test(t)) { name = BOT.last[0].dataset.name; price = parseInt(BOT.last[0].dataset.price) || 0; }
+                if (price) {
+                    const monthly = Math.ceil(price / months / 1000) * 1000;
+                    const who = name || (botM(price));
+                    return {
+                        text: `Dạ với ${name ? `**${name}** (${formatVND(price)})` : `số tiền **${formatVND(price)}**`}, trả góp 0% trong **${months} tháng** thì mỗi tháng khoảng **${formatVND(monthly)}** ạ.\nĐây là số ước tính; khoản trả trước và việc duyệt hồ sơ do đơn vị tài chính/ngân hàng xác nhận. Hồ sơ chỉ cần CCCD gắn chip, duyệt nhanh khoảng 5-10 phút ạ!`,
+                        chips: [6, 12, 18, 24].filter(m => m !== months).slice(0, 3).map(m => [`${m} tháng`, `Trả góp ${who} ${m} tháng`]).concat([['🎁 Mã giảm giá', 'Có mã giảm giá nào không']])
+                    };
+                }
+                const ex = byPrice.length ? [byPrice[0], byPrice[byPrice.length - 1]] : [];
+                return {
+                    text: 'Dạ TechStore hỗ trợ **trả góp 0% lãi suất** qua thẻ tín dụng hoặc công ty tài chính (chỉ cần CCCD gắn chip), duyệt hồ sơ nhanh chỉ trong 5-10 phút ạ! Anh/chị cho em biết **tên máy** (hoặc số tiền) và **số tháng**, em tính mức trả mỗi tháng ngay nhé. Ví dụ: "trả góp 20 triệu 12 tháng".',
+                    chips: ex.map(p => [p.name, `Trả góp ${p.name} 12 tháng`])
+                };
+            }
+
+            // So sánh 2 máy
+            if (/so sanh|so voi|khac nhau|\bhay\b.*\bnen\b|nen mua .* hay/.test(t)) {
+                const two = botFind(t, cat, true).slice(0, 2);
+                if (two.length === 2) {
+                    const [a, b] = two, diff = Math.abs(a.price - b.price), cheap = a.price <= b.price ? a : b;
+                    return {
+                        text: `Dạ em so sánh nhanh 2 máy nhé:\n• **${a.name}** – ${formatVND(a.price)}\n   ${a.specs}\n• **${b.name}** – ${formatVND(b.price)}\n   ${b.specs}\n👉 ${diff ? `**${cheap.name}** rẻ hơn ${formatVND(diff)}.` : 'Hai máy cùng mức giá.'} Anh/chị bấm nút **So sánh** trên thẻ máy để xem bảng chi tiết, hoặc cho em biết ưu tiên (pin, camera, game) để em chọn giúp ạ!`,
+                        cards: botCards(two),
+                        chips: BOT_CHIPS
+                    };
+                }
+                return { text: 'Dạ anh/chị cho em tên **2 máy** muốn so sánh nhé, ví dụ: "so sánh iPhone 18 Pro và Xiaomi 14 Ultra" ạ!', chips: byPrice.length > 1 ? [[`${byPrice[0].name} và ${byPrice[byPrice.length - 1].name}`, `So sánh ${byPrice[0].name} và ${byPrice[byPrice.length - 1].name}`]] : BOT_CHIPS };
+            }
+
+            const named = botFind(t, cat, false);
+
+            // Hỏi còn hàng
+            if (/con hang|het hang|ton kho/.test(t)) {
+                if (named.length) return { text: `Dạ **${named[0].name}** hiện đang được niêm yết giá ${formatVND(named[0].price)} trên web ạ. Về tồn kho thực tế tại cửa hàng, em xin chuyển nhân viên xác nhận để chính xác nhất ạ!`, cards: botCards(named.slice(0, 1)), chips: BOT_CHIPS };
+                return { text: 'Dạ anh/chị cho em tên máy muốn hỏi, em kiểm tra thông tin và chuyển nhân viên xác nhận tồn kho thực tế giúp mình ạ!', chips: BOT_CHIPS };
+            }
+
+            // Hỏi chi tiết một máy cụ thể
+            if (named.length) {
+                const shown = named.slice(0, 2);
+                const p = shown[0];
+                return {
+                    text: shown.length === 1
+                        ? `Dạ **${p.name}** đang bán giá **${formatVND(p.price)}** ạ.\nCấu hình: ${p.specs}.\nAnh/chị muốn em tính **trả góp**, **so sánh** hay gợi ý máy tương tự không ạ?`
+                        : `Dạ bên em có ${shown.length} mẫu phù hợp với tên anh/chị hỏi ạ:`,
+                    cards: botCards(shown),
+                    chips: [['💳 Trả góp máy này', 'Trả góp máy này 12 tháng'], ['🔁 Máy tương tự', 'Gợi ý máy tương tự tầm giá này'], ['🎁 Mã giảm giá', 'Có mã giảm giá nào không']]
+                };
+            }
+
+            // Tư vấn theo hãng / nhu cầu / ngân sách
+            const brand = botBrand(t), need = botNeed(t);
+            let bud = botBudget(t);
+            const ref = /tuong tu|tam gia nay|cung tam gia|may khac|con may nao/.test(t) ? BOT.last[0] : null;
+            if (ref && !bud) { const rp = parseInt(ref.dataset.price) || 0; bud = { min: rp * 0.7, max: rp * 1.3 }; }
+            if (brand || need || bud || /dien thoai|may nao|goi y|tu van|nen mua|smartphone|\bmay\b/.test(t)) {
+                if (!brand && !need && !bud)
+                    return { text: 'Dạ để tư vấn đúng ý, anh/chị cho em biết **ngân sách** dự kiến và **ưu tiên** nhất (pin, camera hay chơi game) nhé ạ!', chips: BOT_BUDGET_CHIPS };
+                let list = cat.filter(p => (!brand || p.brand === brand) && (!bud || ((bud.min == null || p.price >= bud.min) && (bud.max == null || p.price <= bud.max))));
+                if (ref) list = list.filter(p => p.el !== ref);
+                const parts = [];
+                if (brand) parts.push('hãng ' + BOT_BRAND_NAME[brand]);
+                if (need) parts.push(BOT_NEED_TXT[need]);
+                if (bud) parts.push(botBudTxt(bud));
+                const req = parts.length ? parts.join(', ') : 'của anh/chị';
+                if (!list.length) {
+                    const pool = cat.filter(p => !brand || p.brand === brand);
+                    if (!pool.length) return { text: `Dạ hiện trên website chưa niêm yết mẫu nào ${brand ? 'của hãng ' + BOT_BRAND_NAME[brand] : 'phù hợp'} ạ. Anh/chị tham khảo các mẫu khác hoặc bấm **Gặp tư vấn viên** để em hỗ trợ thêm nhé!`, chips: BOT_BUDGET_CHIPS };
+                    const c = bud ? (bud.max != null && bud.min != null ? (bud.min + bud.max) / 2 : (bud.max != null ? bud.max : bud.min)) : 0;
+                    const near = pool.sort((a, b) => Math.abs(a.price - c) - Math.abs(b.price - c)).slice(0, 2);
+                    return { text: `Dạ với yêu cầu ${req} hiện chưa có mẫu khớp hoàn toàn ạ. Em gợi ý 2 mẫu gần nhất để anh/chị tham khảo nhé:`, cards: botCards(near), chips: BOT_BUDGET_CHIPS };
+                }
+                const shown = botRank(list, need, bud).slice(0, 3);
+                const chips = [['💳 Trả góp máy đầu tiên', 'Trả góp máy này 12 tháng']];
+                if (shown.length > 1) chips.push(['🔁 So sánh 2 máy đầu', `So sánh ${shown[0].name} và ${shown[1].name}`]);
+                chips.push(['🎁 Mã giảm giá', 'Có mã giảm giá nào không']);
+                return { text: `Dạ với yêu cầu ${req}, em gợi ý ${shown.length} mẫu phù hợp nhất ạ:`, cards: botCards(shown), chips };
+            }
+            return null;
+        }
+
+        const BOT_HUMAN_CHIP = '<button class="quick-chip" style="background:#ff3b30; color:white; font-weight:bold;" onclick="requestHumanSupport()">👤 Gặp tư vấn viên</button>';
+        function setChatChips(chips) {
+            const box = document.querySelector('.chat-quick-replies');
+            if (!box) return;
+            box.innerHTML = (chips && chips.length ? chips : BOT_CHIPS).map(c => `<button class="quick-chip" data-q="${escapeHtml(c[1])}">${escapeHtml(c[0])}</button>`).join('') + BOT_HUMAN_CHIP;
+            box.scrollLeft = 0;
+        }
+        document.querySelector('.chat-quick-replies').addEventListener('click', (e) => {
+            const b = e.target.closest('[data-q]');
+            if (b) sendQuickQuery(b.dataset.q);
+        });
+        setChatChips(BOT_CHIPS);
+
         async function handleChatSend() {
             const text = chatInput.value.trim();
             if (!text) return;
@@ -2648,88 +2879,45 @@
 
             setTimeout(async () => {
                 removeTypingIndicator();
+                const r = botThink(text);
 
-                let botReply = "";
-                let richCardHtml = "";
-                const lower = text.toLowerCase();
-                const cards = Array.from(document.querySelectorAll('.product-card'));
-
-                const matchedOrder = ordersList.find(o => lower.includes(o.id.toLowerCase()) || lower.includes(o.user.toLowerCase()));
-                if (matchedOrder) {
-                    botReply = `Dạ em kiểm tra thấy đơn hàng **${matchedOrder.id}** của anh/chị (${matchedOrder.itemsSummary}) hiện có trạng thái: **${matchedOrder.status}**. Tổng tiền: ${matchedOrder.total.toLocaleString('vi-VN')}₫ ạ!`;
-                } 
-                else if (lower.includes('đơn hàng') || lower.includes('tra cứu')) {
-                    if (currentUser) {
-                        const userOrders = ordersList.filter(o => o.user === currentUser.username);
-                        if (userOrders.length > 0) {
-                            const lastOrder = userOrders[userOrders.length - 1];
-                            botReply = `Dạ anh/chị ${currentUser.username} ơi, đơn hàng gần nhất **${lastOrder.id}** (${lastOrder.itemsSummary}) hiện đang: **${lastOrder.status}** ạ. Nút bên dưới hỗ trợ chi tiết hơn:`;
-                        } else {
-                            botReply = `Dạ tài khoản của anh/chị hiện chưa có đơn hàng nào trên hệ thống. Anh/chị cần em hỗ trợ đặt dòng máy nào không ạ?`;
-                        }
-                    } else {
-                        botReply = `Dạ anh/chị vui lòng gõ trực tiếp **Mã đơn hàng** (ví dụ: ORD1001) hoặc Đăng nhập tài khoản để em tra cứu tiến độ giao hàng ngay cho mình nhé ạ!`;
-                    }
-                }
-                else if (lower.includes('dưới 5 triệu') || lower.includes('5tr') || lower.includes('giá rẻ')) {
-                    const r14c = cards.find(c => c.getAttribute('data-name').includes('Xiaomi Redmi 14C'));
-                    botReply = "Dạ trong tầm giá dưới 5 triệu, bên em có mẫu **Xiaomi Redmi 14C 128GB** pin trâu 5160mAh cực kỳ hời ạ. Em gửi thông tin máy ngay bên dưới anh/chị tham khảo nhé:";
-                    if (r14c) richCardHtml = buildRichCardHtml(r14c);
-                }
-                else if (lower.includes('iphone')) {
-                    const ip18 = cards.find(c => c.getAttribute('data-name').includes('iPhone 18 Pro'));
-                    botReply = "Dạ dòng iPhone 18 Pro Đỏ 256GB bên em mới về siêu mượt ạ! Dòng này cấu hình cực đỉnh anh ạ. Hiện tại bên em đang có chính sách **trả góp 0%** qua thẻ tín dụng hoặc chỉ cần CCCD, tính ra mỗi ngày chỉ vỏn vẹn hơn chục nghìn là sở hữu được máy rồi ạ. Anh có muốn em hướng dẫn thủ tục nhanh không ạ?";
-                    if (ip18) richCardHtml = buildRichCardHtml(ip18);
-                }
-                else if (lower.includes('xiaomi 14 ultra') || lower.includes('14 ultra')) {
-                    const mi14U = cards.find(c => c.getAttribute('data-name').includes('Xiaomi 14 Ultra'));
-                    if (mi14U) {
-                        botReply = `Dạ mẫu **Xiaomi 14 Ultra Xanh Leica** hiện đang **CÒN HÀNG** sẵn tại quầy ạ! Giá bán ưu đãi hôm nay là 24.990.000₫ kèm bảo hành chính hãng 12 tháng ạ:`;
-                        richCardHtml = buildRichCardHtml(mi14U);
-                    } else {
-                        botReply = `Dạ mẫu Xiaomi 14 Ultra hiện tại bên em vừa hết hàng tạm thời, anh/chị tham khảo sang Xiaomi Redmi Note 14 nhé ạ!`;
-                    }
-                }
-                else if (lower.includes('gaming') || lower.includes('chơi game')) {
-                    const redMagic = cards.find(c => c.getAttribute('data-name').includes('RedMagic'));
-                    botReply = "Dạ để chiến game mượt mà nhất, em tiến cử mẫu **ZTE Nubia RedMagic Gaming Phone** (Snapdragon đầu bảng, màn 144Hz có quạt tản nhiệt) ạ:";
-                    if (redMagic) richCardHtml = buildRichCardHtml(redMagic);
-                }
-                else if (lower.includes('trả góp')) {
-                    botReply = "Dạ TechStore hỗ trợ **trả góp 0% lãi suất** qua thẻ tín dụng hoặc công ty tài chính (chỉ cần CCCD gắn chip). Duyệt hồ sơ nhanh chỉ trong 5-10 phút thôi ạ!";
-                }
-                else {
-                    if (!GEMINI_API_KEY) {
-                        unhandledBotCount++;
-                        if (unhandledBotCount >= 2) {
-                            requestHumanSupport();
-                            unhandledBotCount = 0;
-                            return;
-                        }
-                        botReply = `Dạ để em tư vấn chuẩn nhất cho mình, anh/chị dự định đầu tư khoảng bao nhiêu ngân sách và ưu tiên tiêu chí nào nhất (Pin, Camera hay Hiệu năng chơi game) ạ?`;
-                    } else {
-                        try {
-                            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ 
-                                    contents: [{ 
-                                        parts: [{ 
-                                            text: "Bạn là Nga - Chuyên viên tư vấn chăm sóc khách hàng của cửa hàng điện thoại TechStore. Hãy nói chuyện xưng dạ/em/anh/chị cực kỳ lịch sự, chu đáo, thân thiện, trả lời ngắn gọn dưới 3 câu cho thắc mắc sau: " + text 
-                                        }] 
-                                    }] 
-                                })
-                            });
-                            const data = await response.json();
-                            botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Dạ em chưa hiểu rõ ý mình lắm, anh/chị có thể nói rõ hơn được không ạ?";
-                        } catch (err) {
-                            botReply = "Dạ hệ thống kết nối tự động đang bận chút xíu, anh/chị bấm nút **Gặp tư vấn viên** bên dưới để em hỗ trợ trực tiếp nhé ạ!";
-                        }
-                    }
+                if (r && r.human) { BOT.fails = 0; requestHumanSupport(); return; }
+                if (r) {
+                    BOT.fails = 0;
+                    appendMessage(r.text, 'bot', r.cards || '');
+                    setChatChips(r.chips);
+                    return;
                 }
 
-                appendMessage(botReply, 'bot', richCardHtml);
-            }, 700);
+                // Chưa hiểu: hỏi AI (nếu có key) hoặc xin thêm thông tin / chuyển nhân viên
+                if (!GEMINI_API_KEY) {
+                    BOT.fails++;
+                    if (BOT.fails >= 2) { BOT.fails = 0; requestHumanSupport(); return; }
+                    appendMessage('Dạ em chưa hiểu rõ ý mình lắm ạ 🙏 Anh/chị cho em biết **ngân sách**, **hãng** hoặc **nhu cầu** (pin, camera, chơi game) để em tư vấn đúng nhé!', 'bot');
+                    setChatChips(BOT_BUDGET_CHIPS);
+                    return;
+                }
+                let botReply;
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: "Bạn là Nga - Chuyên viên tư vấn chăm sóc khách hàng của cửa hàng điện thoại TechStore. Hãy nói chuyện xưng dạ/em/anh/chị cực kỳ lịch sự, chu đáo, thân thiện, trả lời ngắn gọn dưới 3 câu cho thắc mắc sau: " + text
+                                }]
+                            }]
+                        })
+                    });
+                    const data = await response.json();
+                    botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Dạ em chưa hiểu rõ ý mình lắm, anh/chị có thể nói rõ hơn được không ạ?";
+                } catch (err) {
+                    botReply = "Dạ hệ thống kết nối tự động đang bận chút xíu, anh/chị bấm nút **Gặp tư vấn viên** bên dưới để em hỗ trợ trực tiếp nhé ạ!";
+                }
+                appendMessage(botReply, 'bot');
+                setChatChips(BOT_CHIPS);
+            }, 600);
         }
 
         function sendQuickQuery(query) {
