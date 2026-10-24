@@ -7,7 +7,6 @@
     <meta name="description" content="TechStore - Bán lẻ điện thoại chính hãng, giá tốt, trả góp 0%, bảo hành 1 đổi 1.">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <title>TechStore - Website Bán Lẻ Điện Thoại Chính Hãng</title>
-    <!-- Thêm thư viện Chart.js để vẽ biểu đồ doanh thu -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <style>
         :root {
@@ -576,12 +575,10 @@
                 <div id="suggestions" class="search-suggestions"></div>
             </div>
             
-            <!-- Nút Chuyển đổi Sáng / Tối -->
             <button class="cart-btn-header" id="theme-toggle-btn" title="Chuyển đổi Sáng/Tối">
                 🌙 <span id="theme-text">Tối</span>
             </button>
 
-            <!-- Nút danh sách Yêu thích -->
             <button class="cart-btn-header" id="wishlist-open-btn" title="Sản phẩm yêu thích">
                 ❤️ <span id="wishlist-count">0</span>
             </button>
@@ -610,7 +607,6 @@
         <p>Cam kết chính hãng 100% - Bảo hành đổi trả 1 đổi 1 trong 30 ngày</p>
     </div>
 
-    <!-- MAIN SHOPPING CONTAINER -->
     <div class="container" id="home-view">
         <aside class="sidebar">
             <button type="button" class="filter-toggle-btn" id="filter-toggle-btn" aria-expanded="false" aria-controls="filter-panel"><span>🔎 Bộ lọc &amp; khoảng giá</span><span class="filter-arrow">▼</span></button>
@@ -757,7 +753,6 @@
         </main>
     </div>
 
-    <!-- TRANG LIÊN HỆ -->
     <div class="contact-page" id="contact-view">
         <h2>📞 Liên Hệ Với TechStore</h2>
         <p style="margin-bottom: 15px; font-size: 14px;">Bạn có thắc mắc hoặc cần hỗ trợ dịch vụ? Hãy gửi tin nhắn cho chúng tôi!</p>
@@ -777,7 +772,6 @@
         <div class="recent-grid" id="recent-grid"></div>
     </div>
 
-    <!-- THANH SO SÁNH NỔI -->
     <div class="compare-bar" id="compare-bar">
         <div>
             <strong>So sánh điện thoại (<span id="compare-count">0</span>/3):</strong>
@@ -789,14 +783,12 @@
         </div>
     </div>
 
-    <!-- CHATBOT KHUNG TƯ VẤN NÂNG CẤP CSKH -->
     <button class="chat-toggle-btn" id="chat-toggle-btn" aria-label="Tư vấn trực tuyến">
         <span class="chat-btn-inner">💬 <span class="chat-label">Tư vấn trực tuyến</span></span>
     </button>
     <div class="chat-window" id="chat-window" role="dialog" aria-label="Tư vấn trực tuyến">
         <div class="chat-header">
             <div class="chat-header-info">
-                <!-- Avatar & Huy hiệu trạng thái trực tuyến động -->
                 <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="CSKH Avatar" class="chat-avatar">
                 <div class="chat-status-text">
                     <span class="title">Tư vấn viên TechStore</span>
@@ -806,7 +798,6 @@
             <span class="close-chat" id="close-chat" role="button" tabindex="0" aria-label="Đóng khung chat">✖</span>
         </div>
         <div class="chat-body" id="chat-body">
-            <!-- Tin nhắn chào mừng cá nhân hóa & thấu cảm -->
             <div class="message bot-msg">Dạ TechStore chào bạn! 😊 Không biết hôm nay mình có thể hỗ trợ bạn tìm dòng smartphone cấu hình mạnh để chơi game, hay một chiếc máy pin trâu chụp ảnh đẹp trong tầm giá nào ạ?</div>
         </div>
         
@@ -815,7 +806,6 @@
             <button class="quick-chip" onclick="sendQuickQuery('Tư vấn iPhone mới nhất')">🔥 iPhone mới</button>
             <button class="quick-chip" onclick="sendQuickQuery('Tra cứu đơn hàng')">📦 Tra cứu đơn hàng</button>
             <button class="quick-chip" onclick="sendQuickQuery('Chính sách trả góp 0%')">💳 Trả góp 0%</button>
-            <!-- Nút Gặp nhân viên hỗ trợ -->
             <button class="quick-chip" style="background:#ff3b30; color:white; font-weight:bold;" onclick="requestHumanSupport()">👤 Gặp tư vấn viên</button>
         </div>
 
@@ -825,7 +815,6 @@
         </div>
     </div>
 
-    <!-- MODAL SO SÁNH -->
     <div class="modal" id="compare-modal">
         <div class="modal-content" style="max-width: 700px;">
             <span class="close-modal" onclick="document.getElementById('compare-modal').style.display='none'">✖</span>
@@ -834,7 +823,6 @@
         </div>
     </div>
 
-    <!-- MODAL YÊU THÍCH (WISHLIST) -->
     <div class="modal" id="wishlist-modal">
         <div class="modal-content" style="max-width: 600px;">
             <span class="close-modal" id="close-wishlist">✖</span>
@@ -871,7 +859,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT SẢN PHẨM -->
     <div class="modal" id="edit-product-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="document.getElementById('edit-product-modal').style.display='none'">✖</span>
@@ -891,7 +878,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDIT NHÂN VIÊN -->
     <div class="modal" id="edit-staff-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="document.getElementById('edit-staff-modal').style.display='none'">✖</span>
@@ -1035,7 +1021,6 @@
         </div>
     </div>
 
-    <!-- ADMIN DASHBOARD -->
     <div class="admin-dashboard" id="admin-dashboard">
         <div class="admin-header">
             <h2>👑 Bảng Quản Trị Cửa Hàng (Admin Dashboard)</h2>
@@ -1158,14 +1143,12 @@
         </div>
     </div>
 
-    <!-- STAFF DASHBOARD - GIAO DIỆN NHÂN VIÊN (ĐÃ BỔ SUNG BANNER CẢNH BÁO YÊU CẦU HỖ TRỢ) -->
     <div class="admin-dashboard" id="staff-dashboard" style="background: #eef2f7;">
         <div class="admin-header">
             <h2>🛠️ TechStore - Giao Diện Nhân Viên (Staff Dashboard)</h2>
             <button class="btn" style="width: auto; background: var(--accent-color);" id="close-staff-dash">Đăng xuất / Thoát</button>
         </div>
 
-        <!-- Banner cảnh báo thông báo chớp đỏ khi có khách yêu cầu hỗ trợ người thật -->
         <div class="staff-alert-banner" id="staff-alert-banner">
             🔔 <strong>YÊU CẦU HỖ TRỢ NGƯỜI THẬT:</strong> Khách hàng đang cần kết nối trực tiếp với nhân viên CSKH/Kỹ thuật tại Chatbot!
             <button class="btn" style="width: auto; padding: 6px 12px; margin-left: 10px; background: #28a745; font-size: 12px;" onclick="ackHumanSupport()">Tiếp nhận ngay</button>
