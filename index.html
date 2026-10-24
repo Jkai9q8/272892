@@ -1796,6 +1796,13 @@
         });
         document.getElementById('close-admin').addEventListener('click', () => adminDashboard.style.display = "none");
 
+        // Khóa cuộn trang nền khi Bảng Quản Trị đang mở (tránh bị 2 thanh cuộn)
+        const syncScrollLock = () => {
+            const open = [adminDashboard, staffDashboard].some(d => d && d.style.display === 'block');
+            document.body.style.overflow = open ? 'hidden' : '';
+        };
+        [adminDashboard, staffDashboard].forEach(d => d && new MutationObserver(syncScrollLock).observe(d, { attributes: true, attributeFilter: ['style'] }));
+
         function updateRevenueStats() {
             const filterType = document.getElementById('stat-filter-type').value;
             const todayStr = new Date().toISOString().split('T')[0];
