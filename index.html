@@ -618,6 +618,9 @@
                 <label><input type="checkbox" class="brand-filter" value="xiaomi"> Xiaomi</label>
                 <label><input type="checkbox" class="brand-filter" value="oppo"> OPPO</label>
                 <label><input type="checkbox" class="brand-filter" value="zte"> ZTE / Nubia / RedMagic</label>
+                <label><input type="checkbox" class="brand-filter" value="motorola"> Motorola</label>
+                <label><input type="checkbox" class="brand-filter" value="realme"> Realme</label>
+                <label><input type="checkbox" class="brand-filter" value="vivo"> Vivo</label>
             </div>
 
             <h3>Mức giá cố định</h3>
@@ -643,6 +646,56 @@
         </aside>
 
         <main class="product-grid" id="product-list">
+            <!-- 4 sản phẩm mới từ hình ảnh của bạn -->
+            <div class="product-card" data-name="Motorola G37 5G Xanh Dương" data-price="5990000" data-specs="• Màn hình 120Hz, Chip 5G mạnh mẽ, Pin 5000 mAh, Sạc nhanh">
+                <button class="wishlist-btn" onclick="toggleWishlist('Motorola G37 5G Xanh Dương', 5990000, 'motorola-g37-xanh-duong-thumbn094946.jpg', '• Màn hình 120Hz, Chip 5G mạnh mẽ, Pin 5000 mAh, Sạc nhanh')" title="Yêu thích">🤍</button>
+                <img loading="lazy" decoding="async" src="motorola-g37-xanh-duong-thumbn094946.jpg" alt="Motorola G37 5G Xanh Dương">
+                <h4>Motorola G37 5G Xanh Dương</h4>
+                <div class="price">5.990.000₫</div>
+                <div class="specs-preview">• Màn hình 120Hz<br>• Chip 5G mạnh mẽ<br>• Pin: 5000 mAh</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Motorola G37 5G Xanh Dương')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Realme 16T 5G Xám Liên Quân" data-price="7490000" data-specs="• Màn hình AMOLED 120Hz, Chip Gaming 5G, Pin 5000 mAh, Camera AI">
+                <button class="wishlist-btn" onclick="toggleWishlist('Realme 16T 5G Xám Liên Quân', 7490000, 'realme-16t-xam-thumb102023.jpg', '• Màn hình AMOLED 120Hz, Chip Gaming 5G, Pin 5000 mAh, Camera AI')" title="Yêu thích">🤍</button>
+                <img loading="lazy" decoding="async" src="realme-16t-xam-thumb102023.jpg" alt="Realme 16T 5G Xám Liên Quân">
+                <h4>Realme 16T 5G Xám Liên Quân</h4>
+                <div class="price">7.490.000₫</div>
+                <div class="specs-preview">• AMOLED 120Hz<br>• Chip Gaming 5G<br>• Pin: 5000 mAh</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Realme 16T 5G Xám Liên Quân')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Realme C100x Vàng ĐTDV" data-price="4290000" data-specs="• Màn hình lớn 90Hz, Pin 5000 mAh, Thiết kế mặt lưng vân nổi, Sạc nhanh">
+                <button class="wishlist-btn" onclick="toggleWishlist('Realme C100x Vàng ĐTDV', 4290000, 'realme-c100x-vang-thumb233708.jpg', '• Màn hình lớn 90Hz, Pin 5000 mAh, Thiết kế mặt lưng vân nổi, Sạc nhanh')" title="Yêu thích">🤍</button>
+                <img loading="lazy" decoding="async" src="realme-c100x-vang-thumb233708.jpg" alt="Realme C100x Vàng ĐTDV">
+                <h4>Realme C100x Vàng ĐTDV</h4>
+                <div class="price">4.290.000₫</div>
+                <div class="specs-preview">• Màn hình 90Hz<br>• Pin: 5000 mAh<br>• Mặt lưng vân nổi</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Realme C100x Vàng ĐTDV')">So sánh</button>
+                </div>
+            </div>
+
+            <div class="product-card" data-name="Vivo Y39 5G Xanh Biển" data-price="6290000" data-specs="• Pin BlueVolt 6500 mAh, Kháng va đập SCHOTT Xensation, Loa kép 400%">
+                <button class="wishlist-btn" onclick="toggleWishlist('Vivo Y39 5G Xanh Biển', 6290000, 'vivo-y39-5g-xanh-thumb.jpg', '• Pin BlueVolt 6500 mAh, Kháng va đập SCHOTT Xensation, Loa kép 400%')" title="Yêu thích">🤍</button>
+                <img loading="lazy" decoding="async" src="vivo-y39-5g-xanh-thumb.jpg" alt="Vivo Y39 5G Xanh Biển">
+                <h4>Vivo Y39 5G Xanh Biển</h4>
+                <div class="price">6.290.000₫</div>
+                <div class="specs-preview">• Pin BlueVolt 6500 mAh<br>• Kháng va đập SCHOTT<br>• Loa kép 400%</div>
+                <div style="display:flex; gap: 5px;">
+                    <button class="btn add-to-cart">Chọn Mua</button>
+                    <button class="btn" style="background:#555; width:auto; font-size:11px;" onclick="toggleCompare('Vivo Y39 5G Xanh Biển')">So sánh</button>
+                </div>
+            </div>
+
+            <!-- Các sản phẩm sẵn có trước đó -->
             <div class="product-card" data-name="ZTE Nubia RedMagic Gaming Phone" data-price="19990000" data-specs="• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh">
                 <button class="wishlist-btn" onclick="toggleWishlist('ZTE Nubia RedMagic Gaming Phone', 19990000, 'images.jpg', '• Màn hình AMOLED 144Hz, Chip Snapdragon 8 Gen Series, Tản nhiệt quạt gió, Pin 5000 mAh')" title="Yêu thích">🤍</button>
                 <img decoding="async" fetchpriority="high" src="images.jpg" alt="ZTE Nubia RedMagic Gaming Phone">
@@ -1164,10 +1217,12 @@
                             <tr><th>Tên sản phẩm</th><th>Giá bán</th><th>Tồn kho</th></tr>
                         </thead>
                         <tbody id="staff-inventory-tbody">
+                            <tr><td>Motorola G37 5G Xanh Dương</td><td>5.990.000₫</td><td style="color: green; font-weight: bold;">Còn (12)</td></tr>
+                            <tr><td>Realme 16T 5G Xám Liên Quân</td><td>7.490.000₫</td><td style="color: green; font-weight: bold;">Còn (10)</td></tr>
+                            <tr><td>Realme C100x Vàng ĐTDV</td><td>4.290.000₫</td><td style="color: green; font-weight: bold;">Còn (15)</td></tr>
+                            <tr><td>Vivo Y39 5G Xanh Biển</td><td>6.290.000₫</td><td style="color: green; font-weight: bold;">Còn (18)</td></tr>
                             <tr><td>ZTE Nubia RedMagic Gaming Phone</td><td>19.990.000₫</td><td style="color: green; font-weight: bold;">Còn (10)</td></tr>
                             <tr><td>Xiaomi Redmi 14C Tím</td><td>3.490.000₫</td><td style="color: green; font-weight: bold;">Còn (15)</td></tr>
-                            <tr><td>Xiaomi 14 Ultra Xanh Leica</td><td>24.990.000₫</td><td style="color: green; font-weight: bold;">Còn (8)</td></tr>
-                            <tr><td>Xiaomi Redmi Note 14 Tím Vân</td><td>4.790.000₫</td><td style="color: green; font-weight: bold;">Còn (20)</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1796,7 +1851,6 @@
         });
         document.getElementById('close-admin').addEventListener('click', () => adminDashboard.style.display = "none");
 
-        // Khóa cuộn trang nền khi Bảng Quản Trị đang mở (tránh bị 2 thanh cuộn)
         const syncScrollLock = () => {
             const open = [adminDashboard, staffDashboard].some(d => d && d.style.display === 'block');
             document.body.style.overflow = open ? 'hidden' : '';
@@ -2586,7 +2640,7 @@
             ['🔥 iPhone mới', 'Tư vấn iPhone mới nhất'], ['💳 Trả góp 0%', 'Chính sách trả góp 0%'], ['🎁 Mã giảm giá', 'Có mã giảm giá nào không'], ['📦 Tra cứu đơn hàng', 'Tra cứu đơn hàng']
         ];
         const BOT_BUDGET_CHIPS = [['Dưới 5 triệu', 'Điện thoại dưới 5 triệu'], ['5 – 10 triệu', 'Điện thoại từ 5 đến 10 triệu'], ['10 – 20 triệu', 'Điện thoại từ 10 đến 20 triệu'], ['Trên 20 triệu', 'Điện thoại trên 20 triệu']];
-        const BOT_BRAND_NAME = { apple: 'Apple', samsung: 'Samsung', xiaomi: 'Xiaomi', oppo: 'OPPO', zte: 'ZTE Nubia' };
+        const BOT_BRAND_NAME = { apple: 'Apple', samsung: 'Samsung', xiaomi: 'Xiaomi', oppo: 'OPPO', zte: 'ZTE Nubia', motorola: 'Motorola', realme: 'Realme', vivo: 'Vivo' };
         const BOT_NEED_TXT = { game: 'chơi game mượt', camera: 'chụp ảnh đẹp', pin: 'pin trâu dùng lâu', cheap: 'giá dễ tiếp cận', top: 'dòng cao cấp' };
         const botM = v => (Math.round(v / 1e5) / 10).toString().replace('.', ',') + ' triệu';
 
@@ -2594,7 +2648,7 @@
             return Array.from(document.querySelectorAll('#product-list .product-card')).map(el => {
                 const name = el.dataset.name || '', specs = el.dataset.specs || '';
                 const norm = vnNorm(name), full = vnNorm(name + ' ' + specs);
-                const brand = /iphone|apple/.test(norm) ? 'apple' : /samsung|galaxy/.test(norm) ? 'samsung' : /xiaomi|redmi/.test(norm) ? 'xiaomi' : /oppo|reno/.test(norm) ? 'oppo' : /zte|nubia|redmagic/.test(norm) ? 'zte' : '';
+                const brand = /iphone|apple/.test(norm) ? 'apple' : /samsung|galaxy/.test(norm) ? 'samsung' : /xiaomi|redmi/.test(norm) ? 'xiaomi' : /oppo|reno/.test(norm) ? 'oppo' : /zte|nubia|redmagic/.test(norm) ? 'zte' : /motorola/.test(norm) ? 'motorola' : /realme/.test(norm) ? 'realme' : /vivo/.test(norm) ? 'vivo' : '';
                 return {
                     el, name, price: parseInt(el.dataset.price) || 0, specs: cleanSpecs(specs), full, brand,
                     mah: parseInt((full.match(/(\d{4})\s*mah/) || [])[1]) || 0,
@@ -2605,7 +2659,7 @@
         }
 
         function botBrand(t) {
-            return /iphone|apple|\bios\b/.test(t) ? 'apple' : /samsung|galaxy/.test(t) ? 'samsung' : /xiaomi|redmi/.test(t) ? 'xiaomi' : /oppo|reno/.test(t) ? 'oppo' : /\bzte\b|nubia|redmagic/.test(t) ? 'zte' : '';
+            return /iphone|apple|\bios\b/.test(t) ? 'apple' : /samsung|galaxy/.test(t) ? 'samsung' : /xiaomi|redmi/.test(t) ? 'xiaomi' : /oppo|reno/.test(t) ? 'oppo' : /\bzte\b|nubia|redmagic/.test(t) ? 'zte' : /motorola/.test(t) ? 'motorola' : /realme/.test(t) ? 'realme' : /vivo/.test(t) ? 'vivo' : '';
         }
 
         function botNeed(t) {
