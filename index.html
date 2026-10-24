@@ -1784,7 +1784,6 @@
             const revenueCard = document.getElementById('revenue-stat-card');
             const staffCard = document.getElementById('staff-manage-card');
 
-            // Admin: thấy tất cả. Quản lý chi nhánh: xem doanh thu, không quản lý hồ sơ/phân quyền nhân sự.
             revenueCard.style.display = 'block';
             staffCard.style.display = isAdmin ? 'block' : 'none';
             if (warningCard) warningCard.style.display = isAdmin ? 'none' : 'block';
@@ -1929,12 +1928,10 @@
             });
         }
 
-        // HÀM MỞ BẢNG MODAL CHỈNH SỬA NHÂN SỰ
         function openEditStaff(index) {
             const s = staffList[index];
             if (!s) return;
             
-            // Gán dữ liệu cũ vào các ô input trong bảng modal
             document.getElementById('edit-staff-index').value = index;
             document.getElementById('edit-staff-code').value = s.code || ('NV100' + (index + 1));
             document.getElementById('edit-staff-name').value = s.name;
@@ -1945,11 +1942,9 @@
             document.getElementById('edit-staff-role').value = s.role;
             document.getElementById('edit-staff-shift').value = s.shift;
             
-            // KÍCH HOẠT HIỆN BẢNG MODAL LÊN MÀN HÌNH
             document.getElementById('edit-staff-modal').style.display = 'flex';
         }
 
-        // Xử lý sự kiện lưu sau khi sửa thông tin nhân sự
         const editStaffForm = document.getElementById('edit-staff-form');
         if (editStaffForm) {
             editStaffForm.addEventListener('submit', (e) => {
@@ -1969,7 +1964,6 @@
                     saveData();
                     renderAdminStaff();
                     
-                    // Đóng bảng modal sau khi lưu thành công
                     document.getElementById('edit-staff-modal').style.display = 'none';
                     showToast("Cập nhật thông tin nhân sự thành công!", "success");
                 }
@@ -2090,7 +2084,6 @@
             }
         });
 
-        // ================= QUẢN LÝ SẢN PHẨM =================
         const PRODUCTS_KEY = 'techstore_products_html';
         const productGrid = document.getElementById('product-list');
         const ORIGINAL_PRODUCTS_HTML = productGrid.innerHTML;
@@ -2501,7 +2494,6 @@
             showToast(`Đặt hàng thành công! Mã đơn: ${orderId}`, "success");
         }
 
-        // ================= XỬ LÝ CHATBOT AI VÀ CHĂM SÓC KHÁCH HÀNG THẬT =================
         const chatToggleBtn = document.getElementById('chat-toggle-btn');
         const chatWindow = document.getElementById('chat-window');
         const closeChat = document.getElementById('close-chat');
@@ -2517,7 +2509,6 @@
         function appendMessage(text, sender, richCardHtml = '') {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message ${sender === 'user' ? 'user-msg' : 'bot-msg'}`;
-            // Luôn lọc ký tự HTML trước (tránh khách gõ mã HTML vào khung chat), sau đó mới đổi **chữ** thành chữ đậm
             const safeText = escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
             msgDiv.innerHTML = safeText + (richCardHtml ? richCardHtml : '');
             chatBody.appendChild(msgDiv);
@@ -2581,7 +2572,6 @@
             showToast("Đã tiếp nhận yêu cầu CSKH từ Chatbot!", "success");
         }
 
-        // ================= BỘ NÃO CHATBOT TƯ VẤN (đọc dữ liệu sản phẩm thật đang hiển thị trên web) =================
         const BOT = { last: [], fails: 0 };
         const BOT_STOP = new Set(['dien', 'thoai', 'phone', '5g', '4g', 'tim', 'do', 'xanh', 'trang', 'den', 'van', 'vang', 'hong', 'la', 'cam', 'bac', 'xam', 'than', 'gaming']);
         const BOT_CHIPS = [
@@ -2620,7 +2610,6 @@
             return '';
         }
 
-        // Hiểu ngân sách: "dưới 5 triệu", "5tr", "tầm 10 củ", "từ 5 đến 10 triệu", "7 triệu rưỡi", "10.000.000"
         function botBudget(t) {
             const rg = t.match(/(\d+(?:[.,]\d+)?)\s*(?:trieu|tr|cu)?\s*(?:-|den|toi)\s*(\d+(?:[.,]\d+)?)\s*(?:trieu|tr|cu)/);
             if (rg) return { min: parseFloat(rg[1].replace(',', '.')) * 1e6, max: parseFloat(rg[2].replace(',', '.')) * 1e6 };
@@ -2644,7 +2633,6 @@
             return 'tầm ' + botM(b.min) + ' – ' + botM(b.max);
         }
 
-        // Tìm máy được nhắc tên (ví dụ "iphone 18 pro", "xiaomi 14 ultra", "s26", "redmi 14c")
         function botFind(t, cat, all) {
             const words = new Set(t.split(/[^a-z0-9]+/).filter(Boolean));
             const scored = cat.map(p => {
@@ -2672,7 +2660,6 @@
 
         function botCards(list) { BOT.last = list.map(p => p.el); return list.map(p => buildRichCardHtml(p.el)).join(''); }
 
-        // Trả về { text, cards, chips } | { human:true } | null (chưa hiểu)
         function botThink(text) {
             const t = vnNorm(text).trim();
             const cat = botCatalog();
@@ -2685,7 +2672,6 @@
             if (/tam biet|\bbye\b|hen gap lai/.test(t)) return { text: 'Dạ cảm ơn anh/chị đã ghé TechStore, chúc anh/chị một ngày thật vui ạ! 👋', chips: BOT_CHIPS };
             if (/cam on|thanks|thank|\btks\b/.test(t)) return { text: 'Dạ không có gì ạ! Anh/chị cần em hỗ trợ thêm gì cứ nhắn em nhé 😊', chips: BOT_CHIPS };
 
-            // Tra cứu đơn hàng
             const matchedOrder = ordersList.find(o => t.includes(vnNorm(o.id)) || (vnNorm(o.user).length >= 4 && t.includes(vnNorm(o.user))));
             if (matchedOrder)
                 return { text: `Dạ em kiểm tra thấy đơn hàng **${matchedOrder.id}** của anh/chị (${matchedOrder.itemsSummary}) hiện có trạng thái: **${matchedOrder.status}**. Tổng tiền: ${matchedOrder.total.toLocaleString('vi-VN')}₫ ạ!`, chips: BOT_CHIPS };
@@ -2698,7 +2684,6 @@
                 return { text: 'Dạ anh/chị vui lòng gõ trực tiếp **Mã đơn hàng** (ví dụ: ORD1001) hoặc đăng nhập tài khoản để em tra cứu tiến độ giao hàng ngay cho mình nhé ạ!', chips: BOT_CHIPS };
             }
 
-            // Chính sách
             if (/ma giam|voucher|khuyen mai|uu dai|giam gia|coupon|\bsale\b/.test(t))
                 return { text: 'Dạ ở bước **Giỏ hàng**, anh/chị nhập mã giảm giá đang có: **GIAM10K** (giảm 10.000₫) hoặc **TECHSTORE50** (giảm 50%) là hệ thống tự trừ vào tổng tiền ạ. Anh/chị cần em tư vấn máy để chọn đơn hợp ý không ạ?', chips: BOT_CHIPS };
             if (/bao hanh|doi tra|1 doi 1|hoan tien|hang loi|may loi|chinh hang|hang that|hang gia|\bfake\b/.test(t))
@@ -2708,7 +2693,6 @@
             if (/dia chi|o dau|gio lam|gio mo|mo cua|dong cua|hotline|so dien thoai|lien he|zalo|fanpage|chi nhanh/.test(t))
                 return { text: 'Dạ anh/chị gửi thông tin ở mục **Liên hệ** trên menu, hoặc bấm **Gặp tư vấn viên** bên dưới để nhân viên phản hồi trực tiếp về địa chỉ, giờ làm việc ạ!', chips: BOT_CHIPS };
 
-            // Trả góp: tính số tiền mỗi tháng
             if (/tra gop|tra cham|tra dan|gop thang/.test(t)) {
                 const f = botFind(t, cat, false)[0];
                 const bud = botBudget(t);
@@ -2733,7 +2717,6 @@
                 };
             }
 
-            // So sánh 2 máy
             if (/so sanh|so voi|khac nhau|\bhay\b.*\bnen\b|nen mua .* hay/.test(t)) {
                 const two = botFind(t, cat, true).slice(0, 2);
                 if (two.length === 2) {
@@ -2749,13 +2732,11 @@
 
             const named = botFind(t, cat, false);
 
-            // Hỏi còn hàng
             if (/con hang|het hang|ton kho/.test(t)) {
                 if (named.length) return { text: `Dạ **${named[0].name}** hiện đang được niêm yết giá ${formatVND(named[0].price)} trên web ạ. Về tồn kho thực tế tại cửa hàng, em xin chuyển nhân viên xác nhận để chính xác nhất ạ!`, cards: botCards(named.slice(0, 1)), chips: BOT_CHIPS };
                 return { text: 'Dạ anh/chị cho em tên máy muốn hỏi, em kiểm tra thông tin và chuyển nhân viên xác nhận tồn kho thực tế giúp mình ạ!', chips: BOT_CHIPS };
             }
 
-            // Hỏi chi tiết một máy cụ thể
             if (named.length) {
                 const shown = named.slice(0, 2);
                 const p = shown[0];
@@ -2768,7 +2749,6 @@
                 };
             }
 
-            // Tư vấn theo hãng / nhu cầu / ngân sách
             const brand = botBrand(t), need = botNeed(t);
             let bud = botBudget(t);
             const ref = /tuong tu|tam gia nay|cung tam gia|may khac|con may nao/.test(t) ? BOT.last[0] : null;
@@ -2832,7 +2812,6 @@
                     return;
                 }
 
-                // Chưa hiểu: hỏi AI (nếu có key) hoặc xin thêm thông tin / chuyển nhân viên
                 if (!GEMINI_API_KEY) {
                     BOT.fails++;
                     if (BOT.fails >= 2) { BOT.fails = 0; requestHumanSupport(); return; }
@@ -2871,7 +2850,6 @@
         sendBtn.addEventListener('click', handleChatSend);
         chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); handleChatSend(); } });
 
-        // Bảng lọc thu gọn trên điện thoại (nút chỉ hiện khi màn hình <= 768px)
         (function initFilterToggle() {
             const btn = document.getElementById('filter-toggle-btn');
             const side = btn ? btn.closest('.sidebar') : null;
@@ -2890,7 +2868,6 @@
 
     <script>
     (function () {
-        // Menu/logo bấm được bằng bàn phím (Tab + Enter)
         document.querySelectorAll('#main-nav a, header .logo').forEach(function (el) {
             el.setAttribute('role', 'link'); el.tabIndex = 0;
             el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
@@ -2900,7 +2877,6 @@
             el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
         });
 
-        // Nhấn Esc để đóng cửa sổ đang mở (PC)
         document.addEventListener('keydown', function (e) {
             if (e.key !== 'Escape') return;
             var closed = false;
@@ -2911,12 +2887,10 @@
             if (!closed && cw && getComputedStyle(cw).display !== 'none') cw.style.display = 'none';
         });
 
-        // Chạm vào nền tối bên ngoài để đóng cửa sổ (điện thoại)
         document.querySelectorAll('.modal').forEach(function (m) {
             m.addEventListener('click', function (e) { if (e.target === m) m.style.display = 'none'; });
         });
 
-        // Ảnh bị lỗi/thiếu file: hiện khung thay thế, tự gỡ nếu ảnh tải lại được
         document.addEventListener('error', function (e) {
             var t = e.target; if (t && t.tagName === 'IMG') t.classList.add('img-broken');
         }, true);
